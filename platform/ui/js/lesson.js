@@ -97,7 +97,7 @@ function buildCheckBlock(el, stepId) {
 
 /**
  * Prepare freshly inserted lesson HTML: language pairs, code blocks (highlight + Copy button),
- * click-to-copy file names, and check blocks.
+ * and check blocks.
  * @param {HTMLElement} root
  * @param {{ stepId: string, hljs?: { highlightElement(el: Element): void } }} options
  */
@@ -121,34 +121,19 @@ export function decorateLesson(root, { stepId, hljs }) {
     pre.append(copyButton(() => code.textContent ?? ''));
   });
 
-  root.querySelectorAll('[data-copy]').forEach((el) => {
-    el.setAttribute('role', 'button');
-    el.setAttribute('tabindex', '0');
-    el.setAttribute('title', 'Click to copy');
-    el.classList.add('copyable');
-  });
-
   root.querySelectorAll('[data-check]').forEach((el) => buildCheckBlock(/** @type {HTMLElement} */ (el), stepId));
 }
 
 /**
- * Handle clicks inside the lesson: tab-switching buttons and click-to-copy text.
+ * Handle clicks inside the lesson: tab-switching buttons (only code blocks have a Copy button).
  * @param {HTMLElement} root
  * @param {{ preview: (target: { port: number, path: string }) => void,
  *           swagger: (target: { op: string, server: string }) => void }} handlers
  */
 export function bindLessonActions(root, handlers) {
   /** @param {Event} event */
-  const onActivate = async (event) => {
+  const onActivate = (event) => {
     const target = /** @type {HTMLElement} */ (event.target);
-    const copyEl = /** @type {HTMLElement | null} */ (target.closest('[data-copy]'));
-    if (copyEl) {
-      const text = copyEl.dataset.copy || copyEl.textContent || '';
-      const ok = await copyText(text.trim());
-      copyEl.classList.add(ok ? 'copied' : 'copy-failed');
-      window.setTimeout(() => copyEl.classList.remove('copied', 'copy-failed'), 1200);
-      return;
-    }
     const actionEl = /** @type {HTMLElement | null} */ (target.closest('[data-action]'));
     if (!actionEl) return;
     event.preventDefault();
@@ -160,10 +145,4 @@ export function bindLessonActions(root, handlers) {
     }
   };
   root.addEventListener('click', onActivate);
-  root.addEventListener('keydown', (event) => {
-    if ((event.key === 'Enter' || event.key === ' ') && /** @type {HTMLElement} */ (event.target).closest('[data-copy]')) {
-      event.preventDefault();
-      void onActivate(event);
-    }
-  });
 }

@@ -59,7 +59,7 @@ Brand: **CE WebDev Academy**. The banner and favicon are copied from the academy
 No Markdown parser. Interactive behavior comes from `data-*` attributes:
 
 ```html
-<p class="where">Edit <code data-copy>server/routes/tasks.js</code>, between the comments
+<p class="where">Edit <code>server/routes/tasks.js</code> (in the Explorer: build &rsaquo; server &rsaquo; routes &rsaquo; tasks.js), between the comments
   <code>@tutorial:begin story-1-list</code> and <code>@tutorial:end story-1-list</code>.</p>
 <pre data-snippet data-file="server/routes/tasks.js" data-zone="story-1-list"><code>...</code></pre>
 <a data-action="preview" data-path="/api/tasks" data-port="3000">/api/tasks</a>
@@ -90,7 +90,7 @@ Five tabs, identical for every module, in this order. Defined once in the platfo
 
 - Each tab header has a small "open in a new browser tab" button (`target="_blank"`, `rel="noopener"`) that opens the tab's URL in a full browser tab (for Preview, the current address bar URL). Clicking the tab itself only switches tabs.
 - Before showing an iframe the platform checks the service's health. If it is not reachable the tab shows a friendly message instead of the browser's "refused to connect". For `ws-robot` the message explains how to start it (Docker Desktop button or `docker compose start ws-robot`), the iframe loads automatically when it becomes healthy, and the new-tab button is disabled until then.
-- Lesson buttons that switch tabs: `preview` goes to Preview, `swagger` goes to Swagger and opens the named operation on the chosen API (`data-server`: `app`, `reference` or `style`; the ports come from `/api/config`). File names in lessons are plain text with a Copy button (the learner browses to them in the Explorer; lessons do not teach Ctrl+P / Cmd+P).
+- Lesson buttons that switch tabs: `preview` goes to Preview, `swagger` goes to Swagger and opens the named operation on the chosen API (`data-server`: `app`, `reference` or `style`; the ports come from `/api/config`). File names in lessons are plain text, not clickable, and each `where` note spells out the Explorer path (only code blocks have a Copy button; the learner browses to them in the Explorer; lessons do not teach Ctrl+P / Cmd+P).
 
 ### API contract and Swagger
 - One OpenAPI 3 file, `course/openapi/taskapp.yaml`, is the contract of the whole Task Manager API (health, tasks, groups, history, plus the optional exercise endpoints). Every operation has an `operationId` (for example `listTasks`).

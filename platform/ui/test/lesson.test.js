@@ -49,10 +49,9 @@ describe('decorateLesson', () => {
     expect(block.querySelector('details').textContent).toContain('PASS  all good');
   });
 
-  it('makes file names copyable and marks translated English blocks', () => {
-    const el = lesson('<code data-copy>server/app.js</code><div lang="en">A</div><div lang="th">ก</div>');
+  it('marks translated English blocks', () => {
+    const el = lesson('<code>server/app.js</code><div lang="en">A</div><div lang="th">ก</div>');
     decorateLesson(el, { stepId: '1.1' });
-    expect(el.querySelector('[data-copy]').getAttribute('role')).toBe('button');
     expect(el.querySelector('[lang="en"]').classList.contains('has-th')).toBe(true);
   });
 });
@@ -76,14 +75,11 @@ describe('bindLessonActions', () => {
     expect(preview).toHaveBeenNthCalledWith(2, { port: 5173, path: '/' });
   });
 
-  it('copies a clicked file name', async () => {
-    const writeText = vi.fn().mockResolvedValue(undefined);
-    Object.assign(navigator, { clipboard: { writeText } });
-    const el = lesson('<code data-copy>server/app.js</code>');
-    bindLessonActions(el, { preview: () => {}, swagger: () => {} });
-    el.querySelector('code').click();
-    await new Promise((r) => setTimeout(r, 0));
-    expect(writeText).toHaveBeenCalledWith('server/app.js');
+  it('does not make inline code clickable', () => {
+    const el = lesson('<code>server/app.js</code>');
+    decorateLesson(el, { stepId: '1.1' });
+    expect(el.querySelector('code').getAttribute('role')).toBeNull();
+    expect(el.querySelector('code').getAttribute('tabindex')).toBeNull();
   });
 });
 

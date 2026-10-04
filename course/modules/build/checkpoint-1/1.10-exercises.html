@@ -8,7 +8,7 @@
     <h3>Exercise 1 (easier): the 5 latest open tasks</h3>
     <p>Write a SQL query that returns the <code>id</code>, <code>title</code> and <code>created_at</code> of the 5 newest tasks that are not done yet.
     Test it in the Database tab (SQL command), then keep it in your file.</p>
-    <p class="where">Edit <code data-copy>db/queries.sql</code>. Write the query between the comments
+    <p class="where">Edit <code>db/queries.sql</code> (in the Explorer: build &rsaquo; db &rsaquo; queries.sql). Write the query between the comments
       <code>@tutorial:begin exercise-1-latest-open</code> and <code>@tutorial:end exercise-1-latest-open</code>.</p>
     <details>
       <summary>Hint</summary>
@@ -30,7 +30,7 @@ LIMIT 5;</code></pre>
     <p>Add a route that answers <code>{ "total": 14, "done": 6 }</code>: the number of tasks and how many of them are done (use the real numbers of the database).
     One SQL query is enough: look at <code>COUNT(*)</code> and <code>SUM(done)</code>.
     The file is already connected to the app, so it answers 404 only until you write the route.</p>
-    <p class="where">Edit <code data-copy>server/routes/stats.js</code>. Write the route between the comments
+    <p class="where">Edit <code>server/routes/stats.js</code> (in the Explorer: build &rsaquo; server &rsaquo; routes &rsaquo; stats.js). Write the route between the comments
       <code>@tutorial:begin exercise-2-stats</code> and <code>@tutorial:end exercise-2-stats</code>.</p>
     <p>
       <button type="button" class="btn btn-sm btn-outline-primary" data-action="swagger" data-op="stats" data-server="app">Try it in Swagger: stats</button>
