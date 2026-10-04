@@ -1,0 +1,40 @@
+<h2>Step 1.4: Add GET /api/health</h2>
+
+<div lang="en">
+  <p>Start with the smallest route: a health check that tells the world the API is alive. It does not use the database.</p>
+</div>
+<div lang="th">
+  <p>เริ่มจาก route ที่เล็กที่สุด คือ health check ที่บอกว่า API ยังทำงานอยู่ โดยไม่ต้องใช้ฐานข้อมูล</p>
+</div>
+
+<p class="where">Edit <code data-copy>server/app.js</code>. Write the code between the comments
+  <code>@tutorial:begin s1-4-health</code> and <code>@tutorial:end s1-4-health</code>.</p>
+
+<pre data-snippet data-file="server/app.js" data-zone="s1-4-health"><code class="language-javascript">app.get('/api/health', (req, res) =&gt; {
+  res.json({ status: 'ok' });
+});</code></pre>
+
+<div lang="en">
+  <p>Save the file. After a second, open the route in <strong>Preview</strong> or call it in <strong>Swagger</strong>:</p>
+</div>
+<div lang="th">
+  <p>บันทึกไฟล์ รอสักครู่ แล้วเปิด route ใน <strong>Preview</strong> หรือเรียกใน <strong>Swagger</strong>:</p>
+</div>
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="3000" data-path="/api/health">Open /api/health</a>
+  <button type="button" class="btn btn-sm btn-outline-primary" data-action="swagger" data-op="health" data-server="app">Try it in Swagger</button>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>Write the code between the two <code>@tutorial</code> comments. You may replace the TODO line, but keep both <code>@tutorial</code> comment lines.</p>
+</details>
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>server/app.js</code>, between the comments of <code>s1-4-health</code>:</p>
+  <pre data-snippet data-file="server/app.js" data-zone="s1-4-health"><code class="language-javascript">app.get('/api/health', (req, res) =&gt; {
+  res.json({ status: 'ok' });
+});</code></pre>
+</details>
+
+<div data-check="health-route"></div>

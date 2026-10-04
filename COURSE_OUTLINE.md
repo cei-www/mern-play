@@ -48,6 +48,8 @@ API: `/api/health`, `/api/groups`, `/api/tasks?group_id=&done=&sort=&order=`, `/
 - 0.6 D Wipe the code: run `tutorial wipe` in the terminal; files stay, DB stays, learn the `@tutorial` markers
 - 0.7 C Markers are empty, DB still has data
 
+> Release 1 as built: Part 0 has 0.1 read, 0.2 use the app, 0.3 tour, 0.4 Swagger, 0.5 change one line, 0.6 wipe, 0.7 check (the 0.5 tour of HMR and the 0.3 tour were merged as listed in `lesson.yaml`). Story 1 steps are 1.1 to 1.9 and Checkpoint 1 is step 1.10. The `/api/stats` exercise and the SQL exercise are checked by flow/file checks, not hidden unit tests (vitest is added with module `unit`).
+
 ### Story 1: View my tasks (~50 min)
 - 1.1 R Story and acceptance criteria
 - 1.2 D `SELECT` in the MySQL client

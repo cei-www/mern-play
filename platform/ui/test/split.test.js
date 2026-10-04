@@ -18,3 +18,25 @@ describe('clampWidth', () => {
     expect(clampWidth(400, 500)).toBe(320);
   });
 });
+
+describe('initSplit keeps proportions', () => {
+  it('remembers the width as a share of the container and restores it for another container width', async () => {
+    const { initSplit, SPLIT_KEY } = await import('../js/split.js');
+    window.localStorage.clear();
+    window.localStorage.setItem(SPLIT_KEY, '0.4');
+    const rect = (w) => () => ({ width: w, left: 0, right: w, top: 0, bottom: 0, height: 0 });
+    const container = document.createElement('div');
+    const rightPane = document.createElement('div');
+    const divider = document.createElement('div');
+    container.getBoundingClientRect = rect(1000);
+    initSplit({ divider, container, rightPane });
+    expect(rightPane.style.flexBasis).toBe('40%');
+    // The sidebar is hidden: the container is wider but the share stays the same.
+    container.getBoundingClientRect = rect(1280);
+    rightPane.getBoundingClientRect = rect(512);
+    divider.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft' }));
+    // 512 of 1280 pixels is the same 40% share.
+    expect(Number(window.localStorage.getItem(SPLIT_KEY))).toBeCloseTo(0.4, 3);
+    expect(rightPane.style.flexBasis).toBe('41.875%');
+  });
+});

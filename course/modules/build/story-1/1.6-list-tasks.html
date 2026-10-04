@@ -1,0 +1,55 @@
+<h2>Step 1.6: GET /api/tasks reads MySQL</h2>
+
+<div lang="en">
+  <p>Now the main route. It runs the <code>LEFT JOIN</code> query from step 1.2 and sends the rows as JSON.
+  At the top of the file there is a constant <code>SELECT_TASKS</code> that holds the <code>SELECT ... LEFT JOIN ...</code> part, so you only add the ordering.</p>
+  <p><code>db.query</code> returns <code>[rows, fields]</code>. You only need <code>rows</code>, so use array destructuring: <code>const [rows] = ...</code>.</p>
+</div>
+<div lang="th">
+  <p>ถึงเวลาทำ route หลัก มันรัน query <code>LEFT JOIN</code> จาก step 1.2 แล้วส่งแถวที่ได้กลับเป็น JSON
+  ที่ต้นไฟล์มีค่าคงที่ <code>SELECT_TASKS</code> เก็บส่วน <code>SELECT ... LEFT JOIN ...</code> ไว้แล้ว คุณจึงเพิ่มแค่การเรียงลำดับ</p>
+  <p><code>db.query</code> คืนค่าเป็น <code>[rows, fields]</code> เราใช้แค่ <code>rows</code> จึงใช้ array destructuring: <code>const [rows] = ...</code></p>
+</div>
+
+<p class="where">Edit <code data-copy>server/routes/tasks.js</code>. Write the code between the comments
+  <code>@tutorial:begin s1-6-list-tasks</code> and <code>@tutorial:end s1-6-list-tasks</code>.</p>
+
+<pre data-snippet data-file="server/routes/tasks.js" data-zone="s1-6-list-tasks"><code class="language-javascript">router.get('/', async (req, res, next) =&gt; {
+  try {
+    const [rows] = await db.query(`${SELECT_TASKS} ORDER BY t.created_at DESC, t.id DESC`);
+    res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+
+<div lang="en">
+  <p>Save the file. The newest task comes first because of <code>ORDER BY t.created_at DESC</code>.</p>
+</div>
+<div lang="th">
+  <p>บันทึกไฟล์ task ใหม่สุดมาก่อนเพราะ <code>ORDER BY t.created_at DESC</code></p>
+</div>
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="3000" data-path="/api/tasks">Open /api/tasks</a>
+  <button type="button" class="btn btn-sm btn-outline-primary" data-action="swagger" data-op="listTasks" data-server="app">Try it in Swagger</button>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>Three parts: <code>await db.query(...)</code> to read, <code>res.json(rows)</code> to answer, <code>next(err)</code> in the <code>catch</code>. A 500 answer means the SQL or the code has an error:
+  look at the message with <code>docker compose logs --tail 30 ws-main</code> on your computer.</p>
+</details>
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>server/routes/tasks.js</code>, between the comments of <code>s1-6-list-tasks</code>:</p>
+  <pre data-snippet data-file="server/routes/tasks.js" data-zone="s1-6-list-tasks"><code class="language-javascript">router.get('/', async (req, res, next) =&gt; {
+  try {
+    const [rows] = await db.query(`${SELECT_TASKS} ORDER BY t.created_at DESC, t.id DESC`);
+    res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+</details>
+
+<div data-check="list-tasks"></div>

@@ -1,0 +1,106 @@
+<h2>Step 1.8: Show the tasks in React</h2>
+
+<div lang="en">
+  <p>The API works. Now the page must call it. The component <code>TaskList</code> does three things:</p>
+  <ul>
+    <li><code>useState</code> keeps the tasks, a <em>loading</em> flag and an <em>error</em> message.</li>
+    <li><code>useEffect</code> calls <code>fetch('/api/tasks')</code> when the component appears (and again when <code>query</code> or <code>reloadKey</code> change).</li>
+    <li>It draws the loading text, the error, an empty message or the list. Each row is a ready-made <code>TaskItem</code>.</li>
+  </ul>
+  <p>The Vite server forwards every <code>/api</code> request to Express, so the page can use a short URL.</p>
+</div>
+<div lang="th">
+  <p>API ทำงานแล้ว ตอนนี้หน้าเว็บต้องเรียกใช้ component <code>TaskList</code> ทำ 3 อย่าง:</p>
+  <ul>
+    <li><code>useState</code> เก็บ tasks, flag <em>loading</em> และข้อความ <em>error</em></li>
+    <li><code>useEffect</code> เรียก <code>fetch('/api/tasks')</code> เมื่อ component ปรากฏ (และเรียกอีกเมื่อ <code>query</code> หรือ <code>reloadKey</code> เปลี่ยน)</li>
+    <li>แสดงข้อความ loading, error, ข้อความว่าง หรือรายการ แต่ละแถวใช้ <code>TaskItem</code> ที่เตรียมไว้ให้แล้ว</li>
+  </ul>
+  <p>เซิร์ฟเวอร์ Vite ส่งทุก request ที่ขึ้นต้นด้วย <code>/api</code> ไปให้ Express หน้าเว็บจึงใช้ URL สั้น ๆ ได้</p>
+</div>
+
+<p class="where">Edit <code data-copy>client/src/components/TaskList.jsx</code>. Write the code between the comments
+  <code>@tutorial:begin s1-8-task-list</code> and <code>@tutorial:end s1-8-task-list</code>, inside the function.</p>
+
+<pre data-snippet data-file="client/src/components/TaskList.jsx" data-zone="s1-8-task-list"><code class="language-javascript">const [tasks, setTasks] = useState([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState('');
+
+useEffect(() =&gt; {
+  setLoading(true);
+  fetch(`/api/tasks${query}`)
+    .then((res) =&gt; {
+      if (!res.ok) throw new Error(`The server answered ${res.status}`);
+      return res.json();
+    })
+    .then((data) =&gt; {
+      setTasks(data);
+      setError('');
+    })
+    .catch((err) =&gt; setError(err.message))
+    .finally(() =&gt; setLoading(false));
+}, [query, reloadKey]);
+
+if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;
+if (error) return &lt;p role="alert"&gt;Could not load the tasks: {error}&lt;/p&gt;;
+if (tasks.length === 0) return &lt;p&gt;No tasks yet.&lt;/p&gt;;
+
+return (
+  &lt;ul className="task-list"&gt;
+    {tasks.map((task) =&gt; (
+      &lt;TaskItem key={task.id} task={task} onChanged={onChanged} /&gt;
+    ))}
+  &lt;/ul&gt;
+);</code></pre>
+
+<div lang="en">
+  <p>Save the file and look at <strong>Preview</strong>: the list appears. Stop the API on purpose to see the error branch: add a typo in the URL
+  (<code>/api/taskz</code>), save, read the message, then fix it.</p>
+</div>
+<div lang="th">
+  <p>บันทึกไฟล์แล้วดู <strong>Preview</strong> รายการจะปรากฏ ลองทำให้ API ผิดโดยตั้งใจเพื่อดูกรณี error:
+  พิมพ์ URL ผิด (<code>/api/taskz</code>) บันทึก อ่านข้อความ แล้วแก้กลับ</p>
+</div>
+<p><a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5173" data-path="/">Open the app in Preview</a></p>
+
+<details>
+  <summary>Hint</summary>
+  <p>The code goes <em>inside</em> the function <code>TaskList</code>, so the <code>return</code> statements are fine. The imports at the top of the file are already there.
+  If the page stays on "Loading...", open the browser's developer tools and read the Console and Network tabs.</p>
+</details>
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/components/TaskList.jsx</code>, between the comments of <code>s1-8-task-list</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskList.jsx" data-zone="s1-8-task-list"><code class="language-javascript">const [tasks, setTasks] = useState([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState('');
+
+useEffect(() =&gt; {
+  setLoading(true);
+  fetch(`/api/tasks${query}`)
+    .then((res) =&gt; {
+      if (!res.ok) throw new Error(`The server answered ${res.status}`);
+      return res.json();
+    })
+    .then((data) =&gt; {
+      setTasks(data);
+      setError('');
+    })
+    .catch((err) =&gt; setError(err.message))
+    .finally(() =&gt; setLoading(false));
+}, [query, reloadKey]);
+
+if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;
+if (error) return &lt;p role="alert"&gt;Could not load the tasks: {error}&lt;/p&gt;;
+if (tasks.length === 0) return &lt;p&gt;No tasks yet.&lt;/p&gt;;
+
+return (
+  &lt;ul className="task-list"&gt;
+    {tasks.map((task) =&gt; (
+      &lt;TaskItem key={task.id} task={task} onChanged={onChanged} /&gt;
+    ))}
+  &lt;/ul&gt;
+);</code></pre>
+</details>
+
+<div data-check="task-list-code"></div>

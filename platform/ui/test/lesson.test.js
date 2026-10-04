@@ -22,6 +22,15 @@ describe('decorateLesson', () => {
     expect(el.querySelector('pre code').textContent).toBe('a => b');
   });
 
+  it('shows the copy button as an icon with an accessible name, not as text', () => {
+    const el = lesson('<pre data-snippet><code>x</code></pre>');
+    decorateLesson(el, { stepId: '1.1' });
+    const button = el.querySelector('.copy-btn');
+    expect(button.querySelector('svg')).not.toBeNull();
+    expect(button.getAttribute('aria-label')).toBe('Copy');
+    expect(button.textContent).toBe('');
+  });
+
   it('does not highlight terminal commands and decorates a block only once', () => {
     const highlightElement = vi.fn();
     const el = lesson('<pre data-command><code>tutorial wipe</code></pre>');

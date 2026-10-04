@@ -12,6 +12,8 @@ interface FileDef extends CheckDef {
   notContains?: string | string[];
   matches?: string | string[];
   notMatches?: string | string[];
+  /** Compare `matches` / `notMatches` without regard to upper and lower case (handy for SQL). */
+  ignoreCase?: boolean;
   /** Tutorial zones that must be "filled" (real code) or "empty" (only the TODO stub). */
   zones?: Record<string, 'filled' | 'empty'>;
   hint?: string;
@@ -38,10 +40,11 @@ export function runFile(id: string, def: FileDef, ctx: CheckContext): CheckResul
 
   const text = toLf(fs.readFileSync(file, 'utf8'));
   const problems: string[] = [];
+  const flags = def.ignoreCase ? 'mi' : 'm';
   for (const needle of list(def.contains)) if (!text.includes(needle)) problems.push(`it does not contain: ${needle}`);
   for (const needle of list(def.notContains)) if (text.includes(needle)) problems.push(`it still contains: ${needle}`);
-  for (const pattern of list(def.matches)) if (!new RegExp(pattern, 'm').test(text)) problems.push(`it does not match: /${pattern}/`);
-  for (const pattern of list(def.notMatches)) if (new RegExp(pattern, 'm').test(text)) problems.push(`it should not match: /${pattern}/`);
+  for (const pattern of list(def.matches)) if (!new RegExp(pattern, flags).test(text)) problems.push(`it does not match: /${pattern}/`);
+  for (const pattern of list(def.notMatches)) if (new RegExp(pattern, flags).test(text)) problems.push(`it should not match: /${pattern}/`);
 
   if (def.zones) {
     let zones;

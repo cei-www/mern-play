@@ -29,13 +29,19 @@ export async function copyText(text) {
   }
 }
 
-/** Briefly change a button's label to confirm the copy. @param {HTMLElement} button @param {boolean} ok */
+const ICONS = {
+  copy: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>',
+  done: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  failed: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+};
+
+/** Briefly change a button's icon to confirm the copy. @param {HTMLElement} button @param {boolean} ok */
 function flash(button, ok) {
-  const original = button.dataset.label ?? button.textContent ?? '';
-  button.dataset.label = original;
-  button.textContent = ok ? 'Copied' : 'Press Ctrl+C';
+  button.innerHTML = ok ? ICONS.done : ICONS.failed;
+  button.title = ok ? 'Copied' : 'Could not copy: press Ctrl+C';
   window.setTimeout(() => {
-    button.textContent = original;
+    button.innerHTML = ICONS.copy;
+    button.title = 'Copy';
   }, 1400);
 }
 
@@ -44,7 +50,9 @@ function copyButton(getText) {
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'btn btn-sm btn-outline-secondary copy-btn';
-  button.textContent = 'Copy';
+  button.innerHTML = ICONS.copy;
+  button.title = 'Copy';
+  button.setAttribute('aria-label', 'Copy');
   button.addEventListener('click', async () => flash(button, await copyText(getText())));
   return button;
 }
@@ -67,7 +75,7 @@ function buildCheckBlock(el, stepId) {
   hint.className = 'small text-secondary mb-2';
   hint.textContent = 'Run this command in the Terminal of the Editor tab (Terminal menu, New Terminal):';
   const pre = document.createElement('pre');
-  pre.className = 'command-block';
+  pre.className = 'command-block code-block';
   pre.dataset.command = '';
   pre.dataset.decorated = '1';
   const code = document.createElement('code');

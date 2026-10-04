@@ -36,7 +36,9 @@ code { font-family: var(--font-mono); }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px; letter-spacing: -.01em; background: none; border: none; padding: 0; cursor: pointer; color: inherit; font-family: inherit; }
 .brand:hover .mark { filter: brightness(1.1); }
 .brand .mark { width: 24px; height: 24px; background: var(--amber); display: flex; align-items: center; justify-content: center; color: var(--amber-ink); font-family: var(--font-mono); font-weight: 700; font-size: 12px; }
-.btn-menu { display: none; background: none; border: 1px solid rgba(255, 255, 255, .35); color: #fff; border-radius: 4px; padding: 0 8px; font-size: 18px; line-height: 28px; }
+body.sidebar-collapsed .sidebar { display: none; }
+.btn-menu { display: inline-block; background: none; border: 0; color: #fff; border-radius: 4px; padding: 0 8px; font-size: 20px; line-height: 28px; }
+.btn-menu:hover, .btn-menu:focus-visible { background: rgba(255, 255, 255, .14); }
 
 .status-dots { display: flex; gap: 12px; font-size: 12px; color: rgba(255, 255, 255, .85); }
 .status-dot { display: inline-flex; align-items: center; gap: 5px; }
@@ -45,6 +47,7 @@ code { font-family: var(--font-mono); }
 .status-dot.is-down i { background: #ff6b6b; }
 
 .lang-toggle .btn { color: #fff; border-color: rgba(255, 255, 255, .45); font-weight: 600; }
+.font-toggle { margin-right: 10px; }
 .lang-toggle .btn[aria-pressed="true"] { background: var(--amber); border-color: var(--amber); color: var(--amber-ink); }
 
 .status-banner { margin: 0; border-radius: 0; padding: 8px 16px; flex: 0 0 auto; }
@@ -52,14 +55,23 @@ code { font-family: var(--font-mono); }
 
 /* ---- Layout ---- */
 .app-body { flex: 1 1 auto; min-height: 0; display: flex; position: relative; }
-.sidebar { flex: 0 0 280px; overflow: auto; background: var(--card); border-right: 1px solid var(--border); }
+.sidebar { flex: 0 0 19.5%; min-width: 220px; max-width: 360px; display: flex; flex-direction: column; min-height: 0; background: var(--card); border-right: 1px solid var(--border); }
+.sidebar-scroll { flex: 1 1 auto; min-height: 0; overflow: auto; }
+.sidebar-foot { flex: 0 0 auto; background: #1B2130; padding: 10px 10px; font-size: 10.5px; line-height: 1.5; color: #8B93A5; }
+.sidebar-foot p { margin: 0; }
+.sidebar-foot a { color: #E8ECF4; text-decoration: none; }
+.sidebar-foot a:hover, .sidebar-foot a:focus-visible { text-decoration: underline; }
 .split { flex: 1 1 auto; min-width: 0; display: flex; }
 .lesson { flex: 1 1 0; min-width: 0; overflow: auto; background: var(--card); outline: none; position: relative; }
 .lesson-body { max-width: 780px; padding: 22px 28px 12px; }
-.lesson-footer { position: sticky; bottom: 0; display: flex; gap: 10px; justify-content: flex-start; padding: 12px 28px; background: var(--card); border-top: 1px solid var(--border); }
+/* Headings use em (not Bootstrap's rem) so the text size buttons scale them with the rest of the lesson. */
+.lesson-body h2 { font-size: 1.5em; }
+.lesson-body h3 { font-size: 1.25em; }
+.lesson-body h4 { font-size: 1.1em; }
+.lesson-footer { display: flex; gap: 10px; justify-content: flex-start; max-width: 780px; padding: 12px 28px 28px; }
 .divider { flex: 0 0 6px; cursor: col-resize; background: var(--border); touch-action: none; }
 .divider:hover, .divider:focus-visible { background: var(--amber); outline: none; }
-.right-pane { flex: 0 0 50%; min-width: 320px; display: flex; flex-direction: column; background: var(--card); }
+.right-pane { flex: 0 0 67.6%; min-width: 320px; display: flex; flex-direction: column; background: var(--card); }
 body.is-resizing { user-select: none; cursor: col-resize; }
 body.is-resizing iframe { pointer-events: none; }
 
@@ -98,6 +110,7 @@ body.is-resizing iframe { pointer-events: none; }
 .step-link.is-current { background: #FFF3DC; font-weight: 600; }
 .step-link .step-icon { flex: 0 0 14px; font-size: 11px; color: var(--ink-muted); }
 .step-link.is-done .step-icon { color: #198754; }
+.step-link.is-partial .step-icon { color: #B7791F; }
 .step-link.is-current .step-icon { color: var(--amber-ink); }
 
 /* ---- Lesson typography ---- */
@@ -114,12 +127,18 @@ body.is-resizing iframe { pointer-events: none; }
 .lesson-body .copyable.copy-failed { background: #FCE0E0; }
 .lesson-body [data-action] { cursor: pointer; }
 
-pre.code-block { position: relative; margin: 8px 0 16px; padding: 36px 16px 14px; border: 1px solid var(--border); border-radius: 6px; background: #F8F9FB; overflow: auto; font-size: 13px; line-height: 1.5; }
-pre.code-block .copy-btn { position: absolute; top: 6px; right: 6px; opacity: .85; }
-pre.command-block { background: var(--code-bg); border-color: var(--code-bg); color: #E6EDF3; padding: 12px 84px 12px 16px; }
+pre.code-block { position: relative; margin: 8px 0 16px; padding: 12px 44px 12px 16px; border: 1px solid var(--border); border-radius: 6px; background: #F8F9FB; overflow: auto; font-size: 13px; line-height: 1.5; }
+pre.code-block .copy-btn { position: absolute; top: 6px; right: 6px; }
+.copy-btn { width: 24px; height: 24px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 4px; background: transparent; color: var(--ink-muted); opacity: .8; }
+.copy-btn:hover, .copy-btn:focus-visible { opacity: 1; background: rgba(120, 130, 150, .18); color: var(--ink); }
+.copy-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+/* Buttons that sit side by side in a lesson (for example the two "Try it in Swagger" buttons) get a gap and wrap cleanly. */
+.lesson-body p:has(> .btn) { display: flex; flex-wrap: wrap; gap: 8px; }
+pre.command-block { background: var(--code-bg); border-color: var(--code-bg); color: #E6EDF3; padding: 12px 44px 12px 16px; }
 pre.command-block .copy-btn { top: 50%; transform: translateY(-50%); }
 pre.command-block code::before { content: "$ "; color: #7D8896; }
-pre.command-block .copy-btn { color: #E6EDF3; border-color: #4A5568; }
+pre.command-block .copy-btn { color: #AEB8C6; }
+pre.command-block .copy-btn:hover, pre.command-block .copy-btn:focus-visible { color: #fff; background: rgba(255, 255, 255, .14); }
 .check-block { border: 1px solid var(--border); border-left: 4px solid #198754; border-radius: 6px; padding: 12px 14px; margin: 18px 0; background: #F6FBF8; }
 
 .visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -130,7 +149,7 @@ html[data-lang="th"] .has-th { display: none; }
 
 /* ---- Narrow screens: lesson on top, workspace below, lesson list in a drawer ---- */
 @media (max-width: 991.98px) {
-  .btn-menu { display: inline-block; }
+  body.sidebar-collapsed .sidebar { display: flex; } /* the drawer ignores the wide-screen setting */
   .sidebar { position: absolute; z-index: 20; top: 0; bottom: 0; left: 0; width: 280px; transform: translateX(-100%); transition: transform .15s ease; box-shadow: 2px 0 12px rgba(0, 0, 0, .15); }
   body.sidebar-open .sidebar { transform: none; }
   .split { flex-direction: column; }
@@ -141,3 +160,11 @@ html[data-lang="th"] .has-th { display: none; }
   .status-dots { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .sidebar { transition: none; } }
+
+/* Status buttons: "Doing" uses a dark amber text so it stays readable on white. */
+.status-group .btn-outline-secondary { color: #4B5563; border-color: #8A93A3; }
+.status-group .btn-doing-outline { color: #7A4B00; border-color: #D9962B; background: #fff; }
+.status-group .btn-doing-outline:hover { background: #FFF3DC; color: #7A4B00; }
+.status-group .btn-doing { color: #3D2600; background: var(--amber); border-color: var(--amber); }
+.status-group .btn-outline-success { color: #146C43; }
+.status-group .btn { white-space: nowrap; }

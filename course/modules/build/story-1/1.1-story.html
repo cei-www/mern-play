@@ -1,0 +1,41 @@
+<h2>Step 1.1: The story and what done looks like</h2>
+
+<div lang="en">
+  <p>Every feature starts as a <strong>user story</strong>: one sentence that says who wants what, and why.</p>
+</div>
+<div lang="th">
+  <p>ทุกฟีเจอร์เริ่มจาก <strong>user story</strong> ซึ่งเป็นประโยคเดียวที่บอกว่าใครต้องการอะไร และเพราะอะไร</p>
+</div>
+
+<blockquote class="blockquote">
+  <p>As a user, I want to see my tasks in a list, so that I know what I have to do.</p>
+</blockquote>
+
+<div lang="en">
+  <p>The story is finished when these <strong>acceptance criteria</strong> are true:</p>
+  <ul>
+    <li><code>GET /api/tasks</code> answers <code>200</code> with a JSON array of the tasks in the database.</li>
+    <li>Each task has its group name (or <code>null</code> when it has no group).</li>
+    <li>The newest task comes first.</li>
+    <li>The React page shows the list, with a "Loading..." text while it waits and an error message if the API fails.</li>
+  </ul>
+  <p>You will build it from the bottom up: SQL, then the Express route, then the React page.</p>
+</div>
+<div lang="th">
+  <p>story นี้ถือว่าเสร็จเมื่อ <strong>acceptance criteria</strong> ต่อไปนี้เป็นจริงทั้งหมด:</p>
+  <ul>
+    <li><code>GET /api/tasks</code> ตอบ <code>200</code> พร้อม JSON array ของ task ในฐานข้อมูล</li>
+    <li>แต่ละ task มีชื่อ group (หรือเป็น <code>null</code> ถ้าไม่มี group)</li>
+    <li>task ใหม่สุดอยู่บนสุด</li>
+    <li>หน้า React แสดงรายการ โดยมีข้อความ "Loading..." ระหว่างรอ และแสดงข้อความผิดพลาดถ้า API ล้มเหลว</li>
+  </ul>
+  <p>คุณจะสร้างจากล่างขึ้นบน: SQL ก่อน แล้วเป็น route ของ Express แล้วจึงเป็นหน้า React</p>
+</div>
+
+<div lang="en">
+  <p>Before you start, make sure you ran <code>tutorial wipe</code> in step 0.6. If you skipped it or want a clean start, type:</p>
+</div>
+<div lang="th">
+  <p>ก่อนเริ่ม ตรวจว่าคุณรัน <code>tutorial wipe</code> ใน step 0.6 แล้ว ถ้าข้ามมา หรืออยากเริ่มใหม่ ให้พิมพ์:</p>
+</div>
+<pre data-command><code>tutorial goto 1.1</code></pre>

@@ -90,7 +90,7 @@ Five tabs, identical for every module, in this order. Defined once in the platfo
 
 - Each tab header has a small "open in a new browser tab" button (`target="_blank"`, `rel="noopener"`) that opens the tab's URL in a full browser tab (for Preview, the current address bar URL). Clicking the tab itself only switches tabs.
 - Before showing an iframe the platform checks the service's health. If it is not reachable the tab shows a friendly message instead of the browser's "refused to connect". For `ws-robot` the message explains how to start it (Docker Desktop button or `docker compose start ws-robot`), the iframe loads automatically when it becomes healthy, and the new-tab button is disabled until then.
-- Lesson buttons that switch tabs: `preview` goes to Preview, `swagger` goes to Swagger and opens the named operation on the chosen API (`data-server`: `app`, `reference` or `style`; the ports come from `/api/config`). File names in lessons are plain text with a Copy button (the learner opens them from the Explorer or with Ctrl+P / Cmd+P).
+- Lesson buttons that switch tabs: `preview` goes to Preview, `swagger` goes to Swagger and opens the named operation on the chosen API (`data-server`: `app`, `reference` or `style`; the ports come from `/api/config`). File names in lessons are plain text with a Copy button (the learner browses to them in the Explorer; lessons do not teach Ctrl+P / Cmd+P).
 
 ### API contract and Swagger
 - One OpenAPI 3 file, `course/openapi/taskapp.yaml`, is the contract of the whole Task Manager API (health, tasks, groups, history, plus the optional exercise endpoints). Every operation has an `operationId` (for example `listTasks`).
@@ -237,6 +237,11 @@ A separate "System Under Test" service was considered and rejected. The referenc
 3. Platform API (TypeScript: course list, config, status, lessons) and lesson linter (including the where-to-edit check). **Done.**
 4. Platform UI (HTML/JS + Bootstrap): layout, lesson rendering, tabs, Swagger, En/Th, banners. **Done** (verified in a browser, desktop and phone width).
 5. `tutorial check` (`http`, `sql`, `file`, `test`, `flow`) and the progress bookmark. **Done** (verified in the real workspace against Express and MySQL: a failing check with the lesson's hint, fixed by editing the file, then passing).
-6. Release 1 content (`build` Part 0 + Story 1 + Checkpoint 1) and integration test.
+6. Release 1 content (`build` Part 0 + Story 1 + Checkpoint 1) and integration test. **Done.**
+   - The finished app is `workspace/project-template/build` (it is both the learner's starting project and the reference solution). Step zones are named `s<major>-<minor>-<name>` after the step that writes them (`s1-6-list-tasks` = step 1.6); exercise zones are `exercise-<n>-<name>` and are stubs in the app, their solutions live in the lesson HTML.
+   - Step snapshots are generated, never written by hand: `workspace/tutorial-cli/snapshots.sh` builds `course/snapshots/build/<step>/` (finished app with the zones of that step and later steps wiped; Part 0 = whole app). `--check` fails when they are out of date.
+   - Later code that changes earlier code is added in a new zone, not by editing an old one (example: the filter/sort middleware `s5-2` sits above the plain `GET /` route and calls `next()` when there are no options).
+   - `tests/integration/run.sh` boots a private stack (`-p ce-it`, other host ports), plays a learner through Release 1 (each check must fail before the action and pass after, snippets are taken from the lesson HTML, the next step's snapshot must equal the learner's files), runs once with the exercises skipped and once done, then validates the running API against `course/openapi/taskapp.yaml`. Breaking a lesson snippet makes it fail (checked).
+   - UI changes made on request: Mark as done sits at the end of the lesson (not sticky), A-/A+ text size buttons next to En|Th (lesson pane only, remembered), icon-only Copy buttons, dark sidebar footer with credits.
 7. `ws-robot` (with its reference API), `robot` checks and mutation checks (needed for later modules).
 8. README, CONTRIBUTING, polish.

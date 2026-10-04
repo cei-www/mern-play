@@ -1,0 +1,39 @@
+<h2>Step 0.4: Call the API in Swagger</h2>
+
+<div lang="en">
+  <p><strong>Swagger</strong> lists every endpoint of the Task Manager API and lets you call it with a button, without writing code.
+  Open the <strong>Swagger</strong> tab and try <code>GET /api/tasks</code>: press <em>Try it out</em>, then <em>Execute</em>.
+  You get <code>200</code> and the list of tasks.</p>
+  <p>Now create a task with <code>POST /api/tasks</code>. Use this body (press <em>Try it out</em> first, then replace the example):</p>
+</div>
+<div lang="th">
+  <p><strong>Swagger</strong> แสดง endpoint ทั้งหมดของ Task Manager API และให้คุณเรียกด้วยการกดปุ่ม โดยไม่ต้องเขียนโค้ด
+  เปิด tab <strong>Swagger</strong> แล้วลอง <code>GET /api/tasks</code> กด <em>Try it out</em> แล้วกด <em>Execute</em>
+  จะได้ <code>200</code> และรายการ task</p>
+  <p>จากนั้นสร้าง task ด้วย <code>POST /api/tasks</code> ใช้ body นี้ (กด <em>Try it out</em> ก่อน แล้วแทนที่ตัวอย่าง):</p>
+</div>
+<pre class="code-block"><code class="language-json">{ "title": "Learn Swagger", "priority": 3 }</code></pre>
+<p>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="listTasks" data-server="app">Try it in Swagger: listTasks</button>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="createTask" data-server="app">Try it in Swagger: createTask</button>
+</p>
+
+<div lang="en">
+  <p>You should see <code>201</code> and the new task with an <code>id</code>. Go back to <strong>Preview</strong> and reload: it is in your list.
+  The page and Swagger talk to the same API.</p>
+  <p>Later, after you wipe the code, an endpoint you have not written yet answers <strong>404</strong> in Swagger.
+  That is your to-do list.</p>
+</div>
+<div lang="th">
+  <p>จะเห็น <code>201</code> และ task ใหม่พร้อม <code>id</code> กลับไปที่ <strong>Preview</strong> แล้ว reload จะเห็น task นั้นในรายการ
+  หน้าเว็บกับ Swagger เรียก API ตัวเดียวกัน</p>
+  <p>ภายหลัง เมื่อคุณลบโค้ดออกแล้ว endpoint ที่ยังไม่ได้เขียนจะตอบ <strong>404</strong> ใน Swagger
+  ซึ่งก็คือรายการสิ่งที่ต้องทำต่อ</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>If you get <code>400</code>, read the answer: it says what is wrong. The title must be written exactly as above.</p>
+</details>
+
+<div data-check="swagger-task-added"></div>

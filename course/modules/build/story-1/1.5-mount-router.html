@@ -1,0 +1,38 @@
+<h2>Step 1.5: Mount the tasks router</h2>
+
+<div lang="en">
+  <p>The file <code>server/routes/tasks.js</code> already creates a <code>Router</code> and exports it, but it has no routes yet.
+  Tell the app to use it under the path <code>/api/tasks</code>.</p>
+</div>
+<div lang="th">
+  <p>ไฟล์ <code>server/routes/tasks.js</code> สร้าง <code>Router</code> และ export ไว้แล้ว แต่ยังไม่มี route เลย
+  บอกให้แอปใช้มันที่ path <code>/api/tasks</code></p>
+</div>
+
+<p class="where">Edit <code data-copy>server/app.js</code>. Write the code between the comments
+  <code>@tutorial:begin s1-5-mount-tasks</code> and <code>@tutorial:end s1-5-mount-tasks</code>.</p>
+
+<pre data-snippet data-file="server/app.js" data-zone="s1-5-mount-tasks"><code class="language-javascript">const tasksRouter = require('./routes/tasks');
+app.use('/api/tasks', tasksRouter);</code></pre>
+
+<div lang="en">
+  <p><code>require</code> loads the other file. <code>app.use(path, router)</code> adds a prefix to every route of that router.
+  Nothing answers <code>/api/tasks</code> yet, because the router is empty: that comes next.</p>
+</div>
+<div lang="th">
+  <p><code>require</code> โหลดไฟล์อื่นเข้ามา <code>app.use(path, router)</code> เติม prefix ให้ทุก route ของ router นั้น
+  ตอนนี้ยังไม่มีอะไรตอบที่ <code>/api/tasks</code> เพราะ router ยังว่าง ซึ่งเป็น step ถัดไป</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>The path in <code>app.use</code> starts with <code>/api</code>. The router file name has no <code>.js</code> in <code>require('./routes/tasks')</code>.</p>
+</details>
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>server/app.js</code>, between the comments of <code>s1-5-mount-tasks</code>:</p>
+  <pre data-snippet data-file="server/app.js" data-zone="s1-5-mount-tasks"><code class="language-javascript">const tasksRouter = require('./routes/tasks');
+app.use('/api/tasks', tasksRouter);</code></pre>
+</details>
+
+<div data-check="router-mounted"></div>

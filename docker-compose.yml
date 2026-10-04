@@ -92,7 +92,8 @@ services:
     cpus: 2
     mem_limit: 2g
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/healthz && curl -fsS http://localhost:3000/api/health"]
+      # Express only has to answer (any status): after `tutorial wipe` the health route is gone and answers 404.
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/healthz && curl -sS -o /dev/null http://localhost:3000/"]
       interval: 5s
       timeout: 3s
       retries: 30

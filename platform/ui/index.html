@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CE WebDev Academy</title>
+  <title>CE WebDev Academy : MERN stack</title>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
   <link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
   <link rel="stylesheet" href="vendor/highlightjs/github.min.css">
@@ -14,11 +14,15 @@
 
   <header class="app-head">
     <div class="head-left">
-      <button type="button" id="sidebar-toggle" class="btn-menu" aria-label="Show or hide the lesson list">&#9776;</button>
-      <button type="button" class="brand" id="brandHome" title="Back to the start" aria-label="CE WebDev Academy, back to the start"><span class="mark">&lt;/&gt;</span>CE WebDev Academy</button>
+      <button type="button" id="sidebar-toggle" class="btn-menu" aria-label="Show or hide the lesson list" aria-expanded="true">&#9776;</button>
+      <button type="button" class="brand" id="brandHome" title="Back to the start" aria-label="CE WebDev Academy : MERN stack, back to the start"><span class="mark">&lt;/&gt;</span>CE WebDev Academy : MERN stack</button>
     </div>
     <div class="head-right">
       <div id="status-dots" class="status-dots" aria-label="Service status"></div>
+      <div class="btn-group btn-group-sm lang-toggle font-toggle" role="group" aria-label="Text size of the lesson">
+        <button type="button" id="font-down" class="btn" aria-label="Smaller text" title="Smaller text">A&minus;</button>
+        <button type="button" id="font-up" class="btn" aria-label="Larger text" title="Larger text">A+</button>
+      </div>
       <div class="btn-group btn-group-sm lang-toggle" role="group" aria-label="Language of the lesson text">
         <button type="button" id="lang-en" class="btn" aria-pressed="true">En</button>
         <button type="button" id="lang-th" class="btn" aria-pressed="false">Th</button>
@@ -30,7 +34,13 @@
 
   <div class="app-body">
     <nav id="sidebar" class="sidebar" aria-label="Lessons">
-      <div id="sidebar-body"></div>
+      <div id="sidebar-body" class="sidebar-scroll"></div>
+      <footer class="sidebar-foot">
+        <p>AI Whisperer &mdash;
+          <a href="https://rathachai.github.io/" target="_blank" rel="noopener">Rathachai Chawuthai</a> &mdash;<br>
+          <a href="https://github.com/SAIG-KMITL" target="_blank" rel="noopener">SAIG Lab</a>, Computer Engineering, KMITL &mdash;
+          <a href="https://github.com/cei-www/mern-play" target="_blank" rel="noopener">GitHub</a></p>
+      </footer>
     </nav>
 
     <div id="split" class="split">

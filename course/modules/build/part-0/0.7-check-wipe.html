@@ -1,0 +1,20 @@
+<h2>Step 0.7: Check the empty project</h2>
+
+<div lang="en">
+  <p>Run the check. It confirms that the step code is gone, that the markers are still there and that your data is safe.</p>
+</div>
+<div lang="th">
+  <p>รันคำสั่งตรวจ เพื่อยืนยันว่าโค้ดของแต่ละ step หายไป marker ยังอยู่ และข้อมูลของคุณปลอดภัย</p>
+</div>
+
+<div data-check="server-wiped">
+  <pre><code>  PASS  The server code of the steps is replaced by TODO lines
+  PASS  The React code of the steps is replaced by TODO lines
+  PASS  The database still has its tasks</code></pre>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>A check that says "still has code in it" means the wipe did not run: type <code>tutorial wipe</code> in the terminal.
+  A check that says a "place is missing" means a line with <code>@tutorial</code> was deleted. Run <code>tutorial goto 1.1</code> to restore the starting point of Story 1.</p>
+</details>

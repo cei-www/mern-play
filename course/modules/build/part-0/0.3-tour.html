@@ -1,0 +1,36 @@
+<h2>Step 0.3: A tour of the project</h2>
+
+<div lang="en">
+  <p>Open the <strong>Editor</strong> tab. In the Explorer on the left you see the folder <code>build</code> with two projects:
+  <code>server</code> (Express) and <code>client</code> (React). The paths below are inside <code>build</code>.
+  Open the files by browsing the folders in the Explorer.</p>
+</div>
+<div lang="th">
+  <p>เปิด tab <strong>Editor</strong> ที่ Explorer ด้านซ้ายจะเห็นโฟลเดอร์ <code>build</code> ที่มี 2 โปรเจกต์คือ
+  <code>server</code> (Express) กับ <code>client</code> (React) path ด้านล่างอยู่ในโฟลเดอร์ <code>build</code>
+  เปิดไฟล์โดยเลือกดูตามโฟลเดอร์ใน Explorer ด้วยตัวเอง</p>
+</div>
+
+<ul>
+  <li><code data-copy>server/app.js</code>: starts Express and connects the routes</li>
+  <li><code data-copy>server/routes/tasks.js</code>: the routes for <code>/api/tasks</code>, with the SQL</li>
+  <li><code data-copy>server/db.js</code>: the connection to MySQL</li>
+  <li><code data-copy>client/src/App.jsx</code>: the React page that puts the parts together</li>
+  <li><code data-copy>client/src/components/TaskList.jsx</code>: the list of tasks</li>
+</ul>
+
+<div lang="en">
+  <p>Notice the comments that contain <code>@tutorial:begin</code> and <code>@tutorial:end</code> in some files.
+  They mark the code you will write later. Do not delete those comment lines.</p>
+  <p>Now watch the traffic. Open your app in <strong>Preview</strong>, open the browser's developer tools
+  (<kbd>F12</kbd>), go to the <em>Network</em> tab and reload the page. Find the request named <code>tasks</code>:
+  it is the call from React to the Express API, and its <em>Response</em> is the JSON that React shows.</p>
+</div>
+<div lang="th">
+  <p>สังเกตคอมเมนต์ที่มีคำว่า <code>@tutorial:begin</code> และ <code>@tutorial:end</code> ในบางไฟล์
+  คอมเมนต์เหล่านี้ทำเครื่องหมายโค้ดที่คุณจะเขียนเองภายหลัง ห้ามลบบรรทัดคอมเมนต์เหล่านี้</p>
+  <p>ลองดู traffic เปิดแอปใน <strong>Preview</strong> เปิด developer tools ของเบราว์เซอร์ (<kbd>F12</kbd>)
+  ไปที่ tab <em>Network</em> แล้ว reload หน้า หา request ชื่อ <code>tasks</code>
+  นั่นคือการที่ React เรียก Express API และ <em>Response</em> คือ JSON ที่ React นำมาแสดง</p>
+</div>
+<p><a href="#" class="btn btn-sm btn-outline-primary" data-action="preview" data-port="5173" data-path="/">Open the app in Preview</a></p>

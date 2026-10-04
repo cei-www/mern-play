@@ -1,0 +1,63 @@
+<h2>Checkpoint 1: two exercises</h2>
+
+<div class="checkpoint">
+  <p>About 15 minutes. Both exercises are optional: skipping them does not block the next stories.
+  Try first, then open the hint, and only then the solution.</p>
+
+  <div class="exercise">
+    <h3>Exercise 1 (easier): the 5 latest open tasks</h3>
+    <p>Write a SQL query that returns the <code>id</code>, <code>title</code> and <code>created_at</code> of the 5 newest tasks that are not done yet.
+    Test it in the Database tab (SQL command), then keep it in your file.</p>
+    <p class="where">Edit <code data-copy>db/queries.sql</code>. Write the query between the comments
+      <code>@tutorial:begin exercise-1-latest-open</code> and <code>@tutorial:end exercise-1-latest-open</code>.</p>
+    <details>
+      <summary>Hint</summary>
+      <p>You need <code>WHERE done = 0</code>, <code>ORDER BY created_at DESC</code> and <code>LIMIT 5</code>, in this order.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>db/queries.sql</code>, between the comments of <code>exercise-1-latest-open</code>:</p>
+      <pre data-snippet data-file="db/queries.sql" data-zone="exercise-1-latest-open"><code class="language-sql">SELECT id, title, created_at
+FROM tasks
+WHERE done = 0
+ORDER BY created_at DESC
+LIMIT 5;</code></pre>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 2 (harder): GET /api/stats</h3>
+    <p>Add a route that answers <code>{ "total": 14, "done": 6 }</code>: the number of tasks and how many of them are done (use the real numbers of the database).
+    One SQL query is enough: look at <code>COUNT(*)</code> and <code>SUM(done)</code>.
+    The file is already connected to the app, so it answers 404 only until you write the route.</p>
+    <p class="where">Edit <code data-copy>server/routes/stats.js</code>. Write the route between the comments
+      <code>@tutorial:begin exercise-2-stats</code> and <code>@tutorial:end exercise-2-stats</code>.</p>
+    <p>
+      <button type="button" class="btn btn-sm btn-outline-primary" data-action="swagger" data-op="stats" data-server="app">Try it in Swagger: stats</button>
+    </p>
+    <details>
+      <summary>Hint</summary>
+      <p>Copy the shape of the route from step 1.6. In the route use <code>router.get('/', ...)</code> (the path <code>/api/stats</code> is already added in <code>app.js</code>).
+      Send one object with <code>res.json(rows[0])</code>. <code>SUM</code> of an empty table is <code>NULL</code>, so wrap it: <code>COALESCE(SUM(done), 0)</code>.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>server/routes/stats.js</code>, between the comments of <code>exercise-2-stats</code>:</p>
+      <pre data-snippet data-file="server/routes/stats.js" data-zone="exercise-2-stats"><code class="language-javascript">router.get('/', async (req, res, next) =&gt; {
+  try {
+    const [rows] = await db.query(
+      'SELECT COUNT(*) AS total, CAST(COALESCE(SUM(done), 0) AS UNSIGNED) AS done FROM tasks',
+    );
+    res.json(rows[0]);
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+    </details>
+  </div>
+</div>
+
+<div data-check="exercise-1-sql">
+  <pre><code>  PASS  db/queries.sql has the query for the 5 latest open tasks
+  PASS  GET /api/stats returns the totals of the database</code></pre>
+</div>

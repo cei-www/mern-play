@@ -1,4 +1,4 @@
-import { countDone, loadProgress } from './storage.js';
+import { countDone, loadProgress, stepStatus } from './storage.js';
 
 /**
  * @typedef {import('./api.js').Module} Module
@@ -8,7 +8,8 @@ import { countDone, loadProgress } from './storage.js';
 /** All step ids of a module, in order. @param {Module} module @returns {string[]} */
 export const stepIds = (module) => module.parts.flatMap((p) => p.steps.map((s) => s.id));
 
-const ICON = { done: '✔', current: '▶', todo: '○' };
+const ICON = { done: '✔', partial: '◐', current: '▶', todo: '○' };
+const LABEL = { done: ' (done)', partial: ' (doing)', todo: '' };
 
 /**
  * Draw the module list. Each module can be opened or closed; the module of the current step is open.
@@ -66,12 +67,13 @@ export function renderSidebar(el, modules, current, onSelect) {
 
       part.steps.forEach((step) => {
         const isCurrent = module.id === current.moduleId && step.id === current.stepId;
-        const isDone = progress.done.includes(step.id);
+        const status = stepStatus(progress, step.id);
+        const isDone = status === 'done';
         const button = document.createElement('button');
         button.type = 'button';
-        button.className = `step-link${isCurrent ? ' is-current' : ''}${isDone ? ' is-done' : ''}`;
+        button.className = `step-link${isCurrent ? ' is-current' : ''}${isDone ? ' is-done' : ''}${status === 'partial' ? ' is-partial' : ''}`;
         if (isCurrent) button.setAttribute('aria-current', 'step');
-        const state = isDone ? 'done' : isCurrent ? 'current' : 'todo';
+        const state = status !== 'todo' ? status : isCurrent ? 'current' : 'todo';
         const icon = document.createElement('span');
         icon.className = 'step-icon';
         icon.setAttribute('aria-hidden', 'true');
@@ -81,7 +83,7 @@ export function renderSidebar(el, modules, current, onSelect) {
         label.textContent = `${step.id}  ${step.title}`;
         const kind = document.createElement('span');
         kind.className = 'visually-hidden';
-        kind.textContent = isDone ? ' (done)' : '';
+        kind.textContent = LABEL[status];
         button.append(icon, label, kind);
         button.addEventListener('click', () => onSelect(module.id, step.id));
         details.append(button);

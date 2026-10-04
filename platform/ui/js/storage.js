@@ -30,7 +30,9 @@ export function removeItem(key) {
 
 /**
  * Progress is only a bookmark: where the learner stopped and which steps they marked as done.
- * @typedef {{ current: string | null, done: string[] }} Progress
+ * `partial` = started but not finished; a step in neither list is not started.
+ * @typedef {{ current: string | null, done: string[], partial: string[] }} Progress
+ * @typedef {'todo' | 'partial' | 'done'} StepStatus
  */
 
 /** @param {string} moduleId @returns {string} */
@@ -42,7 +44,7 @@ export const progressKey = (moduleId) => `tutorial.progress.${moduleId}`;
  * @returns {Progress}
  */
 export function loadProgress(moduleId) {
-  const empty = { current: null, done: [] };
+  const empty = { current: null, done: [], partial: [] };
   const raw = readItem(progressKey(moduleId));
   if (!raw) return empty;
   try {
@@ -50,6 +52,7 @@ export function loadProgress(moduleId) {
     return {
       current: typeof data.current === 'string' ? data.current : null,
       done: Array.isArray(data.done) ? data.done.filter((/** @type {unknown} */ d) => typeof d === 'string') : [],
+      partial: Array.isArray(data.partial) ? data.partial.filter((/** @type {unknown} */ d) => typeof d === 'string') : [],
     };
   } catch {
     return empty;
@@ -61,14 +64,32 @@ export function saveProgress(moduleId, progress) {
   writeItem(progressKey(moduleId), JSON.stringify(progress));
 }
 
+/** @param {Progress} progress @param {string} stepId @returns {StepStatus} */
+export function stepStatus(progress, stepId) {
+  if (progress.done.includes(stepId)) return 'done';
+  return progress.partial.includes(stepId) ? 'partial' : 'todo';
+}
+
 /**
- * Return new progress with the step marked (or unmarked) as done. Does not change the input.
+ * Return new progress with the step set to a status. Does not change the input.
+ * @param {Progress} progress @param {string} stepId @param {StepStatus} status
+ * @returns {Progress}
+ */
+export function withStatus(progress, stepId, status) {
+  const done = progress.done.filter((id) => id !== stepId);
+  const partial = progress.partial.filter((id) => id !== stepId);
+  if (status === 'done') done.push(stepId);
+  if (status === 'partial') partial.push(stepId);
+  return { ...progress, done, partial };
+}
+
+/**
+ * Return new progress with the step marked (or unmarked) as done.
  * @param {Progress} progress @param {string} stepId @param {boolean} done
  * @returns {Progress}
  */
 export function withDone(progress, stepId, done) {
-  const without = progress.done.filter((id) => id !== stepId);
-  return { ...progress, done: done ? [...without, stepId] : without };
+  return withStatus(progress, stepId, done ? 'done' : 'todo');
 }
 
 /**

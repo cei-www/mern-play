@@ -1,6 +1,8 @@
 import { readItem, writeItem } from './storage.js';
 
-export const SPLIT_KEY = 'tutorial.split';
+// The width is remembered as a share of the container (not in pixels), so when the sidebar is
+// shown or hidden the lesson and the workspace grow and shrink in the same proportion.
+export const SPLIT_KEY = 'tutorial.splitRatio';
 
 /**
  * Keep the right pane between a minimum width and what leaves the lesson its own minimum width.
@@ -27,13 +29,18 @@ export function initSplit({ divider, container, rightPane }) {
   const setWidth = (width) => {
     const total = container.getBoundingClientRect().width;
     const clamped = clampWidth(width, total);
-    rightPane.style.flexBasis = `${clamped}px`;
+    rightPane.style.flexBasis = `${(clamped / total) * 100}%`;
     divider.setAttribute('aria-valuenow', String(Math.round(clamped)));
     return clamped;
   };
 
+  const remember = () => {
+    const total = container.getBoundingClientRect().width;
+    if (total > 0) writeItem(SPLIT_KEY, (rightPane.getBoundingClientRect().width / total).toFixed(4));
+  };
+
   const saved = Number(readItem(SPLIT_KEY));
-  if (Number.isFinite(saved) && saved > 0) setWidth(saved);
+  if (Number.isFinite(saved) && saved > 0 && saved < 1) setWidth(saved * container.getBoundingClientRect().width);
 
   divider.addEventListener('pointerdown', (event) => {
     event.preventDefault();
@@ -48,7 +55,7 @@ export function initSplit({ divider, container, rightPane }) {
   const end = (/** @type {PointerEvent} */ event) => {
     if (divider.hasPointerCapture(event.pointerId)) divider.releasePointerCapture(event.pointerId);
     document.body.classList.remove('is-resizing');
-    writeItem(SPLIT_KEY, String(Math.round(rightPane.getBoundingClientRect().width)));
+    remember();
   };
   divider.addEventListener('pointerup', end);
   divider.addEventListener('pointercancel', end);
@@ -59,7 +66,7 @@ export function initSplit({ divider, container, rightPane }) {
     else if (event.key === 'ArrowRight') setWidth(width - STEP);
     else return;
     event.preventDefault();
-    writeItem(SPLIT_KEY, String(Math.round(rightPane.getBoundingClientRect().width)));
+    remember();
   });
   divider.addEventListener('dblclick', () => {
     rightPane.style.flexBasis = '';

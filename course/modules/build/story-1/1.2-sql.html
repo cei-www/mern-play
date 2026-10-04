@@ -1,0 +1,49 @@
+<h2>Step 1.2: Read tasks with SQL</h2>
+
+<div lang="en">
+  <p>The API gets its data with SQL. Try the queries by hand first. Open the <strong>Database</strong> tab, press <em>Login</em>,
+  choose <em>SQL command</em> in the menu, paste a query and press <em>Execute</em>.</p>
+  <p>All tasks:</p>
+</div>
+<div lang="th">
+  <p>API ดึงข้อมูลด้วย SQL ลองรัน query ด้วยมือก่อน เปิด tab <strong>Database</strong> กด <em>Login</em>
+  เลือก <em>SQL command</em> ในเมนู วาง query แล้วกด <em>Execute</em></p>
+  <p>ทุก task:</p>
+</div>
+<pre class="code-block"><code class="language-sql">SELECT * FROM tasks;</code></pre>
+
+<div lang="en">
+  <p>Only the open tasks, newest first:</p>
+</div>
+<div lang="th">
+  <p>เฉพาะ task ที่ยังไม่เสร็จ เรียงจากใหม่ไปเก่า:</p>
+</div>
+<pre class="code-block"><code class="language-sql">SELECT id, title, priority
+FROM tasks
+WHERE done = 0
+ORDER BY created_at DESC;</code></pre>
+
+<div lang="en">
+  <p>Each task knows its group only by a number (<code>group_id</code>). A <code>LEFT JOIN</code> brings in the group name.
+  "Left" means a task without a group is kept, with <code>NULL</code> as the name. This is the query your route will use:</p>
+</div>
+<div lang="th">
+  <p>แต่ละ task รู้จัก group เป็นแค่ตัวเลข (<code>group_id</code>) การใช้ <code>LEFT JOIN</code> จะดึงชื่อ group มาด้วย
+  คำว่า "left" หมายความว่า task ที่ไม่มี group ยังอยู่ในผลลัพธ์ โดยชื่อเป็น <code>NULL</code> นี่คือ query ที่ route ของคุณจะใช้:</p>
+</div>
+<pre class="code-block"><code class="language-sql">SELECT t.*, g.name AS group_name
+FROM tasks t
+LEFT JOIN task_groups g ON g.id = t.group_id
+ORDER BY t.created_at DESC;</code></pre>
+
+<div lang="en">
+  <p>The table is called <code>task_groups</code> and not <code>groups</code>, because <code>GROUPS</code> is a reserved word in MySQL 8.</p>
+</div>
+<div lang="th">
+  <p>ตารางชื่อ <code>task_groups</code> ไม่ใช่ <code>groups</code> เพราะ <code>GROUPS</code> เป็นคำสงวนใน MySQL 8</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>If the Database tab asks for a password it is already filled in. Press <em>Login</em>. You can only read in this database from here.</p>
+</details>

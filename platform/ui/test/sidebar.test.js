@@ -20,7 +20,7 @@ describe('stepIds', () => {
 
 describe('renderSidebar', () => {
   it('shows every step, marks the current and the done ones, and reports clicks', () => {
-    saveProgress('build', { current: '0.2', done: ['0.1'] });
+    saveProgress('build', { current: '0.2', done: ['0.1'], partial: [] });
     const el = document.createElement('div');
     const onSelect = vi.fn();
     renderSidebar(el, [mod], { moduleId: 'build', stepId: '0.2' }, onSelect);

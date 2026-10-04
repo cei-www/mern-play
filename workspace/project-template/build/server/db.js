@@ -9,6 +9,8 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
+  // Dates come back as plain text ("2026-10-05" and "2026-10-05 14:30:00"), which is easy to show.
+  dateStrings: true,
 });
 
 module.exports = pool;

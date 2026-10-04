@@ -177,6 +177,15 @@ describe('file check', () => {
     expect(bad.detail).toEqual(['it does not contain: nope', 'it still contains: tasksRouter']);
   });
 
+  it('matches patterns without regard to case only when ignoreCase is set', async () => {
+    ws.write('workspace/build/db/queries.sql', 'SELECT id FROM tasks WHERE done = 0;\n');
+    const { io } = fakeIo();
+    const def = { type: 'file' as const, path: 'db/queries.sql', matches: ['select\\s+id'] };
+    expect((await runCheck('c', def, ws.ctx(io))).passed).toBe(false);
+    expect((await runCheck('c', { ...def, ignoreCase: true }, ws.ctx(io))).passed).toBe(true);
+    expect((await runCheck('c', { ...def, ignoreCase: true, notMatches: ['where'] }, ws.ctx(io))).passed).toBe(false);
+  });
+
   it('reports missing files and supports exists: false', async () => {
     const { io } = fakeIo();
     expect((await runCheck('c', { type: 'file', path: 'server/none.js' }, ws.ctx(io))).message).toMatch(/does not exist/);

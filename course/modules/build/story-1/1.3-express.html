@@ -1,0 +1,41 @@
+<h2>Step 1.3: How an Express route works</h2>
+
+<div lang="en">
+  <p>Express waits for HTTP requests. A <strong>route</strong> says: "when a request with this method and this path arrives, run this function".
+  The function receives the request (<code>req</code>) and sends the answer with the response (<code>res</code>).</p>
+</div>
+<div lang="th">
+  <p>Express รอรับ HTTP request <strong>route</strong> คือการบอกว่า "เมื่อมี request ที่มี method และ path นี้เข้ามา ให้รันฟังก์ชันนี้"
+  ฟังก์ชันได้รับ request (<code>req</code>) และส่งคำตอบกลับด้วย response (<code>res</code>)</p>
+</div>
+<pre class="code-block"><code class="language-javascript">app.get('/api/health', (req, res) =&gt; {
+  res.json({ status: 'ok' });   // sends JSON and status 200
+});</code></pre>
+
+<div lang="en">
+  <p>Big apps split routes into files. A <code>Router</code> is a small group of routes. <code>app.use('/api/tasks', tasksRouter)</code>
+  mounts it, so a route written as <code>router.get('/')</code> answers <code>/api/tasks</code>.</p>
+  <p>Reading the database takes time, so the route function is <code>async</code> and waits with <code>await</code>.
+  If the database fails, <code>try/catch</code> passes the error on with <code>next(err)</code> and Express answers 500.</p>
+</div>
+<div lang="th">
+  <p>แอปใหญ่ ๆ จะแยก route ไว้หลายไฟล์ <code>Router</code> คือกลุ่ม route ย่อย ๆ
+  <code>app.use('/api/tasks', tasksRouter)</code> นำมาต่อ ทำให้ route ที่เขียนว่า <code>router.get('/')</code> ตอบที่ <code>/api/tasks</code></p>
+  <p>การอ่านฐานข้อมูลใช้เวลา ฟังก์ชัน route จึงเป็น <code>async</code> และรอด้วย <code>await</code>
+  ถ้าฐานข้อมูลมีปัญหา <code>try/catch</code> จะส่ง error ต่อด้วย <code>next(err)</code> แล้ว Express ตอบ 500</p>
+</div>
+<pre class="code-block"><code class="language-javascript">router.get('/', async (req, res, next) =&gt; {
+  try {
+    const [rows] = await db.query('SELECT ...');   // rows is an array of objects
+    res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+
+<div lang="en">
+  <p>The Express server restarts by itself every time you save a file in <code>server</code>. You do not restart anything by hand.</p>
+</div>
+<div lang="th">
+  <p>เซิร์ฟเวอร์ Express จะรีสตาร์ตเองทุกครั้งที่คุณบันทึกไฟล์ใน <code>server</code> ไม่ต้องรีสตาร์ตด้วยมือ</p>
+</div>

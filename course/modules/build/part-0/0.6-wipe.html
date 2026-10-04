@@ -1,0 +1,45 @@
+<h2>Step 0.6: Wipe the code</h2>
+
+<div lang="en">
+  <p>From here on you write the app yourself. One command removes the code of every feature but keeps the files, the folders and the database.
+  Open the terminal of the <strong>Editor</strong> tab (menu <em>Terminal</em>, then <em>New Terminal</em>) and run:</p>
+</div>
+<div lang="th">
+  <p>จากตรงนี้ไปคุณจะเขียนแอปเอง คำสั่งเดียวจะลบโค้ดของทุกฟีเจอร์ออก แต่ไฟล์ โฟลเดอร์ และฐานข้อมูลยังอยู่
+  เปิด terminal ของ tab <strong>Editor</strong> (เมนู <em>Terminal</em> แล้ว <em>New Terminal</em>) แล้วพิมพ์:</p>
+</div>
+<pre data-command><code>tutorial wipe</code></pre>
+
+<div lang="en">
+  <p>It asks you to confirm, then lists the files it changed. Open <code data-copy>server/routes/tasks.js</code>.
+  Each place that was between two <code>@tutorial</code> comments now holds one line like this and two empty lines:</p>
+</div>
+<div lang="th">
+  <p>คำสั่งจะขอให้ยืนยัน แล้วแสดงรายชื่อไฟล์ที่เปลี่ยน เปิด <code data-copy>server/routes/tasks.js</code>
+  ทุกที่ที่เคยอยู่ระหว่างคอมเมนต์ <code>@tutorial</code> สองบรรทัด จะเหลือบรรทัดแบบนี้ 1 บรรทัดกับบรรทัดว่าง 2 บรรทัด:</p>
+</div>
+<pre class="code-block"><code class="language-javascript">// @tutorial:begin s1-6-list-tasks
+// TODO (s1-6-list-tasks): write your code here
+
+
+// @tutorial:end s1-6-list-tasks</code></pre>
+
+<div lang="en">
+  <p>Each lesson tells you the file and the place. You write your code on the empty lines between the comments.
+  Keep the <code>@tutorial</code> lines: the helper commands and the checks use them.</p>
+  <p>The app still starts. Open <strong>Swagger</strong>: <code>GET /api/tasks</code> now answers 404, and the React list is empty.
+  Your <strong>data is untouched</strong>.</p>
+</div>
+<div lang="th">
+  <p>บทเรียนแต่ละ step จะบอกไฟล์และตำแหน่ง คุณเขียนโค้ดในบรรทัดว่างระหว่างคอมเมนต์ อย่าลบบรรทัด <code>@tutorial</code>
+  เพราะคำสั่งช่วยเหลือและการตรวจใช้บรรทัดเหล่านี้</p>
+  <p>แอปยังรันได้ เปิด <strong>Swagger</strong>: <code>GET /api/tasks</code> จะตอบ 404 และรายการใน React ว่างเปล่า
+  แต่ <strong>ข้อมูลยังอยู่ครบ</strong></p>
+</div>
+<p><button type="button" class="btn btn-sm btn-outline-primary" data-action="swagger" data-op="listTasks" data-server="app">See the 404 in Swagger</button></p>
+
+<details>
+  <summary>Hint</summary>
+  <p>If the command says it must be run inside a module folder, add the module name: <code>tutorial wipe --module build</code>.
+  Wiping twice is safe.</p>
+</details>
