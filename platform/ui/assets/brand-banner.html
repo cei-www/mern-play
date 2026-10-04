@@ -1,0 +1,23 @@
+<!-- Header banner of CE WebDev Academy (reference markup and CSS, copied from https://cei-www.github.io/academy/).
+     Use inside the platform page. Colors and fonts are CSS variables so app.css can share them. -->
+<style>
+  :root {
+    --navy: #0F1B33;
+    --amber: #F2A93B;
+    --amber-ink: #6B4207;
+    --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+  .app-head { background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; flex: 0 0 auto; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 14px; letter-spacing: -.01em; }
+  button.brand { background: none; border: none; padding: 0; cursor: pointer; color: inherit; font-family: inherit; }
+  button.brand:hover .mark { filter: brightness(1.1); }
+  .brand .mark { width: 24px; height: 24px; border-radius: 0; background: var(--amber); display: flex; align-items: center; justify-content: center; color: var(--amber-ink); font-family: var(--font-mono); font-weight: 700; font-size: 12px; }
+</style>
+
+<header class="app-head">
+  <button type="button" class="brand" id="brandHome" title="Back to home" aria-label="Back to home"><span class="mark">&lt;/&gt;</span>CE WebDev Academy</button>
+  <!-- right side: En | Th toggle and workspace/database status indicators -->
+</header>
+
+<!-- favicon: <link rel="icon" type="image/svg+xml" href="assets/favicon.svg"> -->
