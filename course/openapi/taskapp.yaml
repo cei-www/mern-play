@@ -1,0 +1,325 @@
+openapi: 3.0.3
+info:
+  title: Task Manager API
+  version: 1.0.0
+  description: |
+    The contract of the Task Manager API that the course builds.
+
+    Use the **Servers** dropdown to choose which API to call:
+    - **Your app** (port 3000): the API you build in module `build`.
+    - **Reference API** (port 3001): the finished API used by module `api` (Robot tests).
+    - **Style API** (port 3002): the finished API used by module `style` (Tailwind).
+
+    While you are still building, operations you have not implemented yet answer 404.
+    That is expected: it tells you what is left to do.
+servers:
+  - url: http://localhost:3000
+    description: Your app (module build)
+  - url: http://localhost:3001
+    description: Reference API (module api)
+  - url: http://localhost:3002
+    description: Style API (module style)
+
+tags:
+  - name: Health
+  - name: Tasks
+  - name: Groups
+  - name: Exercises
+    description: Optional endpoints from the checkpoint exercises.
+
+paths:
+  /api/health:
+    get:
+      tags: [Health]
+      operationId: health
+      summary: Is the API running?
+      responses:
+        '200':
+          description: The API is up.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: ok }
+
+  /api/tasks:
+    get:
+      tags: [Tasks]
+      operationId: listTasks
+      summary: List tasks
+      description: Returns every task. Use the query parameters to filter and sort.
+      parameters:
+        - { name: done, in: query, description: '0 = open tasks, 1 = completed tasks', schema: { type: integer, enum: [0, 1] } }
+        - { name: group_id, in: query, description: Only tasks of this group, schema: { type: integer } }
+        - name: sort
+          in: query
+          description: Column to sort by. Any other value is rejected with 400.
+          schema: { type: string, enum: [created_at, due_date, priority, title] }
+        - { name: order, in: query, schema: { type: string, enum: [asc, desc], default: asc } }
+      responses:
+        '200':
+          description: The tasks.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Task' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+    post:
+      tags: [Tasks]
+      operationId: createTask
+      summary: Create a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/NewTask' }
+            example: { title: Buy milk, group_id: 2, priority: 1 }
+      responses:
+        '201':
+          description: The created task.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+
+  /api/tasks/history:
+    get:
+      tags: [Tasks]
+      operationId: taskHistory
+      summary: Completed tasks, newest first
+      parameters:
+        - { name: days, in: query, description: Only tasks completed in the last N days, schema: { type: integer, minimum: 1, default: 7 } }
+        - { name: group_id, in: query, schema: { type: integer } }
+      responses:
+        '200':
+          description: Completed tasks ordered by completed_at.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Task' }
+
+  /api/tasks/{id}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: integer }, example: 1 }
+    get:
+      tags: [Tasks]
+      operationId: getTask
+      summary: Get one task
+      responses:
+        '200':
+          description: The task.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    put:
+      tags: [Tasks]
+      operationId: updateTask
+      summary: Replace a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/NewTask' }
+      responses:
+        '200':
+          description: The updated task.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      tags: [Tasks]
+      operationId: deleteTask
+      summary: Delete a task
+      responses:
+        '204': { description: Deleted. }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /api/tasks/{id}/done:
+    patch:
+      tags: [Tasks]
+      operationId: setTaskDone
+      summary: Mark a task done or not done
+      description: Sets completed_at when done is true and clears it when done is false.
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer }, example: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [done]
+              properties:
+                done: { type: boolean }
+            example: { done: true }
+      responses:
+        '200':
+          description: The updated task.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Task' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /api/groups:
+    get:
+      tags: [Groups]
+      operationId: listGroups
+      summary: List groups with their task counts
+      responses:
+        '200':
+          description: The groups.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Group' }
+    post:
+      tags: [Groups]
+      operationId: createGroup
+      summary: Create a group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/NewGroup' }
+            example: { name: Fitness, color: '#dc3545' }
+      responses:
+        '201':
+          description: The created group.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Group' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+
+  /api/stats:
+    get:
+      tags: [Exercises]
+      operationId: stats
+      summary: Totals (checkpoint 1 exercise)
+      responses:
+        '200':
+          description: Task totals.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total: { type: integer }
+                  done: { type: integer }
+
+  /api/stats/group/{id}:
+    get:
+      tags: [Exercises]
+      operationId: groupStats
+      summary: Totals for one group (checkpoint 4 exercise)
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        '200':
+          description: Group totals.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name: { type: string }
+                  total: { type: integer }
+                  done: { type: integer }
+        '404':
+          description: Group not found.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+              example: { error: Group not found }
+
+  /api/search:
+    get:
+      tags: [Exercises]
+      operationId: searchTasks
+      summary: Search task titles (checkpoint 2 exercise)
+      parameters:
+        - { name: q, in: query, required: true, schema: { type: string }, example: milk }
+      responses:
+        '200':
+          description: Matching tasks.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Task' }
+
+  /api/high-priority:
+    get:
+      tags: [Exercises]
+      operationId: highPriority
+      summary: Priority 3 tasks by due date (checkpoint 3 exercise)
+      responses:
+        '200':
+          description: High priority tasks.
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Task' }
+
+components:
+  responses:
+    BadRequest:
+      description: The request is invalid. The body explains what is wrong.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example: { error: title is required }
+    NotFound:
+      description: No such resource.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+          example: { error: Task not found }
+
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error: { type: string }
+    Task:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        user_id: { type: integer, example: 1 }
+        group_id: { type: integer, nullable: true, example: 1 }
+        group_name: { type: string, nullable: true, example: Work }
+        title: { type: string, example: Finish quarterly report }
+        priority: { type: integer, description: '1 = low, 2 = medium, 3 = high', minimum: 1, maximum: 3, example: 3 }
+        due_date: { type: string, format: date, nullable: true }
+        done: { type: integer, enum: [0, 1], example: 0 }
+        created_at: { type: string, format: date-time }
+        completed_at: { type: string, format: date-time, nullable: true }
+    NewTask:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 100 }
+        group_id: { type: integer, nullable: true }
+        priority: { type: integer, minimum: 1, maximum: 3, default: 2 }
+        due_date: { type: string, format: date, nullable: true }
+    Group:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string, example: Work }
+        color: { type: string, example: '#0d6efd' }
+        task_count: { type: integer, example: 3 }
+    NewGroup:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 50 }
+        color: { type: string, example: '#6c757d' }

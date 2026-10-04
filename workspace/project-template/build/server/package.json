@@ -1,0 +1,21 @@
+{
+  "name": "task-manager-server",
+  "version": "1.0.0",
+  "private": true,
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "cors": "2.8.6",
+    "dotenv": "18.0.5",
+    "express": "5.2.1",
+    "mysql2": "3.24.5",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "nodemon": "3.1.14",
+    "supertest": "7.3.1"
+  }
+}

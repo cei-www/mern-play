@@ -1,0 +1,23 @@
+{
+  "name": "platform-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Serves the tutorial UI and lessons, lists the course, reports service status; includes the lesson linter",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "start": "node dist/main.js",
+    "lint:lessons": "node dist/lintCli.js"
+  },
+  "dependencies": {
+    "node-html-parser": "9.0.4",
+    "yaml": "2.9.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.1",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  }
+}

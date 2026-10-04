@@ -1,0 +1,32 @@
+<h2>Step 0.4: Add your first route</h2>
+
+<div lang="en">
+  <p>A <em>route</em> connects a URL to some code. You will add one that answers <code>/api/hello</code>.</p>
+</div>
+<div lang="th">
+  <p><em>Route</em> คือสิ่งที่เชื่อม URL เข้ากับโค้ด คุณจะเพิ่ม route ที่ตอบ <code>/api/hello</code></p>
+</div>
+
+<p class="where">Edit <code data-copy>server/app.js</code>. Put the new code on the line
+  right after <code>app.use(express.json());</code>.</p>
+
+<pre data-snippet data-file="server/app.js" data-after="app.use(express.json());"><code class="language-javascript">app.get('/api/hello', (req, res) =&gt; {
+  res.json({ hello: 'world' });
+});</code></pre>
+
+<div lang="en">
+  <p>Save the file (<kbd>Ctrl</kbd>+<kbd>S</kbd>). The server restarts by itself. Then open the route:</p>
+</div>
+<div lang="th">
+  <p>บันทึกไฟล์ (<kbd>Ctrl</kbd>+<kbd>S</kbd>) เซิร์ฟเวอร์จะรีสตาร์ตเอง จากนั้นเปิด route ที่เพิ่ม:</p>
+</div>
+<p><a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="3000" data-path="/api/hello">Open /api/hello</a></p>
+
+<details>
+  <summary>Hint</summary>
+  <p>Do not delete the lines that are already there. The new route goes <em>between</em> <code>app.use(express.json());</code> and the next route.</p>
+</details>
+
+<div data-check="first-route">
+  <pre><code>  PASS  GET /api/hello returned 200 with { "hello": "world" }</code></pre>
+</div>

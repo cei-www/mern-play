@@ -1,0 +1,6 @@
+# Force LF everywhere. CRLF breaks shell scripts and entrypoints inside Linux containers (Windows checkouts).
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff2 binary

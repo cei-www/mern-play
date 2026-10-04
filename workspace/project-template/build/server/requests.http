@@ -1,0 +1,5 @@
+### Health check
+GET http://localhost:3000/api/health
+
+### Can the API reach MySQL?
+GET http://localhost:3000/api/db-check

@@ -1,0 +1,33 @@
+# Module "build": the learner builds the Task Manager.
+# DRAFT: Part 0 below is a working sample of the lesson format. It is rewritten in phase 6,
+# when the complete Task Manager and the step snapshots exist.
+id: build
+title: Build the app
+order: 1
+minutes: 360
+container: ws-main
+defaultTab: editor
+optional: false
+parts:
+  - id: part-0
+    title: "Part 0: Meet the app"
+    steps:
+      - { id: "0.1", title: What you will build, type: read, file: part-0/0.1-what-you-will-build.html }
+      - { id: "0.2", title: Look around your workspace, type: do, file: part-0/0.2-look-around.html, checks: [db-has-tasks] }
+      - { id: "0.3", title: Try the API in Swagger, type: do, file: part-0/0.3-swagger.html }
+      - { id: "0.4", title: Add your first route, type: do, file: part-0/0.4-first-route.html, checks: [first-route] }
+checks:
+  db-has-tasks:
+    title: The database has tasks to work with
+    type: sql
+    database: taskapp
+    query: SELECT id, title FROM tasks LIMIT 3
+    expect: { rowCountAtLeast: 1, first: { id: { $type: number }, title: { $type: string } } }
+    hint: "Reset the database with the command: reset-db"
+  first-route:
+    title: 'GET /api/hello answers { "hello": "world" }'
+    type: http
+    request: { method: GET, url: "http://localhost:3000/api/hello" }
+    expect: { status: 200, json: { hello: world } }
+    hints:
+      404: "The route does not exist yet. Did you add app.get('/api/hello', ...) to server/app.js and save the file?"

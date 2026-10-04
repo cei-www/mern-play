@@ -1,0 +1,25 @@
+<h2>Step 0.3: Try the API in Swagger</h2>
+
+<div lang="en">
+  <p><strong>Swagger</strong> is a page that lists every endpoint of the Task Manager API and lets you call it with a button,
+  without writing any code.</p>
+  <p>Open the <strong>Swagger</strong> tab, pick <code>GET /api/health</code>, press <em>Try it out</em>, then <em>Execute</em>.
+  You should get <code>200</code> and <code>{"status":"ok"}</code>.</p>
+</div>
+<div lang="th">
+  <p><strong>Swagger</strong> คือหน้าที่แสดง endpoint ทั้งหมดของ Task Manager API และให้คุณเรียกใช้ด้วยการกดปุ่ม
+  โดยไม่ต้องเขียนโค้ด</p>
+  <p>เปิด tab <strong>Swagger</strong> เลือก <code>GET /api/health</code> กด <em>Try it out</em> แล้วกด <em>Execute</em>
+  จะได้ <code>200</code> และ <code>{"status":"ok"}</code></p>
+</div>
+<p><button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="health" data-server="app">Try it in Swagger: health</button>
+   <button type="button" class="btn btn-sm btn-outline-primary" data-action="swagger" data-op="listTasks" data-server="app">Now try listTasks</button></p>
+
+<div lang="en">
+  <p>Now try <code>GET /api/tasks</code>. It answers <strong>404</strong>. That is expected: you have not built that endpoint yet.
+  Swagger describes the finished API, so a 404 here is your to-do list.</p>
+</div>
+<div lang="th">
+  <p>ลอง <code>GET /api/tasks</code> จะได้ <strong>404</strong> ซึ่งถูกต้องแล้ว เพราะคุณยังไม่ได้สร้าง endpoint นี้
+  Swagger แสดง API ฉบับสมบูรณ์ ดังนั้น 404 ตรงนี้คือสิ่งที่ต้องทำต่อ</p>
+</div>

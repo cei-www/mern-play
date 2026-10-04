@@ -1,0 +1,9 @@
+node_modules/
+.env
+# the learner project template ships a preconfigured .env
+!workspace/project-template/**/.env
+dist/
+coverage/
+*.log
+.DS_Store
+.claude/worktrees/

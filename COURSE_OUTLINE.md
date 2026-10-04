@@ -17,7 +17,7 @@ Modules are independent. `style` and `unit` start from reference code, `api` tes
 
 ```
 users   (id, name, email)            one seeded user, no login
-groups  (id, user_id, name, color)
+task_groups (id, user_id, name, color)   -- not "groups": GROUPS is a reserved word in MySQL 8
 tasks   (id, user_id, group_id NULL, title, priority 1-3, due_date NULL,
          done 0/1, created_at, completed_at NULL)
 ```
@@ -27,10 +27,13 @@ API: `/api/health`, `/api/groups`, `/api/tasks?group_id=&done=&sort=&order=`, `/
 ## Authoring rules
 
 - Each step is HTML plus entries in `lesson.yaml`. Code in snippets is the code that gets applied.
-- Wipe (`build` only) replaces content between `@tutorial` markers with one TODO line and two blank lines; files and DB stay.
+- **No tutorial page buttons change files or open files.** The learner edits code by hand in the VS Code Editor and types helper commands in its terminal: `tutorial wipe`, `tutorial goto <step>`, `tutorial reset <step>`, `reset-db`, `tutorial check <step>`. Code blocks have a Copy button.
+- **Where to edit:** every step that changes code names the file and the exact place (a `@tutorial` zone, a line to put it after, or the end of the file). Zones double as location markers: after a wipe each one shows a TODO line.
+- Wipe (`build` only), run as `tutorial wipe`, replaces content between `@tutorial` markers with one TODO line and two blank lines; files and DB stay.
 - Exercises live in their own zones and never block progress. Step snapshots never write exercise zones; step checks never test them.
-- Checkpoint = 2 exercises (one easier, one harder), about 15 minutes, skippable, solution collapsed with an optional `Insert solution`.
-- Release 1 ships Part 0, Story 1 and Checkpoint 1 of `build`, bilingual. The rest is added by dropping in HTML plus yaml.
+- Checkpoint = 2 exercises (one easier, one harder), about 15 minutes, skippable, solution collapsed (copy it into the zone named in the exercise by hand).
+- API steps end with a "Try it in Swagger" button (`data-action="swagger"`) that opens the Swagger tab (tab 4) on that operation (`data-server` is `app`, `reference` or `style`). The API contract is `course/openapi/taskapp.yaml`; operations the learner has not built yet return 404 there, which is the signal for what is left to do.
+- Release 1 ships Part 0, Story 1 and Checkpoint 1 of `build`, bilingual (Swagger steps included). The rest is added by dropping in HTML plus yaml.
 
 ---
 
@@ -39,10 +42,11 @@ API: `/api/health`, `/api/groups`, `/api/tasks?group_id=&done=&sort=&order=`, `/
 ### Part 0: Meet the app (~25 min)
 - 0.1 R What you will build: features and the three layers
 - 0.2 D Use the finished app in Preview: add, complete, filter by group, History tab
-- 0.3 R Tour of the stack: open key files with the buttons, inspect a request in DevTools
-- 0.4 D Change one line and watch Vite HMR update Preview (quick win)
-- 0.5 D Wipe the code: files stay, DB stays, learn the `@tutorial` markers
-- 0.6 C Markers are empty, DB still has data
+- 0.3 R Tour of the stack: open the key files from the Explorer (the lesson lists each path), inspect a request in DevTools
+- 0.4 D Try the API in Swagger: call `GET /api/tasks`, create a task with `POST /api/tasks`, see it appear in the app (the whole API is implemented at this point)
+- 0.5 D Change one line and watch Vite HMR update Preview (quick win)
+- 0.6 D Wipe the code: run `tutorial wipe` in the terminal; files stay, DB stays, learn the `@tutorial` markers
+- 0.7 C Markers are empty, DB still has data
 
 ### Story 1: View my tasks (~50 min)
 - 1.1 R Story and acceptance criteria
@@ -51,7 +55,7 @@ API: `/api/health`, `/api/groups`, `/api/tasks?group_id=&done=&sort=&order=`, `/
 - 1.4 D `GET /api/health`
 - 1.5 D Split `routes/tasks.js`, mount at `/api/tasks`
 - 1.6 D `GET /api/tasks` from MySQL (`db.query`, destructuring, `try/catch` + `next`)
-- 1.7 D Try it with `requests.http`
+- 1.7 D Try it with `requests.http` and in Swagger (right after Wipe, `/api/tasks` was a 404 in Swagger; now it returns your rows)
 - 1.8 D React: fetch and render the list (`useEffect`, `useState`, loading and error)
 - 1.9 C http 200 + array, file check, list renders
 
@@ -62,7 +66,7 @@ API: `/api/health`, `/api/groups`, `/api/tasks?group_id=&done=&sort=&order=`, `/
 ### Story 2: Add a task (~50 min)
 - 2.1 R Story and acceptance
 - 2.2 D `INSERT`, `AUTO_INCREMENT`
-- 2.3 D `POST /api/tasks` (`express.json`, 201, placeholders against SQL injection)
+- 2.3 D `POST /api/tasks` (`express.json`, 201, placeholders against SQL injection); try it in Swagger
 - 2.4 D Validation with zod, 400 with a clear message
 - 2.5 D React form: controlled input, POST, refresh the list
 - 2.6 C http 201/400, sql row +1, UI
@@ -70,7 +74,7 @@ API: `/api/health`, `/api/groups`, `/api/tasks?group_id=&done=&sort=&order=`, `/
 ### Story 3: Mark a task as done (~35 min)
 - 3.1 R PUT vs PATCH
 - 3.2 D `UPDATE ... done, completed_at = NOW()` (NULL when unchecked)
-- 3.3 D `PATCH /api/tasks/:id/done` (`req.params`, 404, `affectedRows`)
+- 3.3 D `PATCH /api/tasks/:id/done` (`req.params`, 404, `affectedRows`); try it in Swagger, including an id that does not exist
 - 3.4 D Checkbox in UI with optimistic update
 - 3.5 C http, sql (`completed_at`), UI
 
@@ -81,7 +85,7 @@ API: `/api/health`, `/api/groups`, `/api/tasks?group_id=&done=&sort=&order=`, `/
 ### Story 4: Groups (~50 min)
 - 4.1 R Relationship between groups and tasks (foreign key, nullable)
 - 4.2 D `LEFT JOIN` for the group name
-- 4.3 D `GET /api/groups` with task counts (`GROUP BY`)
+- 4.3 D `GET /api/groups` with task counts (`GROUP BY`); try it in Swagger
 - 4.4 D `GET /api/tasks` returns `group_name`
 - 4.5 D Group dropdown in the form
 - 4.6 D Sidebar of groups with counts and click to filter
@@ -89,7 +93,7 @@ API: `/api/health`, `/api/groups`, `/api/tasks?group_id=&done=&sort=&order=`, `/
 
 ### Story 5: Filter and sort (~45 min)
 - 5.1 R Query strings
-- 5.2 D `?done=` and `?group_id=` built safely
+- 5.2 D `?done=` and `?group_id=` built safely; Swagger shows the query parameters as a form
 - 5.3 D `?sort=&order=` with a whitelist
 - 5.4 R Why `ORDER BY` cannot use `?`, and how the whitelist stops injection
 - 5.5 D Sort dropdown and filter buttons in UI
@@ -101,7 +105,7 @@ API: `/api/health`, `/api/groups`, `/api/tasks?group_id=&done=&sort=&order=`, `/
 
 ### Story 6: History (~45 min)
 - 6.1 R History is "done tasks by `completed_at`", no new table
-- 6.2 D `GET /api/tasks/history?days=7`
+- 6.2 D `GET /api/tasks/history?days=7`; try it in Swagger
 - 6.3 D React Router: Tasks and History tabs
 - 6.4 D History page grouped by day, weekly total
 - 6.5 D Undo button (PATCH `done=false`)
@@ -109,8 +113,8 @@ API: `/api/health`, `/api/groups`, `/api/tasks?group_id=&done=&sort=&order=`, `/
 
 ### Story 7: Edit, delete, errors (~40 min)
 - 7.1 R HTTP status codes
-- 7.2 D `PUT /api/tasks/:id`
-- 7.3 D `DELETE /api/tasks/:id` (204) with confirmation in UI
+- 7.2 D `PUT /api/tasks/:id`; try it in Swagger
+- 7.3 D `DELETE /api/tasks/:id` (204) with confirmation in UI; try it in Swagger
 - 7.4 D Error-handling middleware, one error shape
 - 7.5 D Show errors in the UI instead of a blank page
 - 7.6 C http, sql, UI
@@ -218,7 +222,7 @@ Mutation check: the learner's tests pass on the real code and at least one fails
 Container `ws-robot` is created at setup but not started; start it before this module. The target is the reference API at `localhost:3001` (inside the container) with database `taskapp_test`. The learner writes only `.robot` and `.resource` files.
 
 ### Part A: Hello, Robot (~30 min)
-- A.1 R Why automate, request/response/assertion, try with `requests.http`
+- A.1 R Why automate, request/response/assertion; explore the reference API by hand in Swagger (server: Reference API, port 3001) and with `requests.http`
 - A.2 R Robot file structure: Settings, Variables, Test Cases, Keywords; two or more spaces as separators
 - A.3 D First test: `GET /api/health` returns 200
 - A.4 D Run `robot` and open `report.html` / `log.html`
@@ -233,7 +237,7 @@ Container `ws-robot` is created at setup but not started; start it before this m
 
 ### Part C: Create data and check the DB (~40 min)
 - C.1 D `POST /api/tasks` returns 201 and the body
-- C.2 D Empty title returns 400
+- C.2 D Empty title returns 400 (first reproduce it by hand in Swagger and read the error body)
 - C.3 R Test isolation, why a separate `taskapp_test`
 - C.4 D Connect to MySQL and query the row you just created
 - C.5 D Setup and teardown, resetting data

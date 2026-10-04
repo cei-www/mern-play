@@ -1,0 +1,108 @@
+name: ce-webdev-academy
+
+# All published ports are bound to 127.0.0.1 and can be changed in .env.
+# "internal" has no internet access; services that publish ports also join "public".
+
+services:
+  platform:
+    build:
+      context: ./platform
+    image: ce-webdev/platform
+    environment:
+      COURSE_DIR: /course
+      UI_DIR: /app/ui
+      # Only used for the service status banner; the platform sends no commands to the workspaces.
+      STATUS_WORKSPACE_URL: http://ws-main:8080/healthz
+      STATUS_APP_URL: http://ws-main:3000/api/health
+      STATUS_ROBOT_URL: http://ws-robot:8080/healthz
+      STATUS_DBADMIN_URL: http://dbadmin:8080/
+      STATUS_DB: db:3306
+      # Host ports the browser uses (follow the overrides in .env)
+      PUBLIC_EDITOR_PORT: ${WS_MAIN_PORT:-8081}
+      PUBLIC_EXPRESS_PORT: ${EXPRESS_PORT:-3000}
+      PUBLIC_VITE_PORT: ${VITE_PORT:-5173}
+      PUBLIC_DBADMIN_PORT: ${DBADMIN_PORT:-8085}
+    ports:
+      - "127.0.0.1:${PLATFORM_PORT:-4000}:4000"
+    volumes:
+      - ./course:/course:ro
+      - ./platform/ui:/app/ui:ro
+    networks: [public, internal]
+    cpus: 0.5
+    mem_limit: 256m
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4000/').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_pw}
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./course:/course:ro
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    networks: [internal]
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+      start_period: 20s
+
+  dbadmin:
+    image: adminer:latest
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+      # Only the tutorial page may embed Adminer (see adminer/ce-academy.php)
+      ADMINER_FRAME_ANCESTORS: http://localhost:${PLATFORM_PORT:-4000} http://127.0.0.1:${PLATFORM_PORT:-4000}
+    volumes:
+      - ./adminer/ce-academy.php:/var/www/html/plugins-enabled/ce-academy.php:ro
+    ports:
+      - "127.0.0.1:${DBADMIN_PORT:-8085}:8080"
+    networks: [public, internal]
+    depends_on:
+      db: { condition: service_healthy }
+
+  ws-main:
+    build:
+      context: ./workspace
+      target: main
+    image: ce-webdev/ws-main
+    environment:
+      # Settings for the `tutorial` command (kept separate from the learner's own .env)
+      TUTORIAL_MODULES: build,style,unit
+      TUTORIAL_DB_ALLOWED: taskapp,taskapp_style
+      TUTORIAL_DB_HOST: db
+      TUTORIAL_DB_USER: app
+      TUTORIAL_DB_PASSWORD: app_pw
+    ports:
+      - "127.0.0.1:${WS_MAIN_PORT:-8081}:8080"   # code-server
+      - "127.0.0.1:${EXPRESS_PORT:-3000}:3000"   # learner's Express (build module)
+      - "127.0.0.1:${VITE_PORT:-5173}:5173"      # learner's Vite (build module)
+    volumes:
+      - ws-build:/workspace/build
+      - ./course:/course:ro
+    networks: [public, internal]
+    depends_on:
+      db: { condition: service_healthy }
+    cpus: 2
+    mem_limit: 2g
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/healthz && curl -fsS http://localhost:3000/api/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 15s
+
+networks:
+  public: {}
+  internal:
+    internal: true
+
+volumes:
+  db-data: {}
+  ws-build: {}

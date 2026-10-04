@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CE WebDev Academy</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="vendor/highlightjs/github.min.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <a class="visually-hidden-focusable" href="#lesson">Skip to the lesson</a>
+
+  <header class="app-head">
+    <div class="head-left">
+      <button type="button" id="sidebar-toggle" class="btn-menu" aria-label="Show or hide the lesson list">&#9776;</button>
+      <button type="button" class="brand" id="brandHome" title="Back to the start" aria-label="CE WebDev Academy, back to the start"><span class="mark">&lt;/&gt;</span>CE WebDev Academy</button>
+    </div>
+    <div class="head-right">
+      <div id="status-dots" class="status-dots" aria-label="Service status"></div>
+      <div class="btn-group btn-group-sm lang-toggle" role="group" aria-label="Language of the lesson text">
+        <button type="button" id="lang-en" class="btn" aria-pressed="true">En</button>
+        <button type="button" id="lang-th" class="btn" aria-pressed="false">Th</button>
+      </div>
+    </div>
+  </header>
+
+  <div id="status-banner" class="alert alert-danger status-banner" role="alert" hidden></div>
+
+  <div class="app-body">
+    <nav id="sidebar" class="sidebar" aria-label="Lessons">
+      <div id="sidebar-body"></div>
+    </nav>
+
+    <div id="split" class="split">
+      <main id="lesson" class="lesson" tabindex="-1">
+        <article id="lesson-body" class="lesson-body" aria-live="polite">
+          <p class="text-secondary">Loading the lesson&hellip;</p>
+        </article>
+        <div id="lesson-footer" class="lesson-footer"></div>
+      </main>
+
+      <div id="divider" class="divider" role="separator" aria-orientation="vertical" tabindex="0"
+           aria-label="Resize the lesson and the editor. Use the left and right arrow keys."></div>
+
+      <section id="right-pane" class="right-pane" aria-label="Workspace">
+        <div id="tab-nav" class="tab-nav"></div>
+        <div id="tab-panes" class="tab-panes"></div>
+      </section>
+    </div>
+  </div>
+
+  <script src="vendor/highlightjs/highlight.min.js"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
