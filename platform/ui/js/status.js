@@ -45,7 +45,7 @@ export function describeDots(status) {
   const s = status ?? { workspace: 'unknown', app: 'unknown', db: 'unknown' };
   return [
     dot('workspace', 'Workspace', s.workspace, 'Workspace: not responding'),
-    dot('app', 'Your app', s.app, 'Your app is not running (normal while you are editing it)'),
+    dot('app', 'API', s.app, 'API (your Express server, port 3000) is not running: normal while you are editing it'),
     dot('db', 'Database', s.db, 'Database: not responding'),
   ];
 }

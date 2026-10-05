@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for helping. This file is for people who change the course or the platform. How to run the project is in [README.md](README.md); the reasons behind the design are in [ARCHITECTURE.md](ARCHITECTURE.md); the lesson plan is in [COURSE_OUTLINE.md](COURSE_OUTLINE.md).
+Thank you for helping. This file is for people who change the course or the platform. How to run the project is in [the guide](docs/GUIDE.md); the reasons behind the design are in [ARCHITECTURE.md](ARCHITECTURE.md); the lesson plan is in [COURSE_OUTLINE.md](COURSE_OUTLINE.md).
 
 ## Set up
 
@@ -33,7 +33,7 @@ Module `unit` has the opposite shape: the code under test is the starting projec
    - Every `<pre data-snippet>` has `data-file` (path inside the module) and exactly one of `data-zone`, `data-after`, `data-position="end"`. A visible `<p class="where">` before it names the file and says which Explorer folders to open. The linter enforces this against the finished app.
    - The code in the snippet is the code in the zone. The integration test types the snippets of the lesson into a real workspace, so a typo in a lesson fails the test.
    - Hints and solutions are in `<details>`.
-4. **Define the checks** under `checks:` in `lesson.yaml` (the list of types is in the README). A good check **fails before the learner acts and passes after**; the integration test verifies exactly that for every step it covers. Give `http` checks `hints` for the status codes learners will meet (404 and 500) so the message says what to look at.
+4. **Define the checks** under `checks:` in `lesson.yaml` (the list of types is in [the guide](docs/GUIDE.md)). A good check **fails before the learner acts and passes after**; the integration test verifies exactly that for every step it covers. Give `http` checks `hints` for the status codes learners will meet (404 and 500) so the message says what to look at.
 5. **Run** `make lint-lessons`, `make test`, `make integration`.
 
 ### Exercises (checkpoints)

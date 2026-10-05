@@ -17,9 +17,9 @@ function showError(message) {
  */
 export function buildServers(ports, host = window.location.hostname) {
   return [
-    { role: 'app', url: `http://${host}:${ports.express}`, description: 'Your app (module build)' },
+    { role: 'app', url: `http://${host}:${ports.express}`, description: 'API (module build)' },
     { role: 'reference', url: `http://${host}:${ports.referenceApi}`, description: 'Reference API (module api)' },
-    { role: 'style', url: `http://${host}:${ports.styleApi}`, description: 'Style API (module style)' },
+    { role: 'style', url: `http://${host}:${ports.styleApi}`, description: 'API (for Tailwind)' },
   ];
 }
 

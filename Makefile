@@ -1,4 +1,4 @@
-# Convenience targets. The raw docker compose commands are documented in the README
+# Convenience targets. The raw docker compose commands are documented in docs/GUIDE.md
 # because Windows has no `make` by default. Development targets need Docker only (Node 22 runs in a container).
 
 NODE = docker run --rm -v "$(CURDIR)":/repo
