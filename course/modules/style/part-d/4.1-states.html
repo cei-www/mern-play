@@ -1,0 +1,63 @@
+<h2>Step 4.1: Hover, focus and active</h2>
+
+<div lang="en">
+<p>A control should <em>answer</em> the user. CSS calls these answers <strong>states</strong>, and Tailwind writes them as a <strong>variant</strong>: a prefix and a colon in front of a class. The class applies only in that state.</p>
+<ul>
+  <li><code>hover:bg-slate-100</code>: when the mouse is over it.</li>
+  <li><code>focus-visible:outline-2</code>: when it has keyboard focus (and only then). This is what lets keyboard users see where they are. <em>Never remove it without a replacement.</em></li>
+  <li><code>active:scale-95</code>: while it is pressed (it shrinks a little).</li>
+</ul>
+<p>Add all three to the tab buttons and the group buttons. The zone also holds a condition: the selected tab or group gets the brand color (<code>view === name &amp;&amp; '...'</code>).</p>
+</div>
+<div lang="th">
+<p>ตัวควบคุมควร <em>ตอบสนอง</em> ผู้ใช้ CSS เรียกการตอบสนองเหล่านี้ว่า <strong>state</strong> และ Tailwind เขียนเป็น <strong>variant</strong>: คำนำหน้าและเครื่องหมายทวิภาคหน้า class class นั้นทำงานเฉพาะใน state นั้น</p>
+<ul>
+  <li><code>hover:bg-slate-100</code>: เมื่อเมาส์อยู่เหนือมัน</li>
+  <li><code>focus-visible:outline-2</code>: เมื่อมี keyboard focus (และเฉพาะตอนนั้น) ทำให้ผู้ใช้คีย์บอร์ดเห็นว่าอยู่ตรงไหน <em>อย่าลบออกโดยไม่มีอะไรมาแทน</em></li>
+  <li><code>active:scale-95</code>: ขณะถูกกด (หดลงเล็กน้อย)</li>
+</ul>
+<p>เพิ่มทั้งสามอย่างให้ปุ่ม tab และปุ่ม group ใน zone ยังมีเงื่อนไขด้วย: tab หรือ group ที่เลือกได้สี brand (<code>view === name &amp;&amp; '...'</code>)</p>
+</div>
+
+<p class="where">Edit <code>client/src/App.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; App.jsx). Write the code between the comments <code>@tutorial:begin s4-1-tab-states</code> and <code>@tutorial:end s4-1-tab-states</code>, in the class list of the tab <code>button</code>.</p>
+<pre data-snippet data-file="client/src/App.jsx" data-zone="s4-1-tab-states"><code class="language-javascript">'hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 active:scale-95',
+view === name &amp;&amp; 'border-brand-600 bg-brand-600 text-white hover:bg-brand-600',</code></pre>
+
+<p class="where">Edit <code>client/src/components/GroupFilter.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; GroupFilter.jsx). Write the code between the comments <code>@tutorial:begin s4-1-group-states</code> and <code>@tutorial:end s4-1-group-states</code>, in the class list of the group <code>button</code>.</p>
+<pre data-snippet data-file="client/src/components/GroupFilter.jsx" data-zone="s4-1-group-states"><code class="language-javascript">'hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 active:scale-95',
+value === group.id &amp;&amp; 'border-brand-600 bg-brand-600 text-white hover:bg-brand-600',</code></pre>
+
+<div lang="en">
+<p>Move the mouse over the buttons, press and hold one, and press <kbd>Tab</kbd> in the page to see the focus outline.</p>
+</div>
+<div lang="th">
+<p>เลื่อนเมาส์ไปเหนือปุ่ม กดค้างปุ่มหนึ่ง และกด <kbd>Tab</kbd> ในหน้าเว็บเพื่อดูเส้นรอบ focus</p>
+</div>
+
+<div lang="en">
+<p>The app is in the <strong>Preview</strong> tab (port <em>App (for Tailwind)</em>). It reloads by itself when you save.</p>
+</div>
+<div lang="th">
+<p>แอปอยู่ใน tab <strong>Preview</strong> (พอร์ต <em>App (for Tailwind)</em>) และโหลดใหม่เองเมื่อคุณบันทึก</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>You can stack variants: <code>hover:bg-brand-600</code> is "hover" and "background". The line with <code>value === group.id</code> is plain JavaScript that returns the classes or <code>false</code>.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/App.jsx</code>, between the comments of <code>s4-1-tab-states</code>:</p>
+  <pre data-snippet data-file="client/src/App.jsx" data-zone="s4-1-tab-states"><code class="language-javascript">'hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 active:scale-95',
+view === name &amp;&amp; 'border-brand-600 bg-brand-600 text-white hover:bg-brand-600',</code></pre>
+  <p class="where">In <code>client/src/components/GroupFilter.jsx</code>, between the comments of <code>s4-1-group-states</code>:</p>
+  <pre data-snippet data-file="client/src/components/GroupFilter.jsx" data-zone="s4-1-group-states"><code class="language-javascript">'hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500 active:scale-95',
+value === group.id &amp;&amp; 'border-brand-600 bg-brand-600 text-white hover:bg-brand-600',</code></pre>
+</details>
+
+<div data-check="states-tab"></div>

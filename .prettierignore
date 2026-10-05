@@ -1,0 +1,17 @@
+node_modules/
+dist/
+coverage/
+# Written by hand so that lessons and code match exactly.
+course/
+workspace/project-template/
+platform/ui/vendor/
+# Documents and generated or vendored files
+*.md
+*.yaml
+*.yml
+*.html
+*.css
+*.sql
+*.php
+*.sh
+package-lock.json

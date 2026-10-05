@@ -3,9 +3,21 @@ import { renderSidebar, stepIds } from '../js/sidebar.js';
 import { saveProgress } from '../js/storage.js';
 
 const mod = {
-  id: 'build', title: 'Build the app', order: 1, container: 'ws-main', defaultTab: 'editor', optional: false,
+  id: 'build',
+  title: 'Build the app',
+  order: 1,
+  container: 'ws-main',
+  defaultTab: 'editor',
+  optional: false,
   parts: [
-    { id: 'p0', title: 'Part 0', steps: [{ id: '0.1', title: 'One', type: 'read', file: 'a.html' }, { id: '0.2', title: 'Two', type: 'do', file: 'b.html' }] },
+    {
+      id: 'p0',
+      title: 'Part 0',
+      steps: [
+        { id: '0.1', title: 'One', type: 'read', file: 'a.html' },
+        { id: '0.2', title: 'Two', type: 'do', file: 'b.html' },
+      ],
+    },
     { id: 'p1', title: 'Story 1', steps: [{ id: '1.1', title: 'Three', type: 'do', file: 'c.html' }] },
   ],
 };

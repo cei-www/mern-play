@@ -1,0 +1,34 @@
+<h2>Step D.1: Coverage and what not to test</h2>
+
+<div lang="en">
+<p><strong>Coverage</strong> tells you which lines of your code ran while the tests ran. Try it:</p>
+</div>
+<div lang="th">
+<p><strong>Coverage</strong> บอกว่าบรรทัดไหนของโค้ดคุณถูกรันตอนที่ test รัน ลองดู:</p>
+</div>
+
+<pre data-command><code>npm run coverage</code></pre>
+
+<div lang="en">
+<p>The table lists every file in <code>src</code> with the percent of statements, branches, functions and lines that ran. <code>Uncovered Line #s</code> says which lines never ran: a test is missing there. Two things to keep in mind:</p>
+<ul>
+  <li><strong>Coverage shows what is <em>not</em> tested, never that the rest is tested well.</strong> A test with no <code>expect</code> gives 100% and proves nothing. That is why this module also puts bugs into the code (mutation checks): the real question is "does a test fail when the code is wrong?".</li>
+  <li>Do not chase 100%. This project asks for 40%, which the main steps reach; the checkpoint exercises (which test <code>dates.js</code>, <code>markDone</code> and <code>TaskItem</code>) lift it above 90%. <code>db.js</code> is a stand-in that is always mocked, so it stays at 0% and that is fine.</li>
+</ul>
+<p><strong>What to test:</strong> rules and decisions (validation, sorting, who is overdue), error paths, and what a user sees and does. <strong>What not to test:</strong> libraries (React and Vitest are tested by their authors), plain getters, the exact HTML or class names, and the inner steps of a function (test what goes in and what comes out, not how).</p>
+<p><strong>Brittle tests</strong> fail for the wrong reason. Signs: it breaks when you only restyle or rename; it repeats the code under test line by line; it depends on the order of other tests or on today's date (use a fixed <code>now</code>, as in the checkpoint); it uses real network or a real database. A good test fails only when the behavior is wrong, and its name tells you what that behavior is.</p>
+</div>
+<div lang="th">
+<p>ตารางแสดงทุกไฟล์ใน <code>src</code> พร้อมเปอร์เซ็นต์ของ statement, branch, function และ line ที่ถูกรัน <code>Uncovered Line #s</code> บอกบรรทัดที่ไม่เคยถูกรัน: ตรงนั้นขาด test สองสิ่งที่ต้องจำ:</p>
+<ul>
+  <li><strong>coverage บอกสิ่งที่ <em>ยังไม่ได้</em> ทดสอบ ไม่เคยบอกว่าส่วนที่เหลือทดสอบดี</strong> test ที่ไม่มี <code>expect</code> ให้ 100% แต่พิสูจน์อะไรไม่ได้ เพราะอย่างนี้ module นี้จึงใส่บั๊กลงในโค้ดด้วย (การตรวจแบบ mutation): คำถามจริงคือ "test ล้มไหมเมื่อโค้ดผิด?"</li>
+  <li>อย่าไล่ตาม 100% โปรเจกต์นี้ขอ 40% ซึ่งทำได้ด้วย step หลัก ส่วนโจทย์ใน checkpoint (ที่ทดสอบ <code>dates.js</code>, <code>markDone</code> และ <code>TaskItem</code>) ยกขึ้นไปเกิน 90% <code>db.js</code> เป็นตัวแทนที่ถูก mock เสมอ จึงอยู่ที่ 0% และไม่เป็นไร</li>
+</ul>
+<p><strong>สิ่งที่ควรทดสอบ:</strong> กฎและการตัดสินใจ (validation การเรียง ใครเกินกำหนด) error path และสิ่งที่ผู้ใช้เห็นและทำ <strong>สิ่งที่ไม่ควรทดสอบ:</strong> ไลบรารี (React และ Vitest มีผู้เขียนทดสอบอยู่แล้ว) getter ธรรมดา HTML หรือชื่อ class ตรงตัว และขั้นตอนภายในของฟังก์ชัน (ทดสอบสิ่งที่เข้าและสิ่งที่ออก ไม่ใช่วิธีทำ)</p>
+<p><strong>brittle test</strong> ล้มด้วยเหตุผลที่ผิด สัญญาณ: พังเมื่อแค่ปรับสไตล์หรือเปลี่ยนชื่อ ทำซ้ำโค้ดที่ทดสอบทีละบรรทัด ขึ้นกับลำดับของ test อื่นหรือวันที่ของวันนี้ (ใช้ <code>now</code> ตายตัวเหมือนใน checkpoint) ใช้เครือข่ายหรือฐานข้อมูลจริง test ที่ดีล้มเฉพาะเมื่อพฤติกรรมผิด และชื่อของมันบอกว่าพฤติกรรมนั้นคืออะไร</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>Look at the coverage table after the checkpoints too: the files they test (<code>dates.js</code>, <code>TaskItem.jsx</code>) go up.</p>
+</details>

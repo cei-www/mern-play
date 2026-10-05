@@ -1,0 +1,142 @@
+<h2>Step C.3: Mock fetch: loading, list and error</h2>
+
+<div lang="en">
+<p><code>TaskList</code> in <code>src/client/components/TaskList.jsx</code> loads the tasks with <code>fetch</code> and shows one of four things: <em>Loading...</em>, an error, an empty message, or the list. Again there is something outside (the network), so use a double: <code>vi.stubGlobal('fetch', fetchMock)</code> replaces the global <code>fetch</code> for the test, and <code>vi.unstubAllGlobals()</code> puts it back afterwards.</p>
+<p>The data arrives <em>later</em>, so a test must wait. <code>findBy...</code> (for example <code>findByText</code>) keeps looking for up to a second and returns when the thing shows up; <code>getBy...</code> looks once and fails at once. Rule: <strong><code>getBy</code> for what is there now, <code>findBy</code> for what will appear</strong>. The helper <code>answer(...)</code> in the code builds what a real response looks like (<code>ok</code>, <code>status</code>, <code>json()</code>). A promise that never ends, <code>new Promise(() =&gt; {})</code>, keeps the component in its loading state.</p>
+</div>
+<div lang="th">
+<p><code>TaskList</code> ใน <code>src/client/components/TaskList.jsx</code> โหลด task ด้วย <code>fetch</code> และแสดงหนึ่งในสี่อย่าง: <em>Loading...</em>, error, ข้อความว่าง หรือรายการ ครั้งนี้ก็มีของที่อยู่ข้างนอก (เครือข่าย) จึงใช้ double: <code>vi.stubGlobal('fetch', fetchMock)</code> แทน <code>fetch</code> ส่วนกลางใน test และ <code>vi.unstubAllGlobals()</code> คืนของเดิมทีหลัง</p>
+<p>ข้อมูลมา <em>ทีหลัง</em> test จึงต้องรอ <code>findBy...</code> (เช่น <code>findByText</code>) หาต่อได้ถึงหนึ่งวินาทีและคืนค่าเมื่อของโผล่มา ส่วน <code>getBy...</code> หาครั้งเดียวและล้มทันที กฎ: <strong><code>getBy</code> สำหรับของที่มีอยู่ตอนนี้ <code>findBy</code> สำหรับของที่จะโผล่</strong> ตัวช่วย <code>answer(...)</code> ในโค้ดสร้างสิ่งที่หน้าตาเหมือน response จริง (<code>ok</code>, <code>status</code>, <code>json()</code>) promise ที่ไม่จบ <code>new Promise(() =&gt; {})</code> ทำให้ component ค้างอยู่ในสถานะ loading</p>
+</div>
+
+<p class="where">Create the file <code>tests/TaskList.test.jsx</code> (in the Explorer: unit &rsaquo; tests &rsaquo; TaskList.test.jsx; right-click the folder, then <em>New File</em>). Paste the code into it and save.</p>
+<pre data-snippet data-file="tests/TaskList.test.jsx" data-position="end"><code class="language-javascript">import { render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import TaskList from '../src/client/components/TaskList.jsx';
+
+let fetchMock;
+// What fetch gives back: an object with ok, status and a json() function.
+const answer = (body, { ok = true, status = 200 } = {}) =&gt; ({ ok, status, json: async () =&gt; body });
+
+beforeEach(() =&gt; {
+  fetchMock = vi.fn();
+  vi.stubGlobal('fetch', fetchMock);
+});
+
+afterEach(() =&gt; {
+  vi.unstubAllGlobals();
+});
+
+describe('TaskList', () =&gt; {
+  it('shows Loading... while the tasks are on their way', () =&gt; {
+    fetchMock.mockReturnValue(new Promise(() =&gt; {})); // never answers
+
+    render(&lt;TaskList /&gt;);
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+  });
+
+  it('shows the tasks it receives', async () =&gt; {
+    fetchMock.mockResolvedValue(
+      answer([
+        { id: 1, title: 'Buy milk', done: 0 },
+        { id: 2, title: 'Walk the dog', done: 1 },
+      ]),
+    );
+
+    render(&lt;TaskList /&gt;);
+
+    expect(await screen.findByText('Buy milk')).toBeInTheDocument();
+    expect(screen.getByText('Walk the dog')).toBeInTheDocument();
+    expect(screen.getAllByRole('listitem')).toHaveLength(2);
+    expect(fetchMock).toHaveBeenCalledWith('/api/tasks');
+  });
+
+  it('shows a friendly message when there are no tasks', async () =&gt; {
+    fetchMock.mockResolvedValue(answer([]));
+
+    render(&lt;TaskList /&gt;);
+
+    expect(await screen.findByText(/No tasks yet/)).toBeInTheDocument();
+  });
+
+  it('shows an error when the server answers with an error', async () =&gt; {
+    fetchMock.mockResolvedValue(answer([], { ok: false, status: 500 }));
+
+    render(&lt;TaskList /&gt;);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Could not load tasks (500)');
+  });
+});</code></pre>
+
+<pre data-command><code>npx vitest run tests/TaskList.test.jsx</code></pre>
+
+<details>
+  <summary>Hint</summary>
+  <p>"Unable to find an element" after a second: the text in your test must match what <code>TaskList.jsx</code> shows. The empty message is matched with a pattern, <code>/No tasks yet/</code>, so the rest of the sentence does not matter.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/TaskList.test.jsx</code> (create the file):</p>
+  <pre data-snippet data-file="tests/TaskList.test.jsx" data-position="end"><code class="language-javascript">import { render, screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import TaskList from '../src/client/components/TaskList.jsx';
+
+let fetchMock;
+// What fetch gives back: an object with ok, status and a json() function.
+const answer = (body, { ok = true, status = 200 } = {}) =&gt; ({ ok, status, json: async () =&gt; body });
+
+beforeEach(() =&gt; {
+  fetchMock = vi.fn();
+  vi.stubGlobal('fetch', fetchMock);
+});
+
+afterEach(() =&gt; {
+  vi.unstubAllGlobals();
+});
+
+describe('TaskList', () =&gt; {
+  it('shows Loading... while the tasks are on their way', () =&gt; {
+    fetchMock.mockReturnValue(new Promise(() =&gt; {})); // never answers
+
+    render(&lt;TaskList /&gt;);
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+  });
+
+  it('shows the tasks it receives', async () =&gt; {
+    fetchMock.mockResolvedValue(
+      answer([
+        { id: 1, title: 'Buy milk', done: 0 },
+        { id: 2, title: 'Walk the dog', done: 1 },
+      ]),
+    );
+
+    render(&lt;TaskList /&gt;);
+
+    expect(await screen.findByText('Buy milk')).toBeInTheDocument();
+    expect(screen.getByText('Walk the dog')).toBeInTheDocument();
+    expect(screen.getAllByRole('listitem')).toHaveLength(2);
+    expect(fetchMock).toHaveBeenCalledWith('/api/tasks');
+  });
+
+  it('shows a friendly message when there are no tasks', async () =&gt; {
+    fetchMock.mockResolvedValue(answer([]));
+
+    render(&lt;TaskList /&gt;);
+
+    expect(await screen.findByText(/No tasks yet/)).toBeInTheDocument();
+  });
+
+  it('shows an error when the server answers with an error', async () =&gt; {
+    fetchMock.mockResolvedValue(answer([], { ok: false, status: 500 }));
+
+    render(&lt;TaskList /&gt;);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Could not load tasks (500)');
+  });
+});</code></pre>
+</details>
+
+<div data-check="list-tests"></div>

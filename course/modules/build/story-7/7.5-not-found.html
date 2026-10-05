@@ -1,0 +1,35 @@
+<h2>Step 7.5: One error shape</h2>
+
+<div lang="en">
+<p>When a client asks for a path that does not exist under <code>/api</code>, Express answers with an HTML page. Add a catch-all that answers the JSON error shape instead.</p>
+<p>Express runs <code>app.use</code> in order, so this one sits <strong>after</strong> all the real routes: it only runs when no route answered. The error handler at the very end of <code>app.js</code> (already there) catches everything that was passed to <code>next(err)</code> and answers <code>500</code> with the same shape.</p>
+</div>
+<div lang="th">
+<p>เมื่อ client ขอ path ที่ไม่มีอยู่ใต้ <code>/api</code> Express จะตอบเป็นหน้า HTML เพิ่มตัวรับทั้งหมดที่ตอบเป็น JSON รูปแบบ error แทน</p>
+<p>Express รัน <code>app.use</code> ตามลำดับ ตัวนี้จึงอยู่ <strong>หลัง</strong> route จริงทั้งหมด: มันทำงานเฉพาะเมื่อไม่มี route ไหนตอบ ตัวจัดการ error ท้ายสุดของ <code>app.js</code> (มีอยู่แล้ว) รับทุกอย่างที่ส่งด้วย <code>next(err)</code> และตอบ <code>500</code> ด้วยรูปแบบเดียวกัน</p>
+</div>
+
+<p class="where">Edit <code>server/app.js</code> (in the Explorer: build &rsaquo; server &rsaquo; app.js). Write the code between the comments <code>@tutorial:begin s7-5-not-found</code> and <code>@tutorial:end s7-5-not-found</code>.</p>
+
+<pre data-snippet data-file="server/app.js" data-zone="s7-5-not-found"><code class="language-javascript">app.use('/api', (req, res) =&gt; {
+  res.status(404).json({ error: 'Not found' });
+});</code></pre>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="3000" data-path="/api/nothing-here">Open /api/nothing-here</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p><code>app.use('/api', handler)</code> matches every path that starts with <code>/api</code>. Keep it below the routers you mounted.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>server/app.js</code>, between the comments of <code>s7-5-not-found</code>:</p>
+  <pre data-snippet data-file="server/app.js" data-zone="s7-5-not-found"><code class="language-javascript">app.use('/api', (req, res) =&gt; {
+  res.status(404).json({ error: 'Not found' });
+});</code></pre>
+</details>
+
+<div data-check="not-found-json"></div>

@@ -1,0 +1,19 @@
+<h2>Step 6.4: Check Story 6</h2>
+
+<div lang="en">
+<p>The check asks for the history (and for <code>days=0</code>) and reads your <code>HistoryView</code> code.</p>
+</div>
+<div lang="th">
+<p>การตรวจจะขอ history (และ <code>days=0</code>) และอ่านโค้ด <code>HistoryView</code> ของคุณ</p>
+</div>
+
+<div data-check="history">
+  <pre><code>  PASS  GET /api/tasks/history lists tasks completed in the last days
+  PASS  GET /api/tasks/history?days=0 answers 400
+  PASS  HistoryView.jsx loads and shows the history</code></pre>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>If the history is empty, the sample data may be gone: run <code>reset-db</code> in the terminal.</p>
+</details>

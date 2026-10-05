@@ -17,7 +17,7 @@ async function findTask(id) {
   return rows[0];
 }
 
-// @tutorial:begin s2-1-validate
+// @tutorial:begin s2-3-validate
 // Checks a task from the request body. Returns { error } or { value }.
 function validateTask(body) {
   const title = typeof body?.title === 'string' ? body.title.trim() : '';
@@ -34,7 +34,7 @@ function validateTask(body) {
 
   return { value: { title, priority, dueDate, groupId } };
 }
-// @tutorial:end s2-1-validate
+// @tutorial:end s2-3-validate
 
 // @tutorial:begin s5-2-filter-sort
 // TODO (s5-2-filter-sort): write your code here
@@ -65,28 +65,17 @@ router.get('/', async (req, res, next) => {
 
 // @tutorial:end s7-2-get-one
 
-// @tutorial:begin s2-2-create-task
-router.post('/', async (req, res, next) => {
-  const { error, value } = validateTask(req.body);
-  if (error) return res.status(400).json({ error });
-  try {
-    const [result] = await db.query(
-      'INSERT INTO tasks (user_id, group_id, title, priority, due_date) VALUES (?, ?, ?, ?, ?)',
-      [USER_ID, value.groupId, value.title, value.priority, value.dueDate],
-    );
-    res.status(201).json(await findTask(result.insertId));
-  } catch (err) {
-    if (err.code === 'ER_NO_REFERENCED_ROW_2') return res.status(400).json({ error: 'group_id does not exist' });
-    next(err);
-  }
-});
-// @tutorial:end s2-2-create-task
-
-// @tutorial:begin s3-2-set-done
-// TODO (s3-2-set-done): write your code here
+// @tutorial:begin s2-4-create-task
+// TODO (s2-4-create-task): write your code here
 
 
-// @tutorial:end s3-2-set-done
+// @tutorial:end s2-4-create-task
+
+// @tutorial:begin s3-3-set-done
+// TODO (s3-3-set-done): write your code here
+
+
+// @tutorial:end s3-3-set-done
 
 // @tutorial:begin s7-3-update-task
 // TODO (s7-3-update-task): write your code here

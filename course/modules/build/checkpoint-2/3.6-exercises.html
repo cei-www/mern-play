@@ -1,0 +1,77 @@
+<h2>Step 3.6: Checkpoint 2: two exercises</h2>
+
+<div class="checkpoint">
+  <div lang="en">
+    <p>About 15 minutes. Both exercises are optional. Try first, then the hint, and only then the solution.</p>
+  </div>
+  <div lang="th">
+    <p>ใช้เวลาประมาณ 15 นาที โจทย์ทั้งสองข้อเป็นทางเลือก ลองทำเองก่อน แล้วค่อยเปิด hint และเปิด solution เป็นลำดับสุดท้าย</p>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 3 (easier): Summary</h3>
+    <div lang="en">
+      <p>Write the component <code>Summary</code>. It receives the list <code>tasks</code> as a prop and shows how many are done, in this form: <code>2 of 14 done</code>. (A task is done when <code>task.done === 1</code>.) The page already shows it above the form.</p>
+    </div>
+    <div lang="th">
+      <p>เขียน component <code>Summary</code> รับรายการ <code>tasks</code> เป็น prop และแสดงจำนวนที่เสร็จแล้วในรูปแบบ <code>2 of 14 done</code> (task เสร็จเมื่อ <code>task.done === 1</code>) หน้าเว็บแสดงมันไว้เหนือฟอร์มอยู่แล้ว</p>
+    </div>
+    <p class="where">Edit <code>client/src/components/Summary.jsx</code> (in the Explorer: build &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; Summary.jsx). Write the code between the comments <code>@tutorial:begin exercise-3-summary</code> and <code>@tutorial:end exercise-3-summary</code>, inside the function.</p>
+    <details>
+      <summary>Hint</summary>
+      <p>Count with <code>tasks.filter((task) =&gt; task.done === 1).length</code> and return a <code>&lt;p&gt;</code>.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>client/src/components/Summary.jsx</code>, between the comments of <code>exercise-3-summary</code>:</p>
+      <pre data-snippet data-file="client/src/components/Summary.jsx" data-zone="exercise-3-summary"><code class="language-javascript">const done = tasks.filter((task) =&gt; task.done === 1).length;
+return (
+  &lt;p className="summary"&gt;
+    {done} of {tasks.length} done
+  &lt;/p&gt;
+);</code></pre>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 4 (harder): GET /api/search</h3>
+    <div lang="en">
+      <p>Write <code>GET /api/search?q=milk</code>. It answers the tasks whose title <em>contains</em> the text <code>q</code> (use <code>LIKE</code> with <code>%</code> signs around the value, and a placeholder). Newest first, with <code>group_name</code> like the list. When <code>q</code> is missing or empty, answer <code>400</code> with <code>{ "error": "q is required" }</code>.</p>
+    </div>
+    <div lang="th">
+      <p>เขียน <code>GET /api/search?q=milk</code> ให้ตอบ task ที่ title <em>มี</em> ข้อความ <code>q</code> อยู่ (ใช้ <code>LIKE</code> โดยใส่ <code>%</code> รอบค่า และใช้ placeholder) ใหม่สุดก่อน พร้อม <code>group_name</code> เหมือนรายการ เมื่อไม่มี <code>q</code> หรือว่าง ให้ตอบ <code>400</code> พร้อม <code>{ "error": "q is required" }</code></p>
+    </div>
+    <p class="where">Edit <code>server/routes/search.js</code> (in the Explorer: build &rsaquo; server &rsaquo; routes &rsaquo; search.js). Write the code between the comments <code>@tutorial:begin exercise-4-search</code> and <code>@tutorial:end exercise-4-search</code>.</p>
+    <p><button type="button" class="btn btn-sm btn-outline-primary" data-action="swagger" data-op="searchTasks" data-server="app">Try it in Swagger: searchTasks</button></p>
+    <details>
+      <summary>Hint</summary>
+      <p>The <code>%</code> signs belong to the <em>value</em>, not to the SQL text: <code>[`%${q}%`]</code>. The file is already connected to the app at <code>/api/search</code>.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>server/routes/search.js</code>, between the comments of <code>exercise-4-search</code>:</p>
+      <pre data-snippet data-file="server/routes/search.js" data-zone="exercise-4-search"><code class="language-javascript">router.get('/', async (req, res, next) =&gt; {
+  const q = typeof req.query.q === 'string' ? req.query.q.trim() : '';
+  if (!q) return res.status(400).json({ error: 'q is required' });
+  try {
+    const [rows] = await db.query(
+      `SELECT t.*, g.name AS group_name
+       FROM tasks t
+       LEFT JOIN task_groups g ON g.id = t.group_id
+       WHERE t.title LIKE ?
+       ORDER BY t.created_at DESC, t.id DESC`,
+      [`%${q}%`],
+    );
+    res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+    </details>
+  </div>
+</div>
+
+<div data-check="exercise-3-summary">
+  <pre><code>  PASS  Summary.jsx shows how many tasks are done
+  PASS  GET /api/search finds tasks by title</code></pre>
+</div>

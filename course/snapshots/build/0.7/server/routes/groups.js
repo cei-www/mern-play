@@ -5,7 +5,7 @@ const router = express.Router();
 
 const USER_ID = 1;
 
-// @tutorial:begin s4-2-list-groups
+// @tutorial:begin s4-4-list-groups
 router.get('/', async (req, res, next) => {
   try {
     const [rows] = await db.query(
@@ -22,9 +22,9 @@ router.get('/', async (req, res, next) => {
     next(err);
   }
 });
-// @tutorial:end s4-2-list-groups
+// @tutorial:end s4-4-list-groups
 
-// @tutorial:begin s4-3-create-group
+// @tutorial:begin s4-5-create-group
 router.post('/', async (req, res, next) => {
   const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
   if (name.length < 1 || name.length > 50) return res.status(400).json({ error: 'name is required (1-50 characters)' });
@@ -37,6 +37,6 @@ router.post('/', async (req, res, next) => {
     next(err);
   }
 });
-// @tutorial:end s4-3-create-group
+// @tutorial:end s4-5-create-group
 
 module.exports = router;

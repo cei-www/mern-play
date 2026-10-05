@@ -1,0 +1,102 @@
+<h2>Step C.1: Render a component and find things</h2>
+
+<div lang="en">
+<p>Now the React components in <code>src/client/components</code>. A component test has the same three parts, with Testing Library doing the work:</p>
+<ul>
+  <li><code>render(&lt;Summary tasks={...} /&gt;)</code> puts the component on a simulated page (Arrange and Act in one);</li>
+  <li><code>screen</code> finds things the way a <em>user</em> sees them: <code>getByText('1 of 3 done')</code> by visible text, <code>getByRole('button', { name: 'Delete' })</code> by what it <em>is</em> (a button) and its accessible name, <code>getByLabelText('Title')</code> for form fields;</li>
+  <li><code>expect(...).toBeInTheDocument()</code> comes from <code>jest-dom</code>, which adds readable checks for pages.</li>
+</ul>
+<p><strong>Prefer <code>getByRole</code></strong>: it forces the page to be usable with a screen reader, because that is how roles work. Use <code>getByText</code> when there is no role for it. The file ends in <code>.test.jsx</code> because it contains JSX and needs the simulated browser.</p>
+</div>
+<div lang="th">
+<p>ต่อไปคือ React component ใน <code>src/client/components</code> test ของ component มีสามส่วนเหมือนเดิม โดยมี Testing Library ทำงานให้:</p>
+<ul>
+  <li><code>render(&lt;Summary tasks={...} /&gt;)</code> วาง component บนหน้าจำลอง (Arrange และ Act ในคราวเดียว)</li>
+  <li><code>screen</code> หาของแบบที่ <em>ผู้ใช้</em> มองเห็น: <code>getByText('1 of 3 done')</code> จากข้อความที่เห็น, <code>getByRole('button', { name: 'Delete' })</code> จากสิ่งที่มัน <em>เป็น</em> (ปุ่ม) และชื่อที่ screen reader อ่าน, <code>getByLabelText('Title')</code> สำหรับช่องกรอก</li>
+  <li><code>expect(...).toBeInTheDocument()</code> มาจาก <code>jest-dom</code> ที่เพิ่มการตรวจที่อ่านง่ายสำหรับหน้าเว็บ</li>
+</ul>
+<p><strong>ใช้ <code>getByRole</code> ก่อน</strong>: มันบังคับให้หน้าเว็บใช้กับ screen reader ได้ เพราะ role ทำงานแบบนั้น ใช้ <code>getByText</code> เมื่อไม่มี role ที่เหมาะ ไฟล์ลงท้าย <code>.test.jsx</code> เพราะมี JSX และต้องใช้เบราว์เซอร์จำลอง</p>
+</div>
+
+<p class="where">Create the file <code>tests/rendering.test.jsx</code> (in the Explorer: unit &rsaquo; tests &rsaquo; rendering.test.jsx; right-click the folder, then <em>New File</em>). Paste the code into it and save.</p>
+<pre data-snippet data-file="tests/rendering.test.jsx" data-position="end"><code class="language-javascript">import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import Summary from '../src/client/components/Summary.jsx';
+import TaskItem from '../src/client/components/TaskItem.jsx';
+
+describe('Summary', () =&gt; {
+  it('says how many tasks are done', () =&gt; {
+    const tasks = [
+      { id: 1, done: 1 },
+      { id: 2, done: 0 },
+      { id: 3, done: 0 },
+    ];
+
+    render(&lt;Summary tasks={tasks} /&gt;);
+
+    expect(screen.getByText('1 of 3 done')).toBeInTheDocument();
+  });
+
+  it('says 0 of 0 when there are no tasks', () =&gt; {
+    render(&lt;Summary tasks={[]} /&gt;);
+    expect(screen.getByText('0 of 0 done')).toBeInTheDocument();
+  });
+});
+
+describe('TaskItem', () =&gt; {
+  it('shows the title and a Delete button', () =&gt; {
+    render(&lt;TaskItem task={{ id: 1, title: 'Buy milk', done: 0 }} onToggle={() =&gt; {}} onDelete={() =&gt; {}} /&gt;);
+
+    expect(screen.getByText('Buy milk')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: 'Mark "Buy milk" as done' })).toBeInTheDocument();
+  });
+});</code></pre>
+
+<pre data-command><code>npx vitest run tests/rendering.test.jsx</code></pre>
+
+<details>
+  <summary>Hint</summary>
+  <p>If <code>toBeInTheDocument</code> is "not a function", the setup file is missing: it is <code>vitest.setup.js</code> in the project folder and was there from the start. Did the file name end in <code>.test.jsx</code>?</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/rendering.test.jsx</code> (create the file):</p>
+  <pre data-snippet data-file="tests/rendering.test.jsx" data-position="end"><code class="language-javascript">import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import Summary from '../src/client/components/Summary.jsx';
+import TaskItem from '../src/client/components/TaskItem.jsx';
+
+describe('Summary', () =&gt; {
+  it('says how many tasks are done', () =&gt; {
+    const tasks = [
+      { id: 1, done: 1 },
+      { id: 2, done: 0 },
+      { id: 3, done: 0 },
+    ];
+
+    render(&lt;Summary tasks={tasks} /&gt;);
+
+    expect(screen.getByText('1 of 3 done')).toBeInTheDocument();
+  });
+
+  it('says 0 of 0 when there are no tasks', () =&gt; {
+    render(&lt;Summary tasks={[]} /&gt;);
+    expect(screen.getByText('0 of 0 done')).toBeInTheDocument();
+  });
+});
+
+describe('TaskItem', () =&gt; {
+  it('shows the title and a Delete button', () =&gt; {
+    render(&lt;TaskItem task={{ id: 1, title: 'Buy milk', done: 0 }} onToggle={() =&gt; {}} onDelete={() =&gt; {}} /&gt;);
+
+    expect(screen.getByText('Buy milk')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Delete' })).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: 'Mark "Buy milk" as done' })).toBeInTheDocument();
+  });
+});</code></pre>
+</details>
+
+<div data-check="render-tests"></div>

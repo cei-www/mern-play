@@ -1,0 +1,39 @@
+<h2>Step 1.5: See what a class does</h2>
+
+<div lang="en">
+<p>Tailwind is not magic: every class is a normal CSS rule. Learn to look at it. In <strong>Preview</strong> press the button "open in a new browser tab" (the arrow next to the tab name), then open the developer tools (<kbd>F12</kbd>) and click the <em>Elements</em> tab.</p>
+<ol>
+  <li>Select the heading. On the right you see the <em>Styles</em>: <code>.text-2xl { font-size: ...; line-height: ... }</code>. That is what the class makes.</li>
+  <li>Untick a rule in the Styles panel to see the effect, or double-click a class name in the HTML to try another one. This is a fast way to experiment. (Copy what you like into your code afterwards.)</li>
+</ol>
+<p><strong>If a class seems to do nothing:</strong></p>
+<ul>
+  <li>Is the class spelled exactly? <code>text-2xl</code> works, <code>text-2-xl</code> does not.</li>
+  <li>Is it inside a quoted string, with spaces between the classes?</li>
+  <li>Did the build fail? Look at the Vite messages with <code>docker compose logs --tail 20 ws-main</code> on your computer.</li>
+  <li>Tailwind only finds <em>whole</em> class names written in your files. A name built from pieces, like <code>'text-' + size</code>, is never found.</li>
+</ul>
+</div>
+<div lang="th">
+<p>Tailwind ไม่ใช่เวทมนตร์: ทุก class คือกฎ CSS ธรรมดา ฝึกดูมัน ใน <strong>Preview</strong> กดปุ่ม "เปิดในแท็บเบราว์เซอร์ใหม่" (ลูกศรข้างชื่อ tab) แล้วเปิด developer tools (<kbd>F12</kbd>) และคลิก tab <em>Elements</em></p>
+<ol>
+  <li>เลือกหัวข้อ ด้านขวาจะเห็น <em>Styles</em>: <code>.text-2xl { font-size: ...; line-height: ... }</code> นั่นคือสิ่งที่ class ทำ</li>
+  <li>ติ๊กเอากฎออกใน panel Styles เพื่อดูผล หรือดับเบิลคลิกชื่อ class ใน HTML เพื่อลอง class อื่น เป็นวิธีทดลองที่เร็ว (แล้วคัดลอกที่ชอบลงโค้ดของคุณทีหลัง)</li>
+</ol>
+<p><strong>ถ้า class ดูเหมือนไม่ทำอะไร:</strong></p>
+<ul>
+  <li>สะกดถูกตรงตัวไหม? <code>text-2xl</code> ใช้ได้ <code>text-2-xl</code> ใช้ไม่ได้</li>
+  <li>อยู่ในสตริงที่มีเครื่องหมายคำพูดและเว้นวรรคระหว่าง class หรือเปล่า?</li>
+  <li>build ล้มหรือเปล่า? ดูข้อความ Vite ด้วย <code>docker compose logs --tail 20 ws-main</code> บนเครื่องของคุณ</li>
+  <li>Tailwind หาเจอเฉพาะชื่อ class <em>ที่เขียนครบ</em> ในไฟล์ ชื่อที่ประกอบจากหลายส่วน เช่น <code>'text-' + size</code> จะไม่ถูกพบเลย</li>
+</ul>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>The last point is the most common mistake in real projects: always write the full class name.</p>
+</details>

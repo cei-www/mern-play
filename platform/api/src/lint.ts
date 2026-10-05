@@ -13,8 +13,8 @@ export interface LintIssue {
 }
 
 export interface LintOptions {
-  /** Folder with the finished app (`<solutionDir>/<module>/...`). When given, snippet locations are verified against it. */
-  solutionDir?: string;
+  /** Folder(s) with the finished work (`<solutionDir>/<module>/...`). When given, snippet locations are verified against them: a file may be in any of them. */
+  solutionDir?: string | string[];
 }
 
 /** Operation ids defined in the OpenAPI file, or null when the file is missing or unreadable. */
@@ -35,11 +35,7 @@ function openApiOperationIds(courseDir: string): Set<string> | null {
 
 const textOf = (el: HTMLElement): string => el.textContent.replace(/\s+/g, ' ').trim();
 
-function lintLessonHtml(
-  html: string,
-  ctx: { module: LoadedModule; file: string; ops: Set<string> | null; solutionDir?: string },
-  issues: LintIssue[],
-): void {
+function lintLessonHtml(html: string, ctx: { module: LoadedModule; file: string; ops: Set<string> | null; solutionDirs: string[] }, issues: LintIssue[]): void {
   const add = (rule: string, message: string): void => {
     issues.push({ module: ctx.module.module.id, file: ctx.file, rule, message });
   };
@@ -76,10 +72,10 @@ function lintLessonHtml(
       if (!hasNote) add('where-to-edit', `no visible note (class="where") naming ${file} before its code snippet`);
     }
 
-    // The place must exist in the finished app.
-    if (file && ctx.solutionDir) {
-      const target = path.join(ctx.solutionDir, ctx.module.module.id, file);
-      if (!fs.existsSync(target)) add('snippet-solution', `${file} does not exist in the reference solution`);
+    // The place must exist in the finished work.
+    if (file && ctx.solutionDirs.length > 0) {
+      const target = ctx.solutionDirs.map((dir) => path.join(dir, ctx.module.module.id, file)).find((candidate) => fs.existsSync(candidate));
+      if (!target) add('snippet-solution', `${file} does not exist in the reference solution`);
       else {
         const content = fs.readFileSync(target, 'utf8');
         if (zone && !new RegExp(`@tutorial:begin\\s+${zone.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\w.-])`).test(content)) {
@@ -104,13 +100,13 @@ function lintLessonHtml(
   root.querySelectorAll('[lang="th"]').forEach((th) => {
     const prev = th.previousElementSibling as HTMLElement | null;
     if (!prev || prev.getAttribute('lang') !== 'en') add('lang-pair', 'a lang="th" block must directly follow its lang="en" block');
-    if (th.closest('details, .exercise, .checkpoint, h1, h2, h3, h4, h5, h6')) {
-      add('lang-scope', 'Thai text is allowed only in step prose, not in hints, solutions, exercises, checkpoints or headings');
+    if (th.closest('details, h1, h2, h3, h4, h5, h6')) {
+      add('lang-scope', 'Thai text is allowed only in step prose and in the statements of checkpoint exercises, not in hints, solutions or headings');
     }
   });
 }
 
-const CHECK_TYPES = ['http', 'sql', 'file', 'test', 'flow'];
+const CHECK_TYPES = ['http', 'sql', 'file', 'test', 'flow', 'robot', 'mutation'];
 
 /** Problems with one check definition from lesson.yaml (what `tutorial check` needs to run it). */
 export function checkDefProblems(def: unknown): string[] {
@@ -120,10 +116,25 @@ export function checkDefProblems(def: unknown): string[] {
   if (typeof type !== 'string' || !CHECK_TYPES.includes(type)) return [`type must be one of: ${CHECK_TYPES.join(', ')}`];
   const problems: string[] = [];
   const has = (key: string): boolean => d[key] !== undefined && d[key] !== null && d[key] !== '';
-  if (type === 'http' && !(typeof d.request === 'object' && d.request !== null && has('request') && 'url' in d.request)) problems.push('http check needs request.url');
+  if (type === 'http' && !(typeof d.request === 'object' && d.request !== null && has('request') && 'url' in d.request))
+    problems.push('http check needs request.url');
   if (type === 'sql' && !has('query')) problems.push('sql check needs a query');
   if (type === 'file' && !has('path')) problems.push('file check needs a path');
   if (type === 'test' && !(Array.isArray(d.command) && d.command.length > 0)) problems.push('test check needs a command list');
+  if (type === 'mutation') {
+    if (typeof d.suite !== 'object' || d.suite === null) problems.push('mutation check needs a suite (a robot or test check)');
+    else checkDefProblems(d.suite).forEach((p) => problems.push(`suite: ${p}`));
+    if (!Array.isArray(d.mutants) || d.mutants.length === 0) problems.push('mutation check needs mutants');
+    else {
+      const source = d.mutants.filter((m) => typeof m === 'object' && m !== null && 'file' in m);
+      if (source.length === 0 && !has('control')) problems.push('mutation check needs a control url');
+      source.forEach((m, i) => {
+        const mm = m as Record<string, unknown>;
+        if (typeof mm.find !== 'string' || mm.find === '' || typeof mm.replace !== 'string')
+          problems.push(`mutants[${i}]: a source mutant needs file, find and replace`);
+      });
+    }
+  }
   if (type === 'flow') {
     if (!Array.isArray(d.steps) || d.steps.length === 0) problems.push('flow check needs steps');
     else d.steps.forEach((step, i) => checkDefProblems(step).forEach((p) => problems.push(`steps[${i}]: ${p}`)));
@@ -157,7 +168,8 @@ export function lintCourse(courseDir: string, options: LintOptions = {}): LintIs
         seen.add(step.id);
 
         for (const check of step.checks ?? []) {
-          if (!(check in mod.module.checks)) issues.push({ module: id, file: 'lesson.yaml', rule: 'check-id', message: `step ${step.id} uses check "${check}" which is not defined` });
+          if (!(check in mod.module.checks))
+            issues.push({ module: id, file: 'lesson.yaml', rule: 'check-id', message: `step ${step.id} uses check "${check}" which is not defined` });
         }
 
         const file = path.join(mod.dir, step.file);
@@ -165,7 +177,7 @@ export function lintCourse(courseDir: string, options: LintOptions = {}): LintIs
           issues.push({ module: id, file: step.file, rule: 'missing-file', message: `step ${step.id}: lesson file does not exist` });
           continue;
         }
-        lintLessonHtml(fs.readFileSync(file, 'utf8'), { module: mod, file: step.file, ops, solutionDir: options.solutionDir }, issues);
+        lintLessonHtml(fs.readFileSync(file, 'utf8'), { module: mod, file: step.file, ops, solutionDirs: [options.solutionDir ?? []].flat() }, issues);
       }
     }
   }

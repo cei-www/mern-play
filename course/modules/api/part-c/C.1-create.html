@@ -1,0 +1,57 @@
+<h2>Step C.1: POST /api/tasks: 201 and the body</h2>
+
+<div lang="en">
+<p>Now a test that <em>changes</em> data. You send a JSON body: build a dictionary with <code>Create Dictionary</code> and pass it as <code>json=</code>; the library converts it and sets the header for you.</p>
+<p>The title starts with <code>Robot </code> on purpose. Later you will delete every task with that prefix after each test. In Robot a number must be written <code>${2}</code>, otherwise it is the <em>text</em> "2".</p>
+</div>
+<div lang="th">
+<p>ตอนนี้เป็นเทสต์ที่ <em>เปลี่ยน</em> ข้อมูล คุณส่ง body แบบ JSON: สร้าง dictionary ด้วย <code>Create Dictionary</code> แล้วส่งเป็น <code>json=</code> library จะแปลงและตั้ง header ให้เอง</p>
+<p>title ขึ้นต้นด้วย <code>Robot </code> โดยตั้งใจ ภายหลังคุณจะลบทุก task ที่มี prefix นี้หลังเทสต์แต่ละตัว ใน Robot ตัวเลขต้องเขียน <code>${2}</code> ไม่เช่นนั้นจะเป็น <em>ข้อความ</em> "2"</p>
+</div>
+
+<p class="where">Create the file <code>tests/03_tasks_create.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 03_tasks_create.robot) (right-click the folder in the Explorer, then <em>New File</em>).</p>
+
+<pre data-snippet data-file="tests/03_tasks_create.robot" data-position="end"><code class="language-plaintext">*** Settings ***
+Library    RequestsLibrary
+
+*** Variables ***
+${BASE_URL}    http://localhost:3001
+
+*** Test Cases ***
+Create Task Returns 201 And The Task
+    ${body}=    Create Dictionary    title=Robot task one    priority=${2}
+    ${response}=    POST    ${BASE_URL}/api/tasks    json=${body}
+    Should Be Equal As Integers    ${response.status_code}    201
+    Should Be Equal    ${response.json()}[title]    Robot task one
+    Should Be True    ${response.json()}[id] &gt; 0</code></pre>
+
+<pre data-command><code>robot --outputdir results tests/03_tasks_create.robot</code></pre>
+
+<p>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="createTask" data-server="reference">Swagger (reference API): createTask</button>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>Pass the dictionary with <code>json=${body}</code>. The new task comes back with an <code>id</code>: <code>${response.json()}[id]</code>.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/03_tasks_create.robot</code> (the whole file so far):</p>
+  <pre data-snippet data-file="tests/03_tasks_create.robot" data-position="end"><code class="language-plaintext">*** Settings ***
+Library    RequestsLibrary
+
+*** Variables ***
+${BASE_URL}    http://localhost:3001
+
+*** Test Cases ***
+Create Task Returns 201 And The Task
+    ${body}=    Create Dictionary    title=Robot task one    priority=${2}
+    ${response}=    POST    ${BASE_URL}/api/tasks    json=${body}
+    Should Be Equal As Integers    ${response.status_code}    201
+    Should Be Equal    ${response.json()}[title]    Robot task one
+    Should Be True    ${response.json()}[id] &gt; 0</code></pre>
+</details>
+
+<div data-check="create-tests-1"></div>

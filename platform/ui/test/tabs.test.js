@@ -11,6 +11,9 @@ describe('tab list and URLs', () => {
   it('builds service URLs from the ports', () => {
     expect(editorUrl(ports)).toBe('http://localhost:8081/?folder=/workspace');
     expect(robotUrl({ ...ports, robot: 9083 })).toBe('http://localhost:9083/?folder=/workspace');
+    // With a module, the editor opens that module's folder so the terminal starts there.
+    expect(editorUrl(ports, 'style')).toBe('http://localhost:8081/?folder=/workspace/style');
+    expect(robotUrl(ports, 'api')).toBe('http://localhost:8083/?folder=/workspace/api');
     expect(databaseUrl(ports)).toContain(':8085/?server=db&username=viewer');
     expect(previewUrl(3000, '/api/tasks')).toBe('http://localhost:3000/api/tasks');
     expect(previewUrl(5173, 'x')).toBe('http://localhost:5173/x');

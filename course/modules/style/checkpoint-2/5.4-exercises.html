@@ -1,0 +1,53 @@
+<h2>Step 5.4: Checkpoint 2: two exercises</h2>
+
+<div class="checkpoint">
+  <div lang="en">
+    <p>About 15 minutes. Both exercises are optional. Try first, then the hint, and only then the solution. The check only reads your classes: look at <strong>Preview</strong> to see whether you like the result.</p>
+  </div>
+  <div lang="th">
+    <p>ใช้เวลาประมาณ 15 นาที โจทย์ทั้งสองข้อเป็นทางเลือก ลองทำเองก่อน แล้วค่อยเปิด hint และเปิด solution เป็นลำดับสุดท้าย การตรวจอ่านแค่ class ของคุณ ดูที่ <strong>Preview</strong> เองว่าพอใจกับผลลัพธ์หรือไม่</p>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 3 (easier): a finished task and a row that reacts</h3>
+    <div lang="en">
+      <p>Make a <em>completed</em> task look finished: fade the whole row (<code>opacity-60</code>) when <code>task.done</code> is true. And make every row light up a little when the mouse is over it (<code>hover:bg-slate-50</code>).</p>
+    </div>
+    <div lang="th">
+      <p>ทำให้ task ที่ <em>เสร็จแล้ว</em> ดูเสร็จแล้ว: ทำให้ทั้งแถวจางลง (<code>opacity-60</code>) เมื่อ <code>task.done</code> เป็นจริง และทำให้ทุกแถวสว่างขึ้นเล็กน้อยเมื่อเมาส์อยู่เหนือ (<code>hover:bg-slate-50</code>)</p>
+    </div>
+    <p class="where">Edit <code>client/src/components/TaskItem.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskItem.jsx). Write the code between the comments <code>@tutorial:begin exercise-3-done-row</code> and <code>@tutorial:end exercise-3-done-row</code>, in the class list of the <code>li</code>.</p>
+    <details>
+      <summary>Hint</summary>
+      <p><code>task.done &amp;&amp; 'opacity-60'</code> gives the class only when the task is done. A plain string is always on.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>client/src/components/TaskItem.jsx</code>, between the comments of <code>exercise-3-done-row</code>:</p>
+      <pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="exercise-3-done-row"><code class="language-javascript">task.done &amp;&amp; 'opacity-60',
+'hover:bg-slate-50',</code></pre>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 4 (harder): the task list in columns</h3>
+    <div lang="en">
+      <p>Show the tasks in <strong>one column on mobile and two columns from <code>md</code></strong>. Make the <code>ul</code> a grid with a gap, and add the two-column rule for medium screens and up.</p>
+    </div>
+    <div lang="th">
+      <p>แสดง task เป็น <strong>หนึ่งคอลัมน์บนมือถือ และสองคอลัมน์ตั้งแต่ <code>md</code></strong> ทำให้ <code>ul</code> เป็น grid ที่มี gap และเพิ่มกฎสองคอลัมน์สำหรับจอขนาดกลางขึ้นไป</p>
+    </div>
+    <p class="where">Edit <code>client/src/components/TaskList.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskList.jsx). Write the code between the comments <code>@tutorial:begin exercise-4-task-columns</code> and <code>@tutorial:end exercise-4-task-columns</code>, in the class list of the <code>ul</code>.</p>
+    <details>
+      <summary>Hint</summary>
+      <p>Mobile first: a plain <code>grid gap-3</code> gives one column, and <code>md:grid-cols-2</code> makes two from 768px. The rows keep their own bottom margin.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>client/src/components/TaskList.jsx</code>, between the comments of <code>exercise-4-task-columns</code>:</p>
+      <pre data-snippet data-file="client/src/components/TaskList.jsx" data-zone="exercise-4-task-columns"><code class="language-javascript">'grid gap-3 md:grid-cols-2',</code></pre>
+    </details>
+  </div>
+</div>
+
+<div data-check="exercise-3-done-row"></div>

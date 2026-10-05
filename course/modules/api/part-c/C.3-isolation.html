@@ -1,0 +1,27 @@
+<h2>Step C.3: Test isolation</h2>
+
+<div lang="en">
+<p>Tests that write data must not disturb each other, and must not touch your real data. Two habits make this safe:</p>
+<ul>
+  <li><strong>A separate database.</strong> The reference API for this module uses <code>taskapp_test</code>, never <code>taskapp</code> (your app's data). You can destroy it and restore it with <code>reset-db</code> without any worry.</li>
+  <li><strong>Each test cleans up after itself.</strong> A test must not depend on what another test left behind, and it must not leave rows that change the result of the next run. You will add a teardown in step C.5.</li>
+</ul>
+<p>A test that passes only when it runs after another test, or only the first time, is called <em>flaky</em>. Flaky tests teach people to ignore failures.</p>
+</div>
+<div lang="th">
+<p>เทสต์ที่เขียนข้อมูลต้องไม่รบกวนกัน และต้องไม่แตะข้อมูลจริงของคุณ นิสัยสองข้อทำให้ปลอดภัย:</p>
+<ul>
+  <li><strong>ฐานข้อมูลแยก</strong> reference API ของ module นี้ใช้ <code>taskapp_test</code> ไม่ใช่ <code>taskapp</code> (ข้อมูลของแอปคุณ) คุณทำลายและกู้คืนด้วย <code>reset-db</code> ได้โดยไม่ต้องกังวล</li>
+  <li><strong>เทสต์แต่ละตัวเก็บกวาดหลังตัวเอง</strong> เทสต์ต้องไม่พึ่งสิ่งที่เทสต์อื่นทิ้งไว้ และต้องไม่ทิ้งแถวที่ทำให้ผลของการรันครั้งถัดไปเปลี่ยน คุณจะเพิ่ม teardown ใน step C.5</li>
+</ul>
+<p>เทสต์ที่ผ่านเฉพาะเมื่อรันหลังเทสต์อื่น หรือผ่านเฉพาะครั้งแรก เรียกว่า <em>flaky</em> เทสต์ที่ flaky สอนให้คนเมินความล้มเหลว</p>
+</div>
+
+<div lang="en">
+<p>To restore the test database at any time, type in the Robot terminal:</p>
+</div>
+<div lang="th">
+<p>เมื่อต้องการกู้คืนฐานข้อมูลทดสอบ ให้พิมพ์ใน terminal ของ Robot:</p>
+</div>
+
+<pre data-command><code>reset-db</code></pre>

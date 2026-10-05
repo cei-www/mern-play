@@ -1,0 +1,45 @@
+<h2>Step C.6: PATCH done and completed_at in the database</h2>
+
+<div lang="en">
+<p>Marking a task as done must set <code>completed_at</code> in the database, and the API answer alone does not prove it. Create a task, mark it done with <code>PATCH</code>, then read <code>completed_at</code> with SQL. <code>completed_at IS NOT NULL</code> gives 1 when the time is set.</p>
+</div>
+<div lang="th">
+<p>การทำเครื่องหมายว่าเสร็จต้องตั้ง <code>completed_at</code> ในฐานข้อมูล และคำตอบของ API อย่างเดียวพิสูจน์ไม่ได้ สร้าง task ทำเครื่องหมายด้วย <code>PATCH</code> แล้วอ่าน <code>completed_at</code> ด้วย SQL <code>completed_at IS NOT NULL</code> ให้ค่า 1 เมื่อมีเวลาตั้งไว้</p>
+</div>
+
+<p class="where">Edit <code>tests/03_tasks_create.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 03_tasks_create.robot).</p>
+
+<pre data-snippet data-file="tests/03_tasks_create.robot" data-position="end"><code class="language-plaintext">Marking A Task Done Sets Completed At
+    ${body}=    Create Dictionary    title=Robot done task
+    ${created}=    POST    ${BASE_URL}/api/tasks    json=${body}
+    ${id}=    Set Variable    ${created.json()}[id]
+    ${done}=    Create Dictionary    done=${True}
+    ${response}=    PATCH    ${BASE_URL}/api/tasks/${id}/done    json=${done}
+    Should Be Equal As Integers    ${response.json()}[done]    1
+    ${rows}=    Query    SELECT completed_at IS NOT NULL FROM tasks WHERE id = ${id}
+    Should Be Equal As Integers    ${rows}[0][0]    1</code></pre>
+
+<p>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="setTaskDone" data-server="reference">Swagger (reference API): setTaskDone</button>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>The keyword <code>PATCH</code> works like <code>POST</code>. The path is <code>${BASE_URL}/api/tasks/${id}/done</code> and the body is <code>done=${True}</code>.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/03_tasks_create.robot</code>:</p>
+  <pre data-snippet data-file="tests/03_tasks_create.robot" data-position="end"><code class="language-plaintext">Marking A Task Done Sets Completed At
+    ${body}=    Create Dictionary    title=Robot done task
+    ${created}=    POST    ${BASE_URL}/api/tasks    json=${body}
+    ${id}=    Set Variable    ${created.json()}[id]
+    ${done}=    Create Dictionary    done=${True}
+    ${response}=    PATCH    ${BASE_URL}/api/tasks/${id}/done    json=${done}
+    Should Be Equal As Integers    ${response.json()}[done]    1
+    ${rows}=    Query    SELECT completed_at IS NOT NULL FROM tasks WHERE id = ${id}
+    Should Be Equal As Integers    ${rows}[0][0]    1</code></pre>
+</details>
+
+<div data-check="create-tests-6"></div>

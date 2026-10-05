@@ -1,0 +1,35 @@
+<h2>Step C.2: An empty title returns 400</h2>
+
+<div lang="en">
+<p>First reproduce it by hand: in Swagger (reference API) run <code>createTask</code> with <code>{ "title": "" }</code> and read the <code>400</code> answer. Then automate it. <code>${EMPTY}</code> is the empty text.</p>
+</div>
+<div lang="th">
+<p>เริ่มจากทำซ้ำด้วยมือ: ใน Swagger (reference API) รัน <code>createTask</code> ด้วย <code>{ "title": "" }</code> และอ่านคำตอบ <code>400</code> จากนั้นจึงทำให้เป็นอัตโนมัติ <code>${EMPTY}</code> คือข้อความว่าง</p>
+</div>
+
+<p>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="createTask" data-server="reference">Swagger (reference API): createTask</button>
+</p>
+
+<p class="where">Edit <code>tests/03_tasks_create.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 03_tasks_create.robot).</p>
+
+<pre data-snippet data-file="tests/03_tasks_create.robot" data-position="end"><code class="language-plaintext">Empty Title Is Rejected With 400
+    ${body}=    Create Dictionary    title=${EMPTY}
+    ${response}=    POST    ${BASE_URL}/api/tasks    json=${body}    expected_status=400
+    Should Contain    ${response.json()}[error]    title</code></pre>
+
+<details>
+  <summary>Hint</summary>
+  <p>You must say <code>expected_status=400</code>. Then check that the error message mentions the word <code>title</code> with <code>Should Contain</code>.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/03_tasks_create.robot</code>:</p>
+  <pre data-snippet data-file="tests/03_tasks_create.robot" data-position="end"><code class="language-plaintext">Empty Title Is Rejected With 400
+    ${body}=    Create Dictionary    title=${EMPTY}
+    ${response}=    POST    ${BASE_URL}/api/tasks    json=${body}    expected_status=400
+    Should Contain    ${response.json()}[error]    title</code></pre>
+</details>
+
+<div data-check="create-tests-2"></div>

@@ -1,0 +1,52 @@
+<h2>Step D.2: Variables and a resource file</h2>
+
+<div lang="en">
+<p>Create a resource file. It has the same sections as a test file, but no <em>Test Cases</em>. It loads the libraries and holds the variables, so a test file only needs one line: <code>Resource    ../resources/api.resource</code>.</p>
+</div>
+<div lang="th">
+<p>สร้าง resource file มี section เหมือนไฟล์เทสต์ แต่ไม่มี <em>Test Cases</em> มันโหลด library และเก็บตัวแปร ไฟล์เทสต์จึงต้องการแค่บรรทัดเดียว: <code>Resource    ../resources/api.resource</code></p>
+</div>
+
+<p class="where">Create the file <code>resources/api.resource</code> (in the Explorer: api &rsaquo; resources &rsaquo; api.resource) (right-click the folder in the Explorer, then <em>New File</em>).</p>
+
+<pre data-snippet data-file="resources/api.resource" data-position="end"><code class="language-plaintext">*** Settings ***
+Library    RequestsLibrary
+Library    DatabaseLibrary
+Library    Collections
+
+*** Variables ***
+${BASE_URL}    http://localhost:3001
+${DB_NAME}     taskapp_test
+${DB_USER}     robot
+${DB_PASSWORD}    robot_pw
+${DB_HOST}     db</code></pre>
+
+<div lang="en">
+<p>The path <code>../resources/api.resource</code> is relative to the test file: go up one folder (<code>..</code>), then into <code>resources</code>. Variables can be changed from the command line: <code>robot --variable BASE_URL:http://localhost:3001 tests</code>.</p>
+</div>
+<div lang="th">
+<p>path <code>../resources/api.resource</code> เป็น path เทียบกับไฟล์เทสต์: ขึ้นไปหนึ่งโฟลเดอร์ (<code>..</code>) แล้วเข้า <code>resources</code> ตัวแปรเปลี่ยนจากบรรทัดคำสั่งได้: <code>robot --variable BASE_URL:http://localhost:3001 tests</code></p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>Four variables are about the database (<code>DB_NAME</code>, <code>DB_USER</code>, <code>DB_PASSWORD</code>, <code>DB_HOST</code>) and one is the API address (<code>BASE_URL</code>). The extra library <code>Collections</code> is for later.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>resources/api.resource</code> (the whole file so far):</p>
+  <pre data-snippet data-file="resources/api.resource" data-position="end"><code class="language-plaintext">*** Settings ***
+Library    RequestsLibrary
+Library    DatabaseLibrary
+Library    Collections
+
+*** Variables ***
+${BASE_URL}    http://localhost:3001
+${DB_NAME}     taskapp_test
+${DB_USER}     robot
+${DB_PASSWORD}    robot_pw
+${DB_HOST}     db</code></pre>
+</details>
+
+<div data-check="resource-1"></div>

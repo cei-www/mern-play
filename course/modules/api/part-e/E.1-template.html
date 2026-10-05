@@ -1,0 +1,64 @@
+<h2>Step E.1: Data-driven tests with Test Template</h2>
+
+<div lang="en">
+<p>Many invalid titles should be rejected: empty, only spaces, too long. Writing one test per case is long. With a <strong>test template</strong> you write the steps <em>once</em> (as a keyword) and each test case is just a row of data.</p>
+<p><code>Test Template    Title Should Be Rejected</code> says "every test in this file calls that keyword". The heading <code>*** Test Cases ***    TITLE</code> names the data column. <code>${SPACE}</code> is a space and <code>${{'x' * 101}}</code> runs a bit of Python: 101 letters.</p>
+</div>
+<div lang="th">
+<p>title ที่ไม่ถูกต้องหลายแบบควรถูกปฏิเสธ: ว่าง มีแต่ช่องว่าง ยาวเกินไป การเขียนหนึ่งเทสต์ต่อหนึ่งกรณียาวเกินไป ด้วย <strong>test template</strong> คุณเขียนขั้นตอน <em>ครั้งเดียว</em> (เป็น keyword) และแต่ละเทสต์ก็เป็นแค่แถวข้อมูล</p>
+<p><code>Test Template    Title Should Be Rejected</code> หมายถึง "ทุกเทสต์ในไฟล์นี้เรียก keyword นั้น" หัวตาราง <code>*** Test Cases ***    TITLE</code> ตั้งชื่อคอลัมน์ข้อมูล <code>${SPACE}</code> คือช่องว่าง และ <code>${{'x' * 101}}</code> รันโค้ด Python สั้น ๆ: ตัวอักษร 101 ตัว</p>
+</div>
+
+<p class="where">Create the file <code>tests/06_data_driven.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 06_data_driven.robot) (right-click the folder in the Explorer, then <em>New File</em>).</p>
+
+<pre data-snippet data-file="tests/06_data_driven.robot" data-position="end"><code class="language-plaintext">*** Settings ***
+Resource    ../resources/api.resource
+Test Template    Title Should Be Rejected
+
+*** Test Cases ***    TITLE
+Empty Title    ${EMPTY}
+Spaces Only    ${SPACE}${SPACE}
+Too Long    ${{'x' * 101}}
+
+*** Keywords ***
+Title Should Be Rejected
+    [Arguments]    ${title}
+    ${body}=    Create Dictionary    title=${title}
+    ${response}=    POST    ${BASE_URL}/api/tasks    json=${body}    expected_status=400
+    Should Contain    ${response.json()}[error]    title</code></pre>
+
+<pre data-command><code>robot --outputdir results tests/06_data_driven.robot</code></pre>
+
+<div lang="en">
+<p>Each row appears as its own test in the report. Add a fourth row of your own, for example a title with only a tab.</p>
+</div>
+<div lang="th">
+<p>แต่ละแถวปรากฏเป็นเทสต์ของตัวเองในรายงาน เพิ่มแถวที่สี่ของคุณเอง เช่น title ที่มีแต่ tab</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>The header row and the data rows are separated by two or more spaces. A row whose name is <code>Empty Title</code> and whose data is <code>${EMPTY}</code> calls the template keyword with an empty title.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/06_data_driven.robot</code>:</p>
+  <pre data-snippet data-file="tests/06_data_driven.robot" data-position="end"><code class="language-plaintext">*** Settings ***
+Resource    ../resources/api.resource
+Test Template    Title Should Be Rejected
+
+*** Test Cases ***    TITLE
+Empty Title    ${EMPTY}
+Spaces Only    ${SPACE}${SPACE}
+Too Long    ${{'x' * 101}}
+
+*** Keywords ***
+Title Should Be Rejected
+    [Arguments]    ${title}
+    ${body}=    Create Dictionary    title=${title}
+    ${response}=    POST    ${BASE_URL}/api/tasks    json=${body}    expected_status=400
+    Should Contain    ${response.json()}[error]    title</code></pre>
+</details>
+
+<div data-check="template-tests"></div>

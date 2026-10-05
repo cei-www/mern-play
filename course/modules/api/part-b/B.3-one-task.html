@@ -1,0 +1,35 @@
+<h2>Step B.3: GET /api/tasks/{id}: field values</h2>
+
+<div lang="en">
+<p>Read one task and check a value, not only the shape. The sample data of <code>taskapp_test</code> has task 1 with the title <em>Finish quarterly report</em>. A test on fixed sample data is fine as long as nobody changes it; Part C shows how to keep the data under control.</p>
+</div>
+<div lang="th">
+<p>อ่าน task หนึ่งชิ้นและตรวจ <em>ค่า</em> ไม่ใช่แค่รูปร่าง ข้อมูลตัวอย่างของ <code>taskapp_test</code> มี task หมายเลข 1 ชื่อ <em>Finish quarterly report</em> เทสต์ที่อิงข้อมูลตายตัวใช้ได้ถ้าไม่มีใครเปลี่ยนข้อมูล Part C จะแสดงวิธีควบคุมข้อมูล</p>
+</div>
+
+<p class="where">Edit <code>tests/02_tasks_read.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 02_tasks_read.robot).</p>
+
+<pre data-snippet data-file="tests/02_tasks_read.robot" data-position="end"><code class="language-plaintext">Task 1 Has The Expected Title
+    ${response}=    GET    ${BASE_URL}/api/tasks/1
+    Should Be Equal As Integers    ${response.status_code}    200
+    Should Be Equal    ${response.json()}[title]    Finish quarterly report</code></pre>
+
+<p>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="getTask" data-server="reference">Swagger (reference API): getTask</button>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>The path is <code>${BASE_URL}/api/tasks/1</code>. Compare text with <code>Should Be Equal</code> (not the <em>As Integers</em> one).</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/02_tasks_read.robot</code>:</p>
+  <pre data-snippet data-file="tests/02_tasks_read.robot" data-position="end"><code class="language-plaintext">Task 1 Has The Expected Title
+    ${response}=    GET    ${BASE_URL}/api/tasks/1
+    Should Be Equal As Integers    ${response.status_code}    200
+    Should Be Equal    ${response.json()}[title]    Finish quarterly report</code></pre>
+</details>
+
+<div data-check="read-tests-3"></div>

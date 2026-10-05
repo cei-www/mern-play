@@ -1,0 +1,22 @@
+<h2>Step 7.7: Check Story 7</h2>
+
+<div lang="en">
+<p>The check reads one task, asks for an id that does not exist, updates and deletes tasks through your API, calls an unknown path and reads your <code>TaskItem</code> code.</p>
+</div>
+<div lang="th">
+<p>การตรวจจะอ่าน task หนึ่งชิ้น ขอ id ที่ไม่มีอยู่ แก้และลบ task ผ่าน API ของคุณ เรียก path ที่ไม่รู้จัก และอ่านโค้ด <code>TaskItem</code> ของคุณ</p>
+</div>
+
+<div data-check="get-one">
+  <pre><code>  PASS  GET /api/tasks/:id returns one task
+  PASS  GET /api/tasks/:id answers 404 for an unknown id
+  PASS  PUT /api/tasks/:id changes a task
+  PASS  DELETE /api/tasks/:id removes a task
+  PASS  An unknown path under /api answers a JSON 404
+  PASS  TaskItem.jsx has Edit and Delete</code></pre>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>You now have the complete app. Next: Checkpoint 4, then the wrap-up.</p>
+</details>

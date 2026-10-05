@@ -210,7 +210,8 @@ async function main() {
     if (modules.length === 0) {
       renderSidebar(el('sidebar-body'), modules, current, goTo);
       const body = el('lesson-body');
-      body.innerHTML = '<div class="alert alert-info">No lessons yet. Add a module folder with a <code>lesson.yaml</code> under <code>course/modules/</code>.</div>';
+      body.innerHTML =
+        '<div class="alert alert-info">No lessons yet. Add a module folder with a <code>lesson.yaml</code> under <code>course/modules/</code>.</div>';
       return;
     }
     let target = readHash();
@@ -233,6 +234,7 @@ async function main() {
     renderSidebar(el('sidebar-body'), modules, current, goTo);
     document.title = `${step.id} · CE WebDev Academy : MERN stack`;
     if (moduleChanged) {
+      tabs.setModule(module.id);
       tabs.show(/** @type {import('./tabs.js').TabId} */ (module.defaultTab));
       if (lastStatus) tabs.update(lastStatus, module.startHint);
     }
@@ -241,7 +243,7 @@ async function main() {
     body.setAttribute('aria-busy', 'true');
     try {
       body.innerHTML = await fetchLesson(module.id, step.file);
-      decorateLesson(body, { stepId: step.id, hljs: /** @type {any} */ (window).hljs });
+      decorateLesson(body, { stepId: step.id, tabName: module.defaultTab === 'robot' ? 'Robot' : 'Editor', hljs: /** @type {any} */ (window).hljs });
     } catch (err) {
       showFatal(err instanceof Error ? err.message : String(err));
     }

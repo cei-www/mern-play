@@ -63,7 +63,7 @@ async function start() {
   const tag = op ? tagOfOperation(spec, op) : null;
   if (op && tag) window.location.hash = `#/${encodeURIComponent(tag)}/${encodeURIComponent(op)}`;
 
-  // @ts-ignore SwaggerUIBundle is provided by the vendored script.
+  // @ts-expect-error SwaggerUIBundle is provided by the vendored script.
   window.ui = SwaggerUIBundle({
     spec,
     dom_id: '#swagger-ui',

@@ -1,13 +1,22 @@
 <h2>Checkpoint 1: two exercises</h2>
 
 <div class="checkpoint">
-  <p>About 15 minutes. Both exercises are optional: skipping them does not block the next stories.
-  Try first, then open the hint, and only then the solution.</p>
+  <div lang="en">
+    <p>About 15 minutes. Both exercises are optional: skipping them does not block the next stories. Try first, then open the hint, and only then the solution.</p>
+  </div>
+  <div lang="th">
+    <p>ใช้เวลาประมาณ 15 นาที โจทย์ทั้งสองข้อเป็นทางเลือก ข้ามได้โดยไม่กระทบ story ถัดไป ลองทำเองก่อน แล้วค่อยเปิด hint และเปิด solution เป็นลำดับสุดท้าย</p>
+  </div>
 
   <div class="exercise">
     <h3>Exercise 1 (easier): the 5 latest open tasks</h3>
-    <p>Write a SQL query that returns the <code>id</code>, <code>title</code> and <code>created_at</code> of the 5 newest tasks that are not done yet.
+    <div lang="en">
+      <p>Write a SQL query that returns the <code>id</code>, <code>title</code> and <code>created_at</code> of the 5 newest tasks that are not done yet.
     Test it in the Database tab (SQL command), then keep it in your file.</p>
+    </div>
+    <div lang="th">
+      <p>เขียน SQL ที่คืน <code>id</code>, <code>title</code> และ <code>created_at</code> ของ task ใหม่ล่าสุด 5 รายการที่ยังไม่เสร็จ ทดลองใน tab Database (SQL command) แล้วเก็บไว้ในไฟล์ของคุณ</p>
+    </div>
     <p class="where">Edit <code>db/queries.sql</code> (in the Explorer: build &rsaquo; db &rsaquo; queries.sql). Write the query between the comments
       <code>@tutorial:begin exercise-1-latest-open</code> and <code>@tutorial:end exercise-1-latest-open</code>.</p>
     <details>
@@ -27,9 +36,14 @@ LIMIT 5;</code></pre>
 
   <div class="exercise">
     <h3>Exercise 2 (harder): GET /api/stats</h3>
-    <p>Add a route that answers <code>{ "total": 14, "done": 6 }</code>: the number of tasks and how many of them are done (use the real numbers of the database).
+    <div lang="en">
+      <p>Add a route that answers <code>{ "total": 14, "done": 6 }</code>: the number of tasks and how many of them are done (use the real numbers of the database).
     One SQL query is enough: look at <code>COUNT(*)</code> and <code>SUM(done)</code>.
     The file is already connected to the app, so it answers 404 only until you write the route.</p>
+    </div>
+    <div lang="th">
+      <p>เพิ่ม route ที่ตอบ <code>{ "total": 14, "done": 6 }</code>: จำนวน task ทั้งหมดและจำนวนที่เสร็จแล้ว (ใช้ตัวเลขจริงจากฐานข้อมูล) query เดียวก็พอ: ดู <code>COUNT(*)</code> และ <code>SUM(done)</code> ไฟล์นี้ต่อกับแอปไว้แล้ว จึงตอบ 404 จนกว่าคุณจะเขียน route</p>
+    </div>
     <p class="where">Edit <code>server/routes/stats.js</code> (in the Explorer: build &rsaquo; server &rsaquo; routes &rsaquo; stats.js). Write the route between the comments
       <code>@tutorial:begin exercise-2-stats</code> and <code>@tutorial:end exercise-2-stats</code>.</p>
     <p>

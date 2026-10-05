@@ -1,0 +1,21 @@
+<h2>Step 5.5: Check Story 5</h2>
+
+<div lang="en">
+<p>The check asks your API for open tasks, tasks of one group and a sorted list (and compares the first title with the database), tries unsafe values and reads your <code>SortBar</code> code.</p>
+</div>
+<div lang="th">
+<p>การตรวจจะขอ task ที่ยังไม่เสร็จ task ของหนึ่ง group และรายการที่เรียงแล้วจาก API (แล้วเทียบ title แรกกับฐานข้อมูล) ลองค่าที่ไม่ปลอดภัย และอ่านโค้ด <code>SortBar</code> ของคุณ</p>
+</div>
+
+<div data-check="filter-open">
+  <pre><code>  PASS  GET /api/tasks?done=0 returns only open tasks
+  PASS  GET /api/tasks?group_id=1 returns only that group
+  PASS  Sorting by title is correct
+  PASS  An unsafe sort value answers 400
+  PASS  SortBar.jsx has the three controls</code></pre>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>If the sort check fails, compare the first title of <code>/api/tasks?sort=title&amp;order=desc</code> with <code>SELECT title FROM tasks ORDER BY title DESC LIMIT 1</code> in the Database tab.</p>
+</details>

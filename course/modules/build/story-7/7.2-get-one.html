@@ -1,0 +1,51 @@
+<h2>Step 7.2: GET /api/tasks/:id</h2>
+
+<div lang="en">
+<p>Read one task by its id. <code>:id</code> in the path is a <em>route parameter</em>; it arrives as text in <code>req.params.id</code>, so convert it with <code>Number()</code> and check it.</p>
+<p>Three answers: <code>400</code> for an id that is not a number, <code>404</code> when no row has that id, <code>200</code> with the task otherwise. The helper <code>findTask(id)</code> at the top of the file reads one task with its group name.</p>
+</div>
+<div lang="th">
+<p>อ่าน task หนึ่งชิ้นด้วย id <code>:id</code> ใน path คือ <em>route parameter</em> มาถึงเป็นข้อความใน <code>req.params.id</code> จึงต้องแปลงด้วย <code>Number()</code> และตรวจ</p>
+<p>คำตอบมี 3 แบบ: <code>400</code> เมื่อ id ไม่ใช่ตัวเลข <code>404</code> เมื่อไม่มีแถวที่มี id นั้น และ <code>200</code> พร้อม task ในกรณีอื่น ตัวช่วย <code>findTask(id)</code> ที่ต้นไฟล์อ่าน task หนึ่งชิ้นพร้อมชื่อ group</p>
+</div>
+
+<p class="where">Edit <code>server/routes/tasks.js</code> (in the Explorer: build &rsaquo; server &rsaquo; routes &rsaquo; tasks.js). Write the code between the comments <code>@tutorial:begin s7-2-get-one</code> and <code>@tutorial:end s7-2-get-one</code>.</p>
+
+<pre data-snippet data-file="server/routes/tasks.js" data-zone="s7-2-get-one"><code class="language-javascript">router.get('/:id', async (req, res, next) =&gt; {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'id must be a whole number' });
+  try {
+    const task = await findTask(id);
+    if (!task) return res.status(404).json({ error: 'Task not found' });
+    res.json(task);
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+
+<p>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="getTask" data-server="app">Try it in Swagger: getTask</button>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>Order: check the id with <code>Number.isInteger</code>, call <code>await findTask(id)</code>, answer 404 when it returns nothing.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>server/routes/tasks.js</code>, between the comments of <code>s7-2-get-one</code>:</p>
+  <pre data-snippet data-file="server/routes/tasks.js" data-zone="s7-2-get-one"><code class="language-javascript">router.get('/:id', async (req, res, next) =&gt; {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'id must be a whole number' });
+  try {
+    const task = await findTask(id);
+    if (!task) return res.status(404).json({ error: 'Task not found' });
+    res.json(task);
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+</details>
+
+<div data-check="get-one"></div>

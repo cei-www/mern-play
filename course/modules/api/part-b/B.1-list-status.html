@@ -1,0 +1,51 @@
+<h2>Step B.1: GET /api/tasks: status and content type</h2>
+
+<div lang="en">
+<p>A good API test checks more than "it answered". Start a new file for the tests that read tasks. The first test checks the status <strong>and</strong> the <code>Content-Type</code> header, so a client knows it receives JSON.</p>
+<p><code>${response.headers}[Content-Type]</code> reads one header. <code>Should Contain</code> checks that a text contains another (the header is <code>application/json; charset=utf-8</code>).</p>
+</div>
+<div lang="th">
+<p>เทสต์ API ที่ดีตรวจมากกว่าแค่ "มันตอบ" เริ่มไฟล์ใหม่สำหรับเทสต์ที่อ่าน task เทสต์แรกตรวจ status <strong>และ</strong> header <code>Content-Type</code> เพื่อให้ client รู้ว่าได้รับ JSON</p>
+<p><code>${response.headers}[Content-Type]</code> อ่าน header หนึ่งตัว <code>Should Contain</code> ตรวจว่าข้อความหนึ่งมีอีกข้อความอยู่ข้างใน (header คือ <code>application/json; charset=utf-8</code>)</p>
+</div>
+
+<p class="where">Create the file <code>tests/02_tasks_read.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 02_tasks_read.robot) (right-click the folder in the Explorer, then <em>New File</em>).</p>
+
+<pre data-snippet data-file="tests/02_tasks_read.robot" data-position="end"><code class="language-plaintext">*** Settings ***
+Library    RequestsLibrary
+Library    Collections
+
+*** Variables ***
+${BASE_URL}    http://localhost:3001
+
+*** Test Cases ***
+List Tasks Returns 200 And Json
+    ${response}=    GET    ${BASE_URL}/api/tasks
+    Should Be Equal As Integers    ${response.status_code}    200
+    Should Contain    ${response.headers}[Content-Type]    application/json</code></pre>
+
+<pre data-command><code>robot --outputdir results tests/02_tasks_read.robot</code></pre>
+
+<details>
+  <summary>Hint</summary>
+  <p>You can run one file at a time: <code>robot --outputdir results tests/02_tasks_read.robot</code>. The headers of <code>requests</code> are case-insensitive.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/02_tasks_read.robot</code>:</p>
+  <pre data-snippet data-file="tests/02_tasks_read.robot" data-position="end"><code class="language-plaintext">*** Settings ***
+Library    RequestsLibrary
+Library    Collections
+
+*** Variables ***
+${BASE_URL}    http://localhost:3001
+
+*** Test Cases ***
+List Tasks Returns 200 And Json
+    ${response}=    GET    ${BASE_URL}/api/tasks
+    Should Be Equal As Integers    ${response.status_code}    200
+    Should Contain    ${response.headers}[Content-Type]    application/json</code></pre>
+</details>
+
+<div data-check="read-tests-1"></div>

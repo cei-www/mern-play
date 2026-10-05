@@ -1,0 +1,35 @@
+<h2>Step 6.2: Final check</h2>
+
+<div lang="en">
+<p>The final check looks at your project as a whole:</p>
+<ul>
+  <li>the project <strong>builds</strong> without errors (<code>vite build</code>);</li>
+  <li>your classes use <strong>hover</strong>, a <strong>breakpoint</strong> (<code>sm:</code>, <code>md:</code> or <code>lg:</code>) and <strong>dark mode</strong>;</li>
+  <li>there is <strong>no inline <code>style=</code></strong> anywhere: styling is done with classes.</li>
+</ul>
+<p>The check cannot judge how the page <em>looks</em>. Do that yourself: open <strong>Preview</strong> in a full browser tab, resize it, try the light and the dark mode, tab through the page with the keyboard, hover and press the buttons. Compare with your own idea of a good Task Manager.</p>
+</div>
+<div lang="th">
+<p>การตรวจสุดท้ายดูโปรเจกต์ของคุณทั้งหมด:</p>
+<ul>
+  <li>โปรเจกต์ <strong>build</strong> ได้โดยไม่มี error (<code>vite build</code>)</li>
+  <li>class ของคุณใช้ <strong>hover</strong> <strong>breakpoint</strong> (<code>sm:</code>, <code>md:</code> หรือ <code>lg:</code>) และ <strong>dark mode</strong></li>
+  <li><strong>ไม่มี <code>style=</code> แบบ inline</strong> เลย: การจัดสไตล์ทำด้วย class</li>
+</ul>
+<p>การตรวจตัดสินไม่ได้ว่าหน้า <em>ดูเป็นอย่างไร</em> ให้คุณทำเอง: เปิด <strong>Preview</strong> ในแท็บเบราว์เซอร์เต็ม ปรับขนาด ลองโหมดสว่างและโหมดมืด กด Tab ไปทั่วหน้าด้วยคีย์บอร์ด เลื่อนเมาส์และกดปุ่ม แล้วเทียบกับภาพในใจของคุณว่า Task Manager ที่ดีควรเป็นอย่างไร</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<div data-check="final-build">
+  <pre><code>  PASS  The project builds without errors
+  PASS  The classes use hover, a breakpoint and dark mode
+  PASS  There are no inline style attributes</code></pre>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>If a line fails, it says what is missing. Each of Parts D and E teaches the variants. Use <code>grep -rn "style=" client/src</code> in the terminal to find an inline style.</p>
+</details>

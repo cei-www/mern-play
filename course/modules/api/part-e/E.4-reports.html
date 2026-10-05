@@ -1,0 +1,33 @@
+<h2>Step E.4: Read the report in depth</h2>
+
+<div lang="en">
+<p>When a test fails in a big suite you need to find the cause fast. Practice on purpose. Break one test and follow the clues:</p>
+<ol>
+  <li>In <code>tests/06_data_driven.robot</code> change the expected status <code>400</code> to <code>200</code>. Save.</li>
+  <li>Run <code>robot --outputdir results tests</code>. In the terminal, find the failing lines: they name the test and the message.</li>
+  <li>Open <code>report.html</code>, click the red test and then <code>log.html</code>. Open the failed keyword: you see the arguments it received and the exact message.</li>
+  <li>Run again with more detail: <code>robot --outputdir results --loglevel DEBUG tests</code>. The log now has the response bodies.</li>
+  <li>Put <code>400</code> back and run once more: everything is green.</li>
+</ol>
+<p>Read from the bottom: the <em>last</em> keyword in the failed test is usually where the truth is.</p>
+</div>
+<div lang="th">
+<p>เมื่อเทสต์ล้มในชุดใหญ่ คุณต้องหาสาเหตุให้เร็ว ฝึกโดยตั้งใจ ทำให้เทสต์หนึ่งตัวพังแล้วตามร่องรอย:</p>
+<ol>
+  <li>ใน <code>tests/06_data_driven.robot</code> เปลี่ยน status ที่คาดหวังจาก <code>400</code> เป็น <code>200</code> บันทึก</li>
+  <li>รัน <code>robot --outputdir results tests</code> ใน terminal หาบรรทัดที่ล้ม: บอกชื่อเทสต์และข้อความ</li>
+  <li>เปิด <code>report.html</code> คลิกเทสต์สีแดง แล้วคลิก <code>log.html</code> เปิด keyword ที่ล้ม จะเห็น argument ที่มันได้รับและข้อความที่แน่นอน</li>
+  <li>รันอีกครั้งด้วยรายละเอียดมากขึ้น: <code>robot --outputdir results --loglevel DEBUG tests</code> ตอนนี้ log มีเนื้อหาของ response</li>
+  <li>เปลี่ยน <code>400</code> กลับ แล้วรันอีกครั้ง: เขียวหมด</li>
+</ol>
+<p>อ่านจากล่างขึ้นบน: keyword <em>สุดท้าย</em> ของเทสต์ที่ล้มมักเป็นที่ที่ความจริงอยู่</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-outline-primary" data-action="preview" data-port="9323" data-path="/report.html">Open report.html</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>If you forget to change it back, the final check in F.1 fails and tells you which test is red.</p>
+</details>

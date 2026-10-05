@@ -1,0 +1,48 @@
+<h2>Step 5.2: Narrow screens</h2>
+
+<div lang="en">
+<p>On a phone the two columns (groups and tasks) are too tight. Below <code>md</code> you want <strong>one column</strong>, with the group buttons in a row above the tasks, and from <code>md</code> up the groups as a column again.</p>
+<ul>
+  <li><code>max-md:grid-cols-1</code>: the <code>max-</code> prefix applies <em>below</em> the breakpoint, so under 768px the grid has one column (it overrides the two columns of step 2.3).</li>
+  <li><code>md:flex-col</code>: from 768px up the group buttons stack vertically; below it they stay in the row you made with <code>flex flex-wrap</code>.</li>
+</ul>
+</div>
+<div lang="th">
+<p>บนโทรศัพท์ สองคอลัมน์ (group และ task) แคบเกินไป ต่ำกว่า <code>md</code> ต้องการ <strong>คอลัมน์เดียว</strong> โดยให้ปุ่ม group เรียงเป็นแถวเหนือ task และตั้งแต่ <code>md</code> ขึ้นไป group กลับเป็นคอลัมน์</p>
+<ul>
+  <li><code>max-md:grid-cols-1</code>: prefix <code>max-</code> ใช้ <em>ต่ำกว่า</em> breakpoint ต่ำกว่า 768px grid จึงมีคอลัมน์เดียว (ทับสองคอลัมน์ของ step 2.3)</li>
+  <li><code>md:flex-col</code>: ตั้งแต่ 768px ขึ้นไป ปุ่ม group ซ้อนแนวตั้ง ต่ำกว่านั้นอยู่ในแถวที่คุณทำด้วย <code>flex flex-wrap</code></li>
+</ul>
+</div>
+
+<p class="where">Edit <code>client/src/App.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; App.jsx). Write the code between the comments <code>@tutorial:begin s5-2-layout-narrow</code> and <code>@tutorial:end s5-2-layout-narrow</code>, in the class list of the layout <code>div</code>.</p>
+<pre data-snippet data-file="client/src/App.jsx" data-zone="s5-2-layout-narrow"><code class="language-javascript">'max-md:grid-cols-1',</code></pre>
+
+<p class="where">Edit <code>client/src/components/GroupFilter.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; GroupFilter.jsx). Write the code between the comments <code>@tutorial:begin s5-2-groups-narrow</code> and <code>@tutorial:end s5-2-groups-narrow</code>, in the class list of the groups <code>div</code>.</p>
+<pre data-snippet data-file="client/src/components/GroupFilter.jsx" data-zone="s5-2-groups-narrow"><code class="language-javascript">'md:flex-col',</code></pre>
+
+<div lang="en">
+<p>Narrow the browser below 768px and the layout collapses; widen it and it comes back.</p>
+</div>
+<div lang="th">
+<p>ทำให้เบราว์เซอร์แคบกว่า 768px แล้ว layout จะยุบ ขยายแล้วจะกลับมา</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>"Mobile first" says to prefer <code>md:</code> over <code>max-md:</code>. Here <code>max-md:</code> is the shortest way to override the desktop grid of step 2.3, which is why it is used.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/App.jsx</code>, between the comments of <code>s5-2-layout-narrow</code>:</p>
+  <pre data-snippet data-file="client/src/App.jsx" data-zone="s5-2-layout-narrow"><code class="language-javascript">'max-md:grid-cols-1',</code></pre>
+  <p class="where">In <code>client/src/components/GroupFilter.jsx</code>, between the comments of <code>s5-2-groups-narrow</code>:</p>
+  <pre data-snippet data-file="client/src/components/GroupFilter.jsx" data-zone="s5-2-groups-narrow"><code class="language-javascript">'md:flex-col',</code></pre>
+</details>
+
+<div data-check="narrow-layout"></div>

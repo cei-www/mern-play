@@ -78,7 +78,9 @@ export function buildSnapshots(appDir: string, lessonSteps: string[]): BuiltSnap
       if (isExerciseZone(zone.id)) continue;
       const step = stepOfZone(zone.id);
       if (!step) {
-        throw new SnapshotBuildError(`${file}: zone "${zone.id}" is not an exercise zone and is not named after a step (expected s<major>-<minor>-<name>, for example s1-6-list-tasks)`);
+        throw new SnapshotBuildError(
+          `${file}: zone "${zone.id}" is not an exercise zone and is not named after a step (expected s<major>-<minor>-<name>, for example s1-6-list-tasks)`,
+        );
       }
       zoneStepIds.add(step);
     }
@@ -143,5 +145,56 @@ export function diffSnapshots(built: BuiltSnapshots, outDir: string): string[] {
 }
 
 function listFiles(dir: string, base = dir): string[] {
-  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? listFiles(path.join(dir, e.name), base) : [path.relative(base, path.join(dir, e.name))]));
+  return fs
+    .readdirSync(dir, { withFileTypes: true })
+    .flatMap((e) => (e.isDirectory() ? listFiles(path.join(dir, e.name), base) : [path.relative(base, path.join(dir, e.name))]));
+}
+
+/**
+ * The starting project of a module whose finished app is kept as the source: every file of the finished app,
+ * with all step zones replaced by their stubs (exercise zones are left as they are). Files that are not text are copied as they are.
+ */
+export function buildTemplate(appDir: string): Map<string, Buffer> {
+  const files = new Map<string, Buffer>();
+  const walk = (dir: string): void => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (!SKIP_DIRS.has(entry.name)) walk(full);
+      } else if (entry.isFile()) {
+        const rel = path.relative(appDir, full);
+        const bytes = fs.readFileSync(full);
+        if (bytes.includes(0) || !bytes.toString('utf8').includes('@tutorial:begin')) files.set(rel, bytes);
+        else {
+          const { content } = stripZones(toLf(bytes.toString('utf8')), { include: (zoneId) => !isExerciseZone(zoneId) });
+          files.set(rel, Buffer.from(content, 'utf8'));
+        }
+      }
+    }
+  };
+  walk(appDir);
+  return files;
+}
+
+export function writeTemplate(files: Map<string, Buffer>, outDir: string): void {
+  fs.rmSync(outDir, { recursive: true, force: true });
+  for (const [rel, bytes] of files) {
+    const target = path.join(outDir, rel);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, bytes);
+  }
+}
+
+/** Differences between a template folder on disk and the one built from the finished app. */
+export function diffTemplate(files: Map<string, Buffer>, outDir: string): string[] {
+  const problems: string[] = [];
+  for (const [rel, bytes] of files) {
+    const target = path.join(outDir, rel);
+    if (!fs.existsSync(target)) problems.push(`missing: ${rel}`);
+    else if (!fs.readFileSync(target).equals(bytes)) problems.push(`out of date: ${rel}`);
+  }
+  if (fs.existsSync(outDir)) {
+    for (const rel of listFiles(outDir)) if (!files.has(rel) && !rel.split(path.sep).some((part) => SKIP_DIRS.has(part))) problems.push(`unexpected: ${rel}`);
+  }
+  return problems;
 }

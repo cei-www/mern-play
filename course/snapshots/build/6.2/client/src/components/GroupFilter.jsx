@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 // Buttons that choose a group. `value` is the selected group id, or null for "All".
 export default function GroupFilter({ value, onChange, reloadKey = 0 }) {
-  // @tutorial:begin s4-5-group-filter
+  // @tutorial:begin s4-6-group-filter
   const [groups, setGroups] = useState([]);
   const [version, setVersion] = useState(0);
 
@@ -46,5 +46,5 @@ export default function GroupFilter({ value, onChange, reloadKey = 0 }) {
       </button>
     </div>
   );
-  // @tutorial:end s4-5-group-filter
+  // @tutorial:end s4-6-group-filter
 }

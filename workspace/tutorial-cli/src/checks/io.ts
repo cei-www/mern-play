@@ -4,8 +4,7 @@ import type { CheckIo, Row, RunResult } from './types.js';
 
 const MAX_OUTPUT = 1024 * 1024;
 
-const unescapeBatch = (cell: string): string =>
-  cell.replace(/\\([tn0\\])/g, (_m, c: string) => ({ t: '\t', n: '\n', '0': '\0', '\\': '\\' })[c] as string);
+const unescapeBatch = (cell: string): string => cell.replace(/\\([tn0\\])/g, (_m, c: string) => ({ t: '\t', n: '\n', '0': '\0', '\\': '\\' })[c] as string);
 
 /**
  * Parse the output of `mysql --batch` (tab separated, first line = column names, NULL for null).
@@ -63,8 +62,18 @@ export function createIo(config: CliConfig): CheckIo {
     async sql(database, query) {
       const db = config.db;
       if (!db) throw new Error('no database settings for this workspace');
-      const result = await run(['mysql', '-h', db.host, '-u', db.user, '--batch', database, '-e', query], { cwd: '/', timeoutMs: 10000 }, { ...process.env, MYSQL_PWD: db.password });
-      if (result.code !== 0) throw new Error(result.stderr.replace(/^ERROR[^:]*:\s*/m, '').trim().split('\n')[0] || 'the query failed');
+      const result = await run(
+        ['mysql', '-h', db.host, '-u', db.user, '--batch', database, '-e', query],
+        { cwd: '/', timeoutMs: 10000 },
+        { ...process.env, MYSQL_PWD: db.password },
+      );
+      if (result.code !== 0)
+        throw new Error(
+          result.stderr
+            .replace(/^ERROR[^:]*:\s*/m, '')
+            .trim()
+            .split('\n')[0] || 'the query failed',
+        );
       return parseBatchOutput(result.stdout);
     },
     run,

@@ -1,0 +1,29 @@
+<h2>Step D.2: Final check</h2>
+
+<div lang="en">
+<p>The last check looks at your whole test suite:</p>
+<ol>
+  <li>every test passes, and there are enough of them;</li>
+  <li>coverage reaches the threshold in <code>vitest.config.js</code> (40%);</li>
+  <li>your tests catch the bugs: the check puts about a dozen small bugs into the code, one at a time (in a copy, not in your files), and runs your tests. At most two may slip through.</li>
+</ol>
+<p>It takes a minute or two, because it runs the tests many times. If a bug slips through, the message names the missing case: go back to the step of that file and add a test. The checkpoint exercises are not needed to pass.</p>
+</div>
+<div lang="th">
+<p>การตรวจสุดท้ายดูชุด test ทั้งหมดของคุณ:</p>
+<ol>
+  <li>ทุก test ผ่าน และมีจำนวนมากพอ</li>
+  <li>coverage ถึงเกณฑ์ใน <code>vitest.config.js</code></li>
+  <li>test ของคุณจับบั๊กได้: การตรวจใส่บั๊กเล็ก ๆ ราวสิบกว่าตัวลงในโค้ดทีละตัว (ในสำเนา ไม่ใช่ไฟล์ของคุณ) แล้วรัน test ของคุณ หลุดได้ไม่เกินสองตัว</li>
+</ol>
+<p>ใช้เวลาหนึ่งถึงสองนาที เพราะมันรัน test หลายครั้ง ถ้ามีบั๊กหลุด ข้อความจะบอกกรณีที่ขาด: กลับไปที่ step ของไฟล์นั้นแล้วเพิ่ม test โจทย์ใน checkpoint ไม่จำเป็นต่อการผ่าน</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>Run <code>npm test</code> and <code>npm run coverage</code> yourself first. If they pass, the check will reach the bug part. Do not change files in <code>src</code>: the check tells you if you did.</p>
+</details>
+
+<div data-check="final-tests"></div>
+<div data-check="final-coverage"></div>
+<div data-check="final-mutation"></div>

@@ -1,0 +1,75 @@
+<h2>Step 2.4: POST /api/tasks</h2>
+
+<div lang="en">
+<p>Now the route. It validates, runs the <code>INSERT</code> with placeholders and answers <strong>201 Created</strong> with the task that was stored.</p>
+<ul>
+  <li><code>req.body</code> is the JSON the client sent. The line <code>app.use(express.json())</code> in <code>app.js</code> reads it for you.</li>
+  <li>The <code>?</code> placeholders get their values from the array. The array order is the order of the question marks.</li>
+  <li><code>result.insertId</code> is the <code>id</code> that MySQL created. Use it to read the task back with the group name.</li>
+  <li>A group id that does not exist makes MySQL refuse the row (foreign key). The route turns this into a <code>400</code>.</li>
+</ul>
+</div>
+<div lang="th">
+<p>ถึงเวลาทำ route มันตรวจข้อมูล รัน <code>INSERT</code> ด้วย placeholder แล้วตอบ <strong>201 Created</strong> พร้อม task ที่เก็บแล้ว</p>
+<ul>
+  <li><code>req.body</code> คือ JSON ที่ client ส่งมา บรรทัด <code>app.use(express.json())</code> ใน <code>app.js</code> อ่านให้แล้ว</li>
+  <li>placeholder <code>?</code> รับค่าจาก array ลำดับใน array คือลำดับของเครื่องหมายคำถาม</li>
+  <li><code>result.insertId</code> คือ <code>id</code> ที่ MySQL สร้างให้ ใช้อ่าน task กลับมาพร้อมชื่อ group</li>
+  <li>ถ้า group id ไม่มีอยู่จริง MySQL จะปฏิเสธแถว (foreign key) และ route แปลงเป็น <code>400</code></li>
+</ul>
+</div>
+
+<p class="where">Edit <code>server/routes/tasks.js</code> (in the Explorer: build &rsaquo; server &rsaquo; routes &rsaquo; tasks.js). Write the code between the comments <code>@tutorial:begin s2-4-create-task</code> and <code>@tutorial:end s2-4-create-task</code>.</p>
+
+<pre data-snippet data-file="server/routes/tasks.js" data-zone="s2-4-create-task"><code class="language-javascript">router.post('/', async (req, res, next) =&gt; {
+  const { error, value } = validateTask(req.body);
+  if (error) return res.status(400).json({ error });
+  try {
+    const [result] = await db.query(
+      'INSERT INTO tasks (user_id, group_id, title, priority, due_date) VALUES (?, ?, ?, ?, ?)',
+      [USER_ID, value.groupId, value.title, value.priority, value.dueDate],
+    );
+    res.status(201).json(await findTask(result.insertId));
+  } catch (err) {
+    if (err.code === 'ER_NO_REFERENCED_ROW_2') return res.status(400).json({ error: 'group_id does not exist' });
+    next(err);
+  }
+});</code></pre>
+
+<div lang="en">
+<p>Save the file. Try it in Swagger: press <em>Try it out</em>, use the example body and <em>Execute</em>. Then send a body with an empty title and read the <code>400</code> answer.</p>
+</div>
+<div lang="th">
+<p>บันทึกไฟล์ แล้วลองใน Swagger: กด <em>Try it out</em> ใช้ body ตัวอย่างแล้วกด <em>Execute</em> จากนั้นลองส่ง title ว่างและอ่านคำตอบ <code>400</code></p>
+</div>
+
+<p>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="createTask" data-server="app">Try it in Swagger: createTask</button>
+  <button type="button" class="btn btn-sm btn-outline-primary" data-action="swagger" data-op="listTasks" data-server="app">See it in listTasks</button>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>The route has three outcomes: <code>400</code> when validation fails (answer with <code>return</code>), <code>201</code> when the insert works, and <code>next(err)</code> for other database errors. The code <code>ER_NO_REFERENCED_ROW_2</code> means the group does not exist.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>server/routes/tasks.js</code>, between the comments of <code>s2-4-create-task</code>:</p>
+  <pre data-snippet data-file="server/routes/tasks.js" data-zone="s2-4-create-task"><code class="language-javascript">router.post('/', async (req, res, next) =&gt; {
+  const { error, value } = validateTask(req.body);
+  if (error) return res.status(400).json({ error });
+  try {
+    const [result] = await db.query(
+      'INSERT INTO tasks (user_id, group_id, title, priority, due_date) VALUES (?, ?, ?, ?, ?)',
+      [USER_ID, value.groupId, value.title, value.priority, value.dueDate],
+    );
+    res.status(201).json(await findTask(result.insertId));
+  } catch (err) {
+    if (err.code === 'ER_NO_REFERENCED_ROW_2') return res.status(400).json({ error: 'group_id does not exist' });
+    next(err);
+  }
+});</code></pre>
+</details>
+
+<div data-check="create-task"></div>

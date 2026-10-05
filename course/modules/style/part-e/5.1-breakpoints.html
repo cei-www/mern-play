@@ -1,0 +1,42 @@
+<h2>Step 5.1: Mobile first: breakpoints</h2>
+
+<div lang="en">
+<p>People use phones too. Tailwind is <strong>mobile first</strong>: a class without a prefix applies on <em>every</em> screen, starting with the smallest. A prefix such as <code>sm:</code> (640px), <code>md:</code> (768px) or <code>lg:</code> (1024px) adds a class that applies from that width <em>and up</em>.</p>
+<p>So you write the phone version first, and only add what changes on larger screens. You already did this: the page padding is <code>p-3</code> and the title <code>text-2xl</code> for phones. Now add <code>sm:p-6</code> and <code>sm:text-3xl</code>: more room and a bigger title from 640px.</p>
+</div>
+<div lang="th">
+<p>คนใช้โทรศัพท์ด้วย Tailwind เป็น <strong>mobile first</strong>: class ที่ไม่มี prefix ใช้กับ <em>ทุก</em> หน้าจอ เริ่มจากเล็กที่สุด prefix เช่น <code>sm:</code> (640px), <code>md:</code> (768px) หรือ <code>lg:</code> (1024px) เพิ่ม class ที่ใช้ตั้งแต่ความกว้างนั้น <em>ขึ้นไป</em></p>
+<p>คุณจึงเขียนเวอร์ชันโทรศัพท์ก่อน แล้วเพิ่มเฉพาะสิ่งที่เปลี่ยนบนจอใหญ่ คุณทำแบบนี้มาแล้ว: padding ของหน้าคือ <code>p-3</code> และชื่อหน้า <code>text-2xl</code> สำหรับโทรศัพท์ ตอนนี้เพิ่ม <code>sm:p-6</code> และ <code>sm:text-3xl</code>: พื้นที่มากขึ้นและชื่อใหญ่ขึ้นตั้งแต่ 640px</p>
+</div>
+
+<p class="where">Edit <code>client/src/App.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; App.jsx). Write the code between the comments <code>@tutorial:begin s5-1-page-sm</code> and <code>@tutorial:end s5-1-page-sm</code>, in the class list of <code>main</code>.</p>
+<pre data-snippet data-file="client/src/App.jsx" data-zone="s5-1-page-sm"><code class="language-javascript">'sm:p-6',</code></pre>
+
+<p class="where">Edit <code>client/src/App.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; App.jsx). Write the code between the comments <code>@tutorial:begin s5-1-title-sm</code> and <code>@tutorial:end s5-1-title-sm</code>, in the class list of the <code>h1</code>.</p>
+<pre data-snippet data-file="client/src/App.jsx" data-zone="s5-1-title-sm"><code class="language-javascript">'sm:text-3xl',</code></pre>
+
+<div lang="en">
+<p><strong>Seeing it.</strong> The Preview pane is narrow, so it may show the phone version. Press the "open in a new browser tab" arrow of the <strong>Preview</strong> tab, and drag the browser window narrower and wider. Or open the developer tools (<kbd>F12</kbd>) and use the <em>device toolbar</em> (the phone and tablet icon) to choose a phone.</p>
+</div>
+<div lang="th">
+<p><strong>วิธีดูผล</strong> pane Preview แคบ จึงอาจแสดงเวอร์ชันโทรศัพท์ กดลูกศร "เปิดในแท็บเบราว์เซอร์ใหม่" ของ tab <strong>Preview</strong> แล้วลากหน้าต่างเบราว์เซอร์ให้แคบและกว้าง หรือเปิด developer tools (<kbd>F12</kbd>) แล้วใช้ <em>device toolbar</em> (ไอคอนโทรศัพท์และแท็บเล็ต) เพื่อเลือกโทรศัพท์</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>Prefixes stack with states: <code>sm:hover:bg-slate-100</code> means "from sm up, when hovered".</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/App.jsx</code>, between the comments of <code>s5-1-page-sm</code>:</p>
+  <pre data-snippet data-file="client/src/App.jsx" data-zone="s5-1-page-sm"><code class="language-javascript">'sm:p-6',</code></pre>
+  <p class="where">In <code>client/src/App.jsx</code>, between the comments of <code>s5-1-title-sm</code>:</p>
+  <pre data-snippet data-file="client/src/App.jsx" data-zone="s5-1-title-sm"><code class="language-javascript">'sm:text-3xl',</code></pre>
+</details>
+
+<div data-check="responsive-app"></div>

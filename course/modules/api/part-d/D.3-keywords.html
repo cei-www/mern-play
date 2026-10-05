@@ -1,0 +1,35 @@
+<h2>Step D.3: Your own keywords</h2>
+
+<div lang="en">
+<p>A keyword is defined in a <code>*** Keywords ***</code> section: the name on the left edge, the steps indented under it. Add two small ones to the resource file: one that connects to the test database and one that deletes the tasks the tests created. Their names say what they do, so the tests will read well.</p>
+</div>
+<div lang="th">
+<p>keyword นิยามใน section <code>*** Keywords ***</code>: ชื่ออยู่ชิดซ้าย ขั้นตอนเยื้องเข้าไปใต้ชื่อ เพิ่มสองตัวเล็ก ๆ ในไฟล์ resource: ตัวหนึ่งเชื่อมต่อฐานข้อมูลทดสอบ อีกตัวลบ task ที่เทสต์สร้าง ชื่อของมันบอกว่าทำอะไร เทสต์จึงอ่านง่าย</p>
+</div>
+
+<p class="where">Edit <code>resources/api.resource</code> (in the Explorer: api &rsaquo; resources &rsaquo; api.resource). Add at the end of the file.</p>
+
+<pre data-snippet data-file="resources/api.resource" data-position="end"><code class="language-plaintext">*** Keywords ***
+Connect To Test Database
+    Connect To Database    pymysql    db_name=${DB_NAME}    db_user=${DB_USER}    db_password=${DB_PASSWORD}    db_host=${DB_HOST}    db_port=3306
+
+Delete Test Tasks
+    Execute Sql String    DELETE FROM tasks WHERE title LIKE 'Robot %'</code></pre>
+
+<details>
+  <summary>Hint</summary>
+  <p>The first line of the file is still <code>*** Settings ***</code>. The new section <code>*** Keywords ***</code> goes below the variables.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>resources/api.resource</code>, at the end:</p>
+  <pre data-snippet data-file="resources/api.resource" data-position="end"><code class="language-plaintext">*** Keywords ***
+Connect To Test Database
+    Connect To Database    pymysql    db_name=${DB_NAME}    db_user=${DB_USER}    db_password=${DB_PASSWORD}    db_host=${DB_HOST}    db_port=3306
+
+Delete Test Tasks
+    Execute Sql String    DELETE FROM tasks WHERE title LIKE 'Robot %'</code></pre>
+</details>
+
+<div data-check="resource-2"></div>

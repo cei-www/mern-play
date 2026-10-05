@@ -1,0 +1,74 @@
+<h2>Step 2.2: Flex: header and rows</h2>
+
+<div lang="en">
+<p><strong>Flexbox</strong> lays children out in a row. <code>flex</code> turns an element into a flex box and its children line up horizontally. Then:</p>
+<ul>
+  <li><code>items-center</code> centers the children vertically; <code>justify-between</code> pushes the first child to the left and the last to the right.</li>
+  <li><code>gap-3</code> puts equal space between children.</li>
+  <li><code>flex-wrap</code> lets children go to the next line when there is no room.</li>
+  <li><code>flex-col</code> stacks children in a column instead.</li>
+</ul>
+<p>Use it in six places: the page header (title left, tabs right), the tabs, the task row, the form, the group buttons and the sort bar.</p>
+</div>
+<div lang="th">
+<p><strong>Flexbox</strong> จัดลูกให้เรียงเป็นแถว <code>flex</code> ทำให้องค์ประกอบเป็นกล่อง flex และลูกเรียงแนวนอน แล้ว:</p>
+<ul>
+  <li><code>items-center</code> จัดลูกให้กึ่งกลางแนวตั้ง <code>justify-between</code> ดันลูกตัวแรกไปซ้ายและตัวสุดท้ายไปขวา</li>
+  <li><code>gap-3</code> ใส่ช่องว่างเท่ากันระหว่างลูก</li>
+  <li><code>flex-wrap</code> ให้ลูกลงบรรทัดถัดไปเมื่อที่ไม่พอ</li>
+  <li><code>flex-col</code> วางลูกซ้อนเป็นคอลัมน์แทน</li>
+</ul>
+<p>ใช้ใน 6 ที่: header ของหน้า (ชื่อซ้าย tab ขวา), tab, แถว task, ฟอร์ม, ปุ่ม group และแถบเรียงลำดับ</p>
+</div>
+
+<p class="where">Edit <code>client/src/App.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; App.jsx). Write the code between the comments <code>@tutorial:begin s2-2-header-flex</code> and <code>@tutorial:end s2-2-header-flex</code>, in the class list of the <code>header</code>.</p>
+<pre data-snippet data-file="client/src/App.jsx" data-zone="s2-2-header-flex"><code class="language-javascript">'mb-4 flex items-center justify-between',</code></pre>
+
+<p class="where">Edit <code>client/src/App.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; App.jsx). Write the code between the comments <code>@tutorial:begin s2-2-nav-flex</code> and <code>@tutorial:end s2-2-nav-flex</code>, in the class list of the <code>nav</code>.</p>
+<pre data-snippet data-file="client/src/App.jsx" data-zone="s2-2-nav-flex"><code class="language-javascript">'flex gap-2',</code></pre>
+
+<p class="where">Edit <code>client/src/components/TaskItem.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskItem.jsx). Write the code between the comments <code>@tutorial:begin s2-2-row-flex</code> and <code>@tutorial:end s2-2-row-flex</code>, in the class list of the <code>li</code>.</p>
+<pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s2-2-row-flex"><code class="language-javascript">'flex flex-wrap items-center gap-3',</code></pre>
+
+<p class="where">Edit <code>client/src/components/TaskForm.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskForm.jsx). Write the code between the comments <code>@tutorial:begin s2-2-form-flex</code> and <code>@tutorial:end s2-2-form-flex</code>, in the class list of the <code>form</code>.</p>
+<pre data-snippet data-file="client/src/components/TaskForm.jsx" data-zone="s2-2-form-flex"><code class="language-javascript">'flex flex-wrap gap-2',</code></pre>
+
+<p class="where">Edit <code>client/src/components/GroupFilter.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; GroupFilter.jsx). Write the code between the comments <code>@tutorial:begin s2-2-groups-flex</code> and <code>@tutorial:end s2-2-groups-flex</code>, in the class list of the <code>div</code>.</p>
+<pre data-snippet data-file="client/src/components/GroupFilter.jsx" data-zone="s2-2-groups-flex"><code class="language-javascript">'flex flex-wrap gap-2',</code></pre>
+
+<p class="where">Edit <code>client/src/components/SortBar.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; SortBar.jsx). Write the code between the comments <code>@tutorial:begin s2-2-sort-flex</code> and <code>@tutorial:end s2-2-sort-flex</code>, in the class list of the <code>div</code>.</p>
+<pre data-snippet data-file="client/src/components/SortBar.jsx" data-zone="s2-2-sort-flex"><code class="language-javascript">'mb-3 flex flex-wrap gap-4 text-sm',</code></pre>
+
+<div lang="en">
+<p>The app is in the <strong>Preview</strong> tab (port <em>App (for Tailwind)</em>). It reloads by itself when you save.</p>
+</div>
+<div lang="th">
+<p>แอปอยู่ใน tab <strong>Preview</strong> (พอร์ต <em>App (for Tailwind)</em>) และโหลดใหม่เองเมื่อคุณบันทึก</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>"Which class makes it a row?" is <code>flex</code>; the other classes only tune it. A row that does not line up is often missing <code>items-center</code>.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/App.jsx</code>, between the comments of <code>s2-2-header-flex</code>:</p>
+  <pre data-snippet data-file="client/src/App.jsx" data-zone="s2-2-header-flex"><code class="language-javascript">'mb-4 flex items-center justify-between',</code></pre>
+  <p class="where">In <code>client/src/App.jsx</code>, between the comments of <code>s2-2-nav-flex</code>:</p>
+  <pre data-snippet data-file="client/src/App.jsx" data-zone="s2-2-nav-flex"><code class="language-javascript">'flex gap-2',</code></pre>
+  <p class="where">In <code>client/src/components/TaskItem.jsx</code>, between the comments of <code>s2-2-row-flex</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s2-2-row-flex"><code class="language-javascript">'flex flex-wrap items-center gap-3',</code></pre>
+  <p class="where">In <code>client/src/components/TaskForm.jsx</code>, between the comments of <code>s2-2-form-flex</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskForm.jsx" data-zone="s2-2-form-flex"><code class="language-javascript">'flex flex-wrap gap-2',</code></pre>
+  <p class="where">In <code>client/src/components/GroupFilter.jsx</code>, between the comments of <code>s2-2-groups-flex</code>:</p>
+  <pre data-snippet data-file="client/src/components/GroupFilter.jsx" data-zone="s2-2-groups-flex"><code class="language-javascript">'flex flex-wrap gap-2',</code></pre>
+  <p class="where">In <code>client/src/components/SortBar.jsx</code>, between the comments of <code>s2-2-sort-flex</code>:</p>
+  <pre data-snippet data-file="client/src/components/SortBar.jsx" data-zone="s2-2-sort-flex"><code class="language-javascript">'mb-3 flex flex-wrap gap-4 text-sm',</code></pre>
+</details>
+
+<div data-check="flex-app"></div>

@@ -1,0 +1,37 @@
+<h2>Step 2.4: Container, maximum width, centering</h2>
+
+<div lang="en">
+<p>On a wide screen the page stretches edge to edge, which is hard to read. Limit its width and center it: <code>max-w-4xl</code> (a maximum width of 56rem) and <code>mx-auto</code> (automatic left and right margins, which center a block).</p>
+<p>To see the effect you need a wide window: press the "open in a new browser tab" arrow of the <strong>Preview</strong> tab and widen the browser.</p>
+</div>
+<div lang="th">
+<p>บนจอกว้าง หน้าเว็บจะยืดเต็มขอบ ซึ่งอ่านยาก จำกัดความกว้างและจัดกึ่งกลาง: <code>max-w-4xl</code> (ความกว้างสูงสุด 56rem) และ <code>mx-auto</code> (margin ซ้ายขวาอัตโนมัติ ซึ่งทำให้บล็อกอยู่กึ่งกลาง)</p>
+<p>เพื่อเห็นผล ต้องใช้หน้าต่างกว้าง: กดลูกศร "เปิดในแท็บเบราว์เซอร์ใหม่" ของ tab <strong>Preview</strong> แล้วขยายเบราว์เซอร์</p>
+</div>
+
+<p class="where">Edit <code>client/src/App.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; App.jsx). Write the code between the comments <code>@tutorial:begin s2-4-container</code> and <code>@tutorial:end s2-4-container</code>, in the class list of <code>main</code> (below the padding you wrote in step 2.1).</p>
+<pre data-snippet data-file="client/src/App.jsx" data-zone="s2-4-container"><code class="language-javascript">'mx-auto max-w-4xl',</code></pre>
+
+<div lang="en">
+<p>The app is in the <strong>Preview</strong> tab (port <em>App (for Tailwind)</em>). It reloads by itself when you save.</p>
+</div>
+<div lang="th">
+<p>แอปอยู่ใน tab <strong>Preview</strong> (พอร์ต <em>App (for Tailwind)</em>) และโหลดใหม่เองเมื่อคุณบันทึก</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p><code>max-w-</code> comes in sizes from <code>max-w-sm</code> to <code>max-w-7xl</code>. <code>mx-auto</code> does nothing without a maximum width, because a block already fills the line.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/App.jsx</code>, between the comments of <code>s2-4-container</code>:</p>
+  <pre data-snippet data-file="client/src/App.jsx" data-zone="s2-4-container"><code class="language-javascript">'mx-auto max-w-4xl',</code></pre>
+</details>
+
+<div data-check="container"></div>

@@ -1,0 +1,14 @@
+# Send a request with the "Send Request" link above it (REST Client extension).
+# The reference API runs in this container on port 3001.
+
+### Is the API running?
+GET http://localhost:3001/api/health
+
+### All tasks
+GET http://localhost:3001/api/tasks
+
+### Create a task
+POST http://localhost:3001/api/tasks
+Content-Type: application/json
+
+{ "title": "Buy milk", "priority": 1 }

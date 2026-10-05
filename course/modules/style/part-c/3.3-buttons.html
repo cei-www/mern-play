@@ -1,0 +1,47 @@
+<h2>Step 3.3: Buttons and fields</h2>
+
+<div lang="en">
+<p>Tailwind's reset removed the look of buttons and inputs, so you style them yourself. A simple pattern that works well: a border, rounded corners, a white background and padding.</p>
+<p>Style the two tab buttons, the group buttons and the title field of the form. Note <code>min-w-48 flex-1</code> on the field: it can shrink to 12rem and grows to take the free space of the form row.</p>
+</div>
+<div lang="th">
+<p>reset ของ Tailwind ลบหน้าตาของปุ่มและ input ออก คุณจึงจัดสไตล์เอง รูปแบบง่าย ๆ ที่ใช้ได้ดี: เส้นขอบ มุมมน พื้นขาว และ padding</p>
+<p>จัดสไตล์ปุ่ม tab สองปุ่ม ปุ่ม group และช่องชื่อของฟอร์ม สังเกต <code>min-w-48 flex-1</code> ที่ช่อง: มันหดได้ถึง 12rem และขยายกินที่ว่างของแถวฟอร์ม</p>
+</div>
+
+<p class="where">Edit <code>client/src/App.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; App.jsx). Write the code between the comments <code>@tutorial:begin s3-3-tab-base</code> and <code>@tutorial:end s3-3-tab-base</code>, in the class list of the tab <code>button</code>.</p>
+<pre data-snippet data-file="client/src/App.jsx" data-zone="s3-3-tab-base"><code class="language-javascript">'rounded border border-slate-300 bg-white px-3 py-1 capitalize',</code></pre>
+
+<p class="where">Edit <code>client/src/components/GroupFilter.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; GroupFilter.jsx). Write the code between the comments <code>@tutorial:begin s3-3-group-base</code> and <code>@tutorial:end s3-3-group-base</code>, in the class list of the group <code>button</code>.</p>
+<pre data-snippet data-file="client/src/components/GroupFilter.jsx" data-zone="s3-3-group-base"><code class="language-javascript">'rounded border border-slate-300 bg-white px-3 py-1 text-left',</code></pre>
+
+<p class="where">Edit <code>client/src/components/TaskForm.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskForm.jsx). Write the code between the comments <code>@tutorial:begin s3-3-input-base</code> and <code>@tutorial:end s3-3-input-base</code>, in the class list of the title <code>input</code>.</p>
+<pre data-snippet data-file="client/src/components/TaskForm.jsx" data-zone="s3-3-input-base"><code class="language-javascript">'min-w-48 flex-1 rounded border border-slate-300 bg-white px-2 py-1',</code></pre>
+
+<div lang="en">
+<p>The app is in the <strong>Preview</strong> tab (port <em>App (for Tailwind)</em>). It reloads by itself when you save.</p>
+</div>
+<div lang="th">
+<p>แอปอยู่ใน tab <strong>Preview</strong> (พอร์ต <em>App (for Tailwind)</em>) และโหลดใหม่เองเมื่อคุณบันทึก</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p><code>capitalize</code> in the tab classes turns "tasks" into "Tasks" without changing the text in the code.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/App.jsx</code>, between the comments of <code>s3-3-tab-base</code>:</p>
+  <pre data-snippet data-file="client/src/App.jsx" data-zone="s3-3-tab-base"><code class="language-javascript">'rounded border border-slate-300 bg-white px-3 py-1 capitalize',</code></pre>
+  <p class="where">In <code>client/src/components/GroupFilter.jsx</code>, between the comments of <code>s3-3-group-base</code>:</p>
+  <pre data-snippet data-file="client/src/components/GroupFilter.jsx" data-zone="s3-3-group-base"><code class="language-javascript">'rounded border border-slate-300 bg-white px-3 py-1 text-left',</code></pre>
+  <p class="where">In <code>client/src/components/TaskForm.jsx</code>, between the comments of <code>s3-3-input-base</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskForm.jsx" data-zone="s3-3-input-base"><code class="language-javascript">'min-w-48 flex-1 rounded border border-slate-300 bg-white px-2 py-1',</code></pre>
+</details>
+
+<div data-check="buttons-tab"></div>

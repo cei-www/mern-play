@@ -1,0 +1,32 @@
+<h2>Step C.5: Setup and teardown: reset the data</h2>
+
+<div lang="en">
+<p>Your tests have created tasks called <code>Robot ...</code>. A <strong>Test Teardown</strong> runs after <em>every</em> test, even when it failed, and deletes them. <code>Execute Sql String</code> runs one SQL statement. This keeps the database in the same state before every run.</p>
+</div>
+<div lang="th">
+<p>เทสต์ของคุณสร้าง task ชื่อ <code>Robot ...</code> ไว้ <strong>Test Teardown</strong> ทำงานหลังเทสต์ <em>ทุกตัว</em> แม้จะล้ม และลบ task เหล่านั้น <code>Execute Sql String</code> รัน SQL หนึ่งคำสั่ง ทำให้ฐานข้อมูลอยู่ในสภาพเดิมก่อนการรันทุกครั้ง</p>
+</div>
+
+<p class="where">Edit <code>tests/03_tasks_create.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 03_tasks_create.robot). Add this line to the Settings, after the <code>Suite Teardown</code> line:</p>
+
+<pre data-snippet data-file="tests/03_tasks_create.robot" data-after="Suite Teardown    Disconnect From All Databases"><code class="language-plaintext">Test Teardown    Execute Sql String    DELETE FROM tasks WHERE title LIKE 'Robot %'</code></pre>
+
+<div lang="en">
+<p>Run the file twice. Then check in the Database tab that no <code>Robot ...</code> task is left (use the SQL command <code>SELECT title FROM tasks WHERE title LIKE 'Robot %'</code>; the viewer can only read this database).</p>
+</div>
+<div lang="th">
+<p>รันไฟล์สองครั้ง แล้วดูใน tab Database ว่าไม่มี task <code>Robot ...</code> เหลือ (ใช้ SQL command <code>SELECT title FROM tasks WHERE title LIKE 'Robot %'</code> ผู้ใช้ viewer อ่านฐานข้อมูลนี้ได้อย่างเดียว)</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>Use <code>LIKE 'Robot %'</code> with a space after Robot. Setup and teardown can be set for the whole suite (<code>Suite Setup</code>) or for each test (<code>Test Teardown</code>).</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/03_tasks_create.robot</code>:</p>
+  <pre data-snippet data-file="tests/03_tasks_create.robot" data-after="Suite Teardown    Disconnect From All Databases"><code class="language-plaintext">Test Teardown    Execute Sql String    DELETE FROM tasks WHERE title LIKE 'Robot %'</code></pre>
+</details>
+
+<div data-check="create-tests-5"></div>

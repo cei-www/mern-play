@@ -1,0 +1,35 @@
+<h2>Step A.4: Run Robot and read the report</h2>
+
+<div lang="en">
+<p>Open the terminal of the <strong>Robot</strong> tab (menu <em>Terminal</em>, <em>New Terminal</em>). Make sure you are in the folder <code>api</code> (the prompt ends with <code>/workspace/api</code>). Run:</p>
+</div>
+<div lang="th">
+<p>เปิด terminal ของ tab <strong>Robot</strong> (เมนู <em>Terminal</em> แล้ว <em>New Terminal</em>) ตรวจให้แน่ใจว่าอยู่ในโฟลเดอร์ <code>api</code> (prompt ลงท้ายด้วย <code>/workspace/api</code>) แล้วรัน:</p>
+</div>
+
+<pre data-command><code>robot --outputdir results tests</code></pre>
+
+<div lang="en">
+<p>Robot prints one line per test with <code>PASS</code> or <code>FAIL</code>, and writes three files to the folder <code>results</code>: <code>output.xml</code> (raw data), <code>log.html</code> (every step in detail) and <code>report.html</code> (a summary). Open the report in the Preview tab or press the button:</p>
+</div>
+<div lang="th">
+<p>Robot พิมพ์หนึ่งบรรทัดต่อหนึ่งเทสต์พร้อม <code>PASS</code> หรือ <code>FAIL</code> และเขียนไฟล์สามไฟล์ลงโฟลเดอร์ <code>results</code>: <code>output.xml</code> (ข้อมูลดิบ) <code>log.html</code> (ทุกขั้นตอนอย่างละเอียด) และ <code>report.html</code> (สรุป) เปิดรายงานใน tab Preview หรือกดปุ่ม:</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-outline-primary" data-action="preview" data-port="9323" data-path="/report.html">Open report.html</a>
+</p>
+
+<div lang="en">
+<p>In the report, click the suite name and then the test name. In <code>log.html</code> every keyword is listed with the values it received. This is where you will look every time a test fails.</p>
+</div>
+<div lang="th">
+<p>ในรายงาน คลิกชื่อ suite แล้วคลิกชื่อเทสต์ ใน <code>log.html</code> จะเห็นทุก keyword พร้อมค่าที่มันได้รับ นี่คือที่ที่คุณจะดูทุกครั้งที่เทสต์ล้ม</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>"No tests found" means the path is wrong or the file was not saved. If you ran <code>robot</code> from another folder, <code>cd /workspace/api</code> first.</p>
+</details>
+
+<div data-check="report-exists"></div>

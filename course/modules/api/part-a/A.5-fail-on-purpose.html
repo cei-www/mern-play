@@ -1,0 +1,46 @@
+<h2>Step A.5: Make a test fail on purpose</h2>
+
+<div lang="en">
+<p>A test you have never seen fail is a test you cannot trust. Add a second test that checks the body of the health answer. Then you will break it on purpose and read the failure.</p>
+</div>
+<div lang="th">
+<p>เทสต์ที่คุณไม่เคยเห็นมันล้ม เป็นเทสต์ที่ไว้ใจไม่ได้ เพิ่มเทสต์ที่สองที่ตรวจเนื้อหาของคำตอบ health แล้วคุณจะทำให้มันพังโดยตั้งใจและอ่านความล้มเหลว</p>
+</div>
+
+<p class="where">Edit <code>tests/01_health.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 01_health.robot).</p>
+
+<pre data-snippet data-file="tests/01_health.robot" data-position="end"><code class="language-plaintext">Health Body Says Ok
+    ${response}=    GET    ${BASE_URL}/api/health
+    Should Be Equal    ${response.json()}[status]    ok</code></pre>
+
+<div lang="en">
+<ol>
+  <li>Run <code>robot --outputdir results tests</code>. Both tests pass.</li>
+  <li>Change the last word of the new test from <code>ok</code> to <code>fine</code>. Save and run again.</li>
+  <li>Read the message: <em>ok != fine</em>. Open <code>log.html</code> and find the failing step.</li>
+  <li>Change <code>fine</code> back to <code>ok</code> and run again.</li>
+</ol>
+</div>
+<div lang="th">
+<ol>
+  <li>รัน <code>robot --outputdir results tests</code> เทสต์ทั้งสองผ่าน</li>
+  <li>เปลี่ยนคำสุดท้ายของเทสต์ใหม่จาก <code>ok</code> เป็น <code>fine</code> บันทึกแล้วรันอีกครั้ง</li>
+  <li>อ่านข้อความ: <em>ok != fine</em> เปิด <code>log.html</code> แล้วหา step ที่ล้ม</li>
+  <li>เปลี่ยน <code>fine</code> กลับเป็น <code>ok</code> แล้วรันอีกครั้ง</li>
+</ol>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p><code>${response.json()}[status]</code> reads the key <code>status</code> from the JSON answer <code>{"status": "ok"}</code>.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/01_health.robot</code>:</p>
+  <pre data-snippet data-file="tests/01_health.robot" data-position="end"><code class="language-plaintext">Health Body Says Ok
+    ${response}=    GET    ${BASE_URL}/api/health
+    Should Be Equal    ${response.json()}[status]    ok</code></pre>
+</details>
+
+<div data-check="health-body-test"></div>

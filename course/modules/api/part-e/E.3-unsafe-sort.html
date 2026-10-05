@@ -1,0 +1,33 @@
+<h2>Step E.3: An unsafe sort value returns 400</h2>
+
+<div lang="en">
+<p>The API accepts only four values for <code>sort</code> and must refuse anything else with 400 (module <code>build</code>, Story 5). Without this test, a future change could open a hole without anyone noticing. Add it to the same file.</p>
+</div>
+<div lang="th">
+<p>API ยอมรับ <code>sort</code> เพียงสี่ค่า และต้องปฏิเสธอย่างอื่นด้วย 400 (module <code>build</code> Story 5) ถ้าไม่มีเทสต์นี้ การแก้ไขในอนาคตอาจเปิดช่องโหว่โดยไม่มีใครสังเกต เพิ่มเทสต์นี้ในไฟล์เดียวกัน</p>
+</div>
+
+<p class="where">Edit <code>tests/07_smoke_and_security.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 07_smoke_and_security.robot). Add at the end of the file.</p>
+
+<pre data-snippet data-file="tests/07_smoke_and_security.robot" data-position="end"><code class="language-plaintext">Unsafe Sort Value Is Rejected
+    ${response}=    GET    ${BASE_URL}/api/tasks    params=sort=title;drop    expected_status=400
+    Should Contain    ${response.json()}[error]    sort</code></pre>
+
+<p>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="listTasks" data-server="reference">Swagger (reference API): listTasks</button>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>The parameter is <code>params=sort=title;drop</code> and the expected status is 400. The error message names the parameter: check that it contains <code>sort</code>.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/07_smoke_and_security.robot</code>, at the end:</p>
+  <pre data-snippet data-file="tests/07_smoke_and_security.robot" data-position="end"><code class="language-plaintext">Unsafe Sort Value Is Rejected
+    ${response}=    GET    ${BASE_URL}/api/tasks    params=sort=title;drop    expected_status=400
+    Should Contain    ${response.json()}[error]    sort</code></pre>
+</details>
+
+<div data-check="security-tests"></div>

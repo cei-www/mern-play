@@ -40,7 +40,10 @@ describe('loadModuleChecks / runStepChecks', () => {
     ws.write('workspace/build/server/app.js', 'hello');
     const report = await runStepChecks(ws.config, 'build', '0.4', fakeIo().io);
     expect(report.step.title).toBe('First route');
-    expect(report.results.map((r) => [r.id, r.passed])).toEqual([['route-file', true], ['ghost', false]]);
+    expect(report.results.map((r) => [r.id, r.passed])).toEqual([
+      ['route-file', true],
+      ['ghost', false],
+    ]);
     expect(report.results[1]?.message).toMatch(/listed for this step but not defined/);
   });
 

@@ -1,0 +1,41 @@
+<h2>Step A.2: How a Robot file looks</h2>
+
+<div lang="en">
+<p>A Robot Framework test is a plain text file ending in <code>.robot</code>. It has up to four <strong>sections</strong>. Each starts with a line of three stars:</p>
+<ul>
+  <li><code>*** Settings ***</code>: libraries to use (<code>Library    RequestsLibrary</code>), setup and teardown.</li>
+  <li><code>*** Variables ***</code>: named values, written <code>${NAME}    value</code>.</li>
+  <li><code>*** Test Cases ***</code>: the tests. A name on the left edge, then indented lines of steps.</li>
+  <li><code>*** Keywords ***</code>: your own reusable steps (Part D).</li>
+</ul>
+<p>Every step is a <strong>keyword</strong> (a ready-made action such as <code>GET</code> or <code>Should Be Equal</code>) followed by its arguments. <strong>Separate the pieces with two or more spaces</strong> (or a tab). One space is part of a name: <code>Should Be Equal</code> is one keyword, because it has single spaces inside.</p>
+<p>Results are stored in variables with <code>${name}=    Keyword ...</code>. You read parts of a variable with brackets: <code>${response.status_code}</code>, <code>${data}[0][title]</code>.</p>
+</div>
+<div lang="th">
+<p>เทสต์ของ Robot Framework คือไฟล์ข้อความธรรมดาที่ลงท้ายด้วย <code>.robot</code> มี <strong>section</strong> ได้สูงสุดสี่แบบ แต่ละอันขึ้นต้นด้วยบรรทัดที่มีดาวสามดวง:</p>
+<ul>
+  <li><code>*** Settings ***</code>: library ที่ใช้ (<code>Library    RequestsLibrary</code>) รวมถึง setup และ teardown</li>
+  <li><code>*** Variables ***</code>: ค่าที่ตั้งชื่อ เขียนเป็น <code>${NAME}    value</code></li>
+  <li><code>*** Test Cases ***</code>: ตัวเทสต์ ชื่ออยู่ชิดซ้าย แล้วตามด้วยบรรทัดที่เยื้องเข้าไปเป็นขั้นตอน</li>
+  <li><code>*** Keywords ***</code>: ขั้นตอนที่คุณสร้างเองเพื่อใช้ซ้ำ (Part D)</li>
+</ul>
+<p>แต่ละขั้นตอนคือ <strong>keyword</strong> (การกระทำสำเร็จรูป เช่น <code>GET</code> หรือ <code>Should Be Equal</code>) ตามด้วย argument <strong>คั่นแต่ละส่วนด้วยช่องว่างตั้งแต่สองช่องขึ้นไป</strong> (หรือ tab) ช่องว่างเดียวถือเป็นส่วนของชื่อ: <code>Should Be Equal</code> เป็น keyword เดียว เพราะมีช่องว่างเดียวคั่น</p>
+<p>เก็บผลลัพธ์ในตัวแปรด้วย <code>${name}=    Keyword ...</code> และอ่านบางส่วนของตัวแปรด้วยวงเล็บเหลี่ยม: <code>${response.status_code}</code>, <code>${data}[0][title]</code></p>
+</div>
+
+<pre class="code-block"><code class="language-plaintext">*** Test Cases ***
+Health Returns 200
+    ${response}=    GET    http://localhost:3001/api/health
+    Should Be Equal As Integers    ${response.status_code}    200</code></pre>
+
+<div lang="en">
+<p>This is the shape of the test you write next. Notice the four spaces before each step and the two or more spaces between the pieces.</p>
+</div>
+<div lang="th">
+<p>นี่คือรูปแบบของเทสต์ที่คุณจะเขียนต่อไป สังเกตช่องว่างสี่ช่องหน้าแต่ละขั้นตอน และช่องว่างตั้งแต่สองช่องระหว่างแต่ละส่วน</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>A test with only one space between the pieces fails with "No keyword with name ... found". Most beginner errors in Robot are spaces.</p>
+</details>

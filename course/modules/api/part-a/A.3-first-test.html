@@ -1,0 +1,52 @@
+<h2>Step A.3: Your first test</h2>
+
+<div lang="en">
+<p>Create a test that calls <code>GET /api/health</code> and asserts that the status code is 200. <code>RequestsLibrary</code> gives you the keyword <code>GET</code>; it returns a response object with <code>status_code</code>, <code>headers</code> and <code>json()</code>. <code>Should Be Equal As Integers</code> compares two numbers.</p>
+<p>The test name is free text. Use exactly this name, because the check looks for it.</p>
+</div>
+<div lang="th">
+<p>สร้างเทสต์ที่เรียก <code>GET /api/health</code> และยืนยันว่า status code เป็น 200 <code>RequestsLibrary</code> มี keyword <code>GET</code> ให้ ซึ่งคืน response object ที่มี <code>status_code</code>, <code>headers</code> และ <code>json()</code> ส่วน <code>Should Be Equal As Integers</code> เทียบตัวเลขสองค่า</p>
+<p>ชื่อเทสต์เป็นข้อความอิสระ ให้ใช้ชื่อนี้ตามตัวอักษร เพราะการตรวจมองหาชื่อนี้</p>
+</div>
+
+<p class="where">Create the file <code>tests/01_health.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 01_health.robot) (right-click the folder in the Explorer, then <em>New File</em>).</p>
+
+<pre data-snippet data-file="tests/01_health.robot" data-position="end"><code class="language-plaintext">*** Settings ***
+Library    RequestsLibrary
+
+*** Variables ***
+${BASE_URL}    http://localhost:3001
+
+*** Test Cases ***
+Health Returns 200
+    ${response}=    GET    ${BASE_URL}/api/health
+    Should Be Equal As Integers    ${response.status_code}    200</code></pre>
+
+<div lang="en">
+<p>Save the file. Nothing runs yet; the next step runs it.</p>
+</div>
+<div lang="th">
+<p>บันทึกไฟล์ ยังไม่มีอะไรทำงาน step ถัดไปจะรันมัน</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>The file name starts with <code>01_</code> so the files run in a clear order. The URL is built from the variable: <code>${BASE_URL}/api/health</code>.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/01_health.robot</code>:</p>
+  <pre data-snippet data-file="tests/01_health.robot" data-position="end"><code class="language-plaintext">*** Settings ***
+Library    RequestsLibrary
+
+*** Variables ***
+${BASE_URL}    http://localhost:3001
+
+*** Test Cases ***
+Health Returns 200
+    ${response}=    GET    ${BASE_URL}/api/health
+    Should Be Equal As Integers    ${response.status_code}    200</code></pre>
+</details>
+
+<div data-check="health-test"></div>

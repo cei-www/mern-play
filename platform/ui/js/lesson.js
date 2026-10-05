@@ -18,7 +18,7 @@ export async function copyText(text) {
     area.style.opacity = '0';
     document.body.append(area);
     area.select();
-    let ok = false;
+    let ok;
     try {
       ok = document.execCommand('copy');
     } catch {
@@ -60,9 +60,9 @@ function copyButton(getText) {
 /**
  * The block shown where a lesson has `<div data-check="...">`: how to run the check in the terminal.
  * Any content inside the lesson's element is kept as "what you should see".
- * @param {HTMLElement} el @param {string} stepId
+ * @param {HTMLElement} el @param {string} stepId @param {string} tabName
  */
-function buildCheckBlock(el, stepId) {
+function buildCheckBlock(el, stepId, tabName) {
   const expected = el.innerHTML.trim();
   const command = `tutorial check ${stepId}`;
   el.classList.add('check-block');
@@ -73,14 +73,17 @@ function buildCheckBlock(el, stepId) {
   title.textContent = 'Check your work';
   const hint = document.createElement('p');
   hint.className = 'small text-secondary mb-2';
-  hint.textContent = 'Run this command in the Terminal of the Editor tab (Terminal menu, New Terminal):';
+  hint.textContent = `Run this command in the Terminal of the ${tabName} tab (Terminal menu, New Terminal):`;
   const pre = document.createElement('pre');
   pre.className = 'command-block code-block';
   pre.dataset.command = '';
   pre.dataset.decorated = '1';
   const code = document.createElement('code');
   code.textContent = command;
-  pre.append(code, copyButton(() => command));
+  pre.append(
+    code,
+    copyButton(() => command),
+  );
   el.append(title, hint, pre);
 
   if (expected) {
@@ -99,9 +102,10 @@ function buildCheckBlock(el, stepId) {
  * Prepare freshly inserted lesson HTML: language pairs, code blocks (highlight + Copy button),
  * and check blocks.
  * @param {HTMLElement} root
- * @param {{ stepId: string, hljs?: { highlightElement(el: Element): void } }} options
+ * @param {{ stepId: string, tabName?: string, hljs?: { highlightElement(el: Element): void } }} options
+ *   `tabName` is the tab whose terminal the learner uses for the check: Editor (default) or Robot.
  */
-export function decorateLesson(root, { stepId, hljs }) {
+export function decorateLesson(root, { stepId, hljs, tabName = 'Editor' }) {
   markTranslations(root);
 
   root.querySelectorAll('pre').forEach((pre) => {
@@ -121,7 +125,7 @@ export function decorateLesson(root, { stepId, hljs }) {
     pre.append(copyButton(() => code.textContent ?? ''));
   });
 
-  root.querySelectorAll('[data-check]').forEach((el) => buildCheckBlock(/** @type {HTMLElement} */ (el), stepId));
+  root.querySelectorAll('[data-check]').forEach((el) => buildCheckBlock(/** @type {HTMLElement} */ (el), stepId, tabName));
 }
 
 /**

@@ -1,0 +1,27 @@
+<h2>Step 4.3: Mount the groups router</h2>
+
+<div lang="en">
+<p>The file <code>server/routes/groups.js</code> already creates a router. Mount it at <code>/api/groups</code>, the same way you mounted the tasks router in step 1.5.</p>
+</div>
+<div lang="th">
+<p>ไฟล์ <code>server/routes/groups.js</code> สร้าง router ไว้แล้ว นำมาต่อที่ <code>/api/groups</code> แบบเดียวกับที่ต่อ router ของ tasks ใน step 1.5</p>
+</div>
+
+<p class="where">Edit <code>server/app.js</code> (in the Explorer: build &rsaquo; server &rsaquo; app.js). Write the code between the comments <code>@tutorial:begin s4-3-mount-groups</code> and <code>@tutorial:end s4-3-mount-groups</code>.</p>
+
+<pre data-snippet data-file="server/app.js" data-zone="s4-3-mount-groups"><code class="language-javascript">const groupsRouter = require('./routes/groups');
+app.use('/api/groups', groupsRouter);</code></pre>
+
+<details>
+  <summary>Hint</summary>
+  <p>Same two lines as step 1.5, with <code>groups</code> instead of <code>tasks</code>.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>server/app.js</code>, between the comments of <code>s4-3-mount-groups</code>:</p>
+  <pre data-snippet data-file="server/app.js" data-zone="s4-3-mount-groups"><code class="language-javascript">const groupsRouter = require('./routes/groups');
+app.use('/api/groups', groupsRouter);</code></pre>
+</details>
+
+<div data-check="groups-mounted"></div>

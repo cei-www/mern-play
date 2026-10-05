@@ -1,0 +1,41 @@
+<h2>Step 1.1: What Tailwind is</h2>
+
+<div lang="en">
+<p>You will make the Task Manager look good with <strong>Tailwind CSS</strong>. The page is the same React app you know. It starts <em>unstyled</em>: plain browser defaults. The API behind it is the finished one (you do not change it).</p>
+<p>In regular CSS you invent a class name (<code>.task-card</code>), write its rules in a CSS file, and put the name in the HTML. Tailwind turns this around. It gives you thousands of tiny ready-made classes, each doing <em>one</em> thing, and you put them straight on the element:</p>
+</div>
+<div lang="th">
+<p>คุณจะทำให้ Task Manager สวยด้วย <strong>Tailwind CSS</strong> หน้าเว็บคือแอป React ตัวเดิมที่คุณรู้จัก แต่เริ่มต้น <em>ไม่มีสไตล์</em> เป็นค่าเริ่มต้นของเบราว์เซอร์ ส่วน API ด้านหลังเป็นฉบับสำเร็จ (คุณไม่ต้องแก้)</p>
+<p>ใน CSS ปกติ คุณตั้งชื่อ class เอง (<code>.task-card</code>) เขียนกฎในไฟล์ CSS แล้วใส่ชื่อใน HTML Tailwind กลับด้านนี้ มี class เล็ก ๆ สำเร็จรูปเป็นพันตัว แต่ละตัวทำ <em>อย่างเดียว</em> แล้วคุณใส่บนองค์ประกอบได้เลย:</p>
+</div>
+
+<pre class="code-block"><code class="language-html">&lt;li class="rounded-lg border p-3 shadow-sm"&gt;...&lt;/li&gt;</code></pre>
+
+<div lang="en">
+<p><code>rounded-lg</code> rounds the corners, <code>border</code> draws a border, <code>p-3</code> adds padding, <code>shadow-sm</code> adds a small shadow. You read the style from the element itself, and you never name or hunt for a CSS rule.</p>
+<p>Tailwind reads your source files, finds the class names you used and writes <em>only those</em> rules into the CSS file. It is already installed in this project. You will connect it (Part A), then build the look step by step.</p>
+<p><strong>How the project works.</strong> The code is in <code>client</code> (React and Vite). Every element has its class list built with a small helper <code>cx(...)</code>, for example <code>className={cx('p-3', 'mb-2')}</code>. Inside each list you will see comments <code>@tutorial:begin ...</code> and <code>@tutorial:end ...</code>: your classes for a step go between them. In real projects you write the classes in one string; the zones just let every step show you exactly where to type. Keep the comment lines.</p>
+</div>
+<div lang="th">
+<p><code>rounded-lg</code> ทำมุมมน <code>border</code> วาดเส้นขอบ <code>p-3</code> เพิ่ม padding <code>shadow-sm</code> เพิ่มเงาเล็ก ๆ คุณอ่านสไตล์ได้จากองค์ประกอบเอง และไม่ต้องตั้งชื่อหรือไล่หากฎ CSS</p>
+<p>Tailwind อ่านไฟล์ซอร์สของคุณ หาชื่อ class ที่ใช้ และเขียน <em>เฉพาะกฎเหล่านั้น</em> ลงไฟล์ CSS โปรเจกต์นี้ติดตั้งมาแล้ว คุณจะเชื่อมมัน (Part A) แล้วสร้างหน้าตาทีละ step</p>
+<p><strong>โปรเจกต์ทำงานอย่างไร</strong> โค้ดอยู่ใน <code>client</code> (React และ Vite) ทุกองค์ประกอบสร้างรายการ class ด้วยตัวช่วย <code>cx(...)</code> เช่น <code>className={cx('p-3', 'mb-2')}</code> ในแต่ละรายการจะเห็นคอมเมนต์ <code>@tutorial:begin ...</code> และ <code>@tutorial:end ...</code>: class ของแต่ละ step ใส่ระหว่างคอมเมนต์สองบรรทัดนี้ ในงานจริงคุณเขียน class ในสตริงเดียว zone เป็นเพียงให้ทุก step ชี้ได้ว่าให้พิมพ์ตรงไหน อย่าลบบรรทัดคอมเมนต์</p>
+</div>
+
+<div lang="en">
+<p>Open the app in <strong>Preview</strong> and look at it now: no style at all. By the end it will look like a real product.</p>
+</div>
+<div lang="th">
+<p>เปิดแอปใน <strong>Preview</strong> ดูตอนนี้: ไม่มีสไตล์เลย เมื่อจบจะดูเหมือนผลิตภัณฑ์จริง</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<div lang="en">
+<p>To start any step from a clean state, type for example <code>tutorial goto 2.1</code> in the terminal of the Editor tab (it starts in the project folder). It writes the code of the earlier steps and empties the zones from that step on.</p>
+</div>
+<div lang="th">
+<p>ถ้าอยากเริ่ม step ใดจากสถานะที่สะอาด ให้พิมพ์ เช่น <code>tutorial goto 2.1</code> ใน terminal ของ tab Editor คำสั่งนี้เขียนโค้ดของ step ก่อนหน้า และล้าง zone ตั้งแต่ step นั้นเป็นต้นไป</p>
+</div>

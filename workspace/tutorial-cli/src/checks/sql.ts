@@ -21,7 +21,7 @@ export async function runSql(id: string, def: SqlDef, ctx: CheckContext): Promis
   const query = def.query?.trim();
   if (!database || !query) return fail('This check is not set up correctly (it needs a database and a query). Tell the course author.');
   if (!ctx.config.db?.allowed.includes(database)) return fail(`This workspace cannot read the database "${database}".`);
-  if (!/^select\b/i.test(query) || query.includes(';') && query.replace(/;\s*$/, '').includes(';')) {
+  if (!/^select\b/i.test(query) || (query.includes(';') && query.replace(/;\s*$/, '').includes(';'))) {
     return fail('Checks may only run a single SELECT query.');
   }
 

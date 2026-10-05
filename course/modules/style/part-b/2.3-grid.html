@@ -1,0 +1,45 @@
+<h2>Step 2.3: Grid: groups and list</h2>
+
+<div lang="en">
+<p><strong>Grid</strong> lays things out in rows <em>and</em> columns. The page has two parts side by side: the groups on the left and the tasks on the right.</p>
+<ul>
+  <li><code>grid</code> turns the element into a grid.</li>
+  <li><code>grid-cols-[14rem_1fr]</code> makes two columns: a fixed 14rem for the groups and <code>1fr</code> (all that is left) for the tasks. The square brackets are an <em>arbitrary value</em>: any CSS value you need, with underscores for spaces.</li>
+  <li><code>gap-6</code> is the space between the columns.</li>
+</ul>
+</div>
+<div lang="th">
+<p><strong>Grid</strong> จัดวางเป็นแถว <em>และ</em> คอลัมน์ หน้าเว็บมีสองส่วนอยู่ข้างกัน: group ทางซ้ายและ task ทางขวา</p>
+<ul>
+  <li><code>grid</code> ทำให้องค์ประกอบเป็น grid</li>
+  <li><code>grid-cols-[14rem_1fr]</code> สร้างสองคอลัมน์: 14rem คงที่สำหรับ group และ <code>1fr</code> (ที่เหลือทั้งหมด) สำหรับ task วงเล็บเหลี่ยมคือ <em>arbitrary value</em>: ค่า CSS ใดก็ได้ที่ต้องการ โดยใช้ underscore แทนช่องว่าง</li>
+  <li><code>gap-6</code> คือช่องว่างระหว่างคอลัมน์</li>
+</ul>
+</div>
+
+<p class="where">Edit <code>client/src/App.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; App.jsx). Write the code between the comments <code>@tutorial:begin s2-3-layout-grid</code> and <code>@tutorial:end s2-3-layout-grid</code>, in the class list of the <code>div</code> that holds the <code>aside</code> and the <code>section</code>.</p>
+<pre data-snippet data-file="client/src/App.jsx" data-zone="s2-3-layout-grid"><code class="language-javascript">'grid grid-cols-[14rem_1fr] gap-6',</code></pre>
+
+<div lang="en">
+<p>The app is in the <strong>Preview</strong> tab (port <em>App (for Tailwind)</em>). It reloads by itself when you save.</p>
+</div>
+<div lang="th">
+<p>แอปอยู่ใน tab <strong>Preview</strong> (พอร์ต <em>App (for Tailwind)</em>) และโหลดใหม่เองเมื่อคุณบันทึก</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>Tailwind also has ready-made column counts, such as <code>grid-cols-3</code> for three equal columns. Here the first column must keep a fixed width, so an arbitrary value is the right tool.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/App.jsx</code>, between the comments of <code>s2-3-layout-grid</code>:</p>
+  <pre data-snippet data-file="client/src/App.jsx" data-zone="s2-3-layout-grid"><code class="language-javascript">'grid grid-cols-[14rem_1fr] gap-6',</code></pre>
+</details>
+
+<div data-check="grid-layout"></div>

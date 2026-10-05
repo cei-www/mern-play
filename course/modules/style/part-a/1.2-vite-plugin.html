@@ -1,0 +1,36 @@
+<h2>Step 1.2: Add the Tailwind plugin to Vite</h2>
+
+<div lang="en">
+<p>Tailwind version 4 works as a <strong>Vite plugin</strong>: while Vite builds your page, the plugin reads your classes and produces the CSS. The package <code>@tailwindcss/vite</code> is installed already. You tell Vite to use it, in two places of one file: an <code>import</code> at the top and the plugin in the <code>plugins</code> list.</p>
+</div>
+<div lang="th">
+<p>Tailwind เวอร์ชัน 4 ทำงานเป็น <strong>Vite plugin</strong>: ตอน Vite สร้างหน้าเว็บ plugin จะอ่าน class ของคุณและสร้าง CSS ให้ แพ็กเกจ <code>@tailwindcss/vite</code> ติดตั้งไว้แล้ว คุณบอกให้ Vite ใช้มัน ในสองตำแหน่งของไฟล์เดียว: <code>import</code> ที่ต้นไฟล์ และ plugin ในรายการ <code>plugins</code></p>
+</div>
+
+<p class="where">Edit <code>client/vite.config.js</code> (in the Explorer: style &rsaquo; client &rsaquo; vite.config.js). Write the code between the comments <code>@tutorial:begin s1-2-vite-import</code> and <code>@tutorial:end s1-2-vite-import</code> (near the top).</p>
+<pre data-snippet data-file="client/vite.config.js" data-zone="s1-2-vite-import"><code class="language-javascript">import tailwindcss from '@tailwindcss/vite';</code></pre>
+
+<p class="where">Edit <code>client/vite.config.js</code> (in the Explorer: style &rsaquo; client &rsaquo; vite.config.js). Write the code between the comments <code>@tutorial:begin s1-2-vite-plugin</code> and <code>@tutorial:end s1-2-vite-plugin</code> (inside the <code>plugins</code> list, after <code>react()</code>).</p>
+<pre data-snippet data-file="client/vite.config.js" data-zone="s1-2-vite-plugin"><code class="language-javascript">tailwindcss(),</code></pre>
+
+<div lang="en">
+<p>Save the file. Vite restarts by itself. Nothing changes on the page yet: the plugin is waiting for a CSS file that asks for Tailwind (next step).</p>
+</div>
+<div lang="th">
+<p>บันทึกไฟล์ Vite จะรีสตาร์ตเอง หน้าเว็บยังไม่เปลี่ยน เพราะ plugin รอไฟล์ CSS ที่เรียกใช้ Tailwind (step ถัดไป)</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>The import is one line: <code>import tailwindcss from '@tailwindcss/vite';</code>. In the list, <code>tailwindcss()</code> is called like <code>react()</code>, with a comma after it.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/vite.config.js</code>, between the comments of <code>s1-2-vite-import</code>:</p>
+  <pre data-snippet data-file="client/vite.config.js" data-zone="s1-2-vite-import"><code class="language-javascript">import tailwindcss from '@tailwindcss/vite';</code></pre>
+  <p class="where">In <code>client/vite.config.js</code>, between the comments of <code>s1-2-vite-plugin</code>:</p>
+  <pre data-snippet data-file="client/vite.config.js" data-zone="s1-2-vite-plugin"><code class="language-javascript">tailwindcss(),</code></pre>
+</details>
+
+<div data-check="vite-wired"></div>

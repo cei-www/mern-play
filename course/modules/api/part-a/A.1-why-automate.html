@@ -1,0 +1,38 @@
+<h2>Step A.1: Why automate API tests</h2>
+
+<div lang="en">
+<p>You tested the Task Manager by hand: you clicked, you called routes in Swagger, and you looked at the answer. That works once. After every change you would have to do it all again. An <strong>automated test</strong> is a small program that does it for you in seconds and tells you only <em>pass</em> or <em>fail</em>.</p>
+<p>Every API test has three parts: a <strong>request</strong> (what you send), a <strong>response</strong> (what comes back) and an <strong>assertion</strong> (what you expect to see). For example: send <code>GET /api/health</code>, receive an answer, assert that the status is 200.</p>
+<p>In this module you test the Task Manager API <em>from the outside</em>, with <strong>Robot Framework</strong>. You will not change the API. You will write only test files. The API under test is the finished <strong>reference API</strong> that runs inside this container on port 3001, with its own database <code>taskapp_test</code>.</p>
+</div>
+<div lang="th">
+<p>คุณทดสอบ Task Manager ด้วยมือมาแล้ว: คลิก เรียก route ใน Swagger แล้วดูคำตอบ วิธีนี้ทำได้ครั้งเดียว ทุกครั้งที่แก้โค้ดต้องทำซ้ำทั้งหมด <strong>automated test</strong> คือโปรแกรมเล็ก ๆ ที่ทำให้แทนคุณในไม่กี่วินาที และบอกแค่ <em>pass</em> หรือ <em>fail</em></p>
+<p>เทสต์ API ทุกตัวมี 3 ส่วน: <strong>request</strong> (สิ่งที่ส่ง) <strong>response</strong> (สิ่งที่ตอบกลับ) และ <strong>assertion</strong> (สิ่งที่คาดหวังว่าจะเห็น) เช่น ส่ง <code>GET /api/health</code> รับคำตอบ แล้วยืนยันว่า status เป็น 200</p>
+<p>ใน module นี้คุณทดสอบ Task Manager API <em>จากภายนอก</em> ด้วย <strong>Robot Framework</strong> คุณไม่แก้ API แต่เขียนเฉพาะไฟล์เทสต์ API ที่ถูกทดสอบคือ <strong>reference API</strong> ที่ทำงานอยู่ใน container นี้ที่พอร์ต 3001 พร้อมฐานข้อมูล <code>taskapp_test</code> ของมันเอง</p>
+</div>
+
+<div lang="en">
+<p>This module runs in its own container, <code>ws-robot</code>, which is created but not started. Start it from <strong>your computer's terminal</strong> (not the editor's terminal), or press Start on <code>ws-robot</code> in Docker Desktop:</p>
+</div>
+<div lang="th">
+<p>module นี้ทำงานใน container แยกชื่อ <code>ws-robot</code> ซึ่งสร้างไว้แต่ยังไม่ได้เปิด ให้เปิดจาก <strong>terminal ของเครื่องคุณ</strong> (ไม่ใช่ terminal ใน editor) หรือกดปุ่ม Start ของ <code>ws-robot</code> ใน Docker Desktop:</p>
+</div>
+
+<pre data-command><code>docker compose start ws-robot</code></pre>
+
+<div lang="en">
+<p>When it is ready, the <strong>Robot</strong> tab shows a VS Code with the folder <code>api</code>. Before you automate anything, explore the reference API by hand. In Swagger the <em>Servers</em> list has "Reference API (module api)". Try <code>listTasks</code> and <code>getTask</code> there. You can also send requests from <code>requests.http</code> in the Explorer (api &rsaquo; requests.http): click <em>Send Request</em> above a line.</p>
+</div>
+<div lang="th">
+<p>เมื่อพร้อมแล้ว tab <strong>Robot</strong> จะแสดง VS Code ที่มีโฟลเดอร์ <code>api</code> ก่อนจะทำอะไรอัตโนมัติ ให้ลองใช้ reference API ด้วยมือก่อน ใน Swagger รายการ <em>Servers</em> มี "Reference API (module api)" ลอง <code>listTasks</code> และ <code>getTask</code> ที่นั่น หรือส่ง request จาก <code>requests.http</code> ใน Explorer (api &rsaquo; requests.http) โดยคลิก <em>Send Request</em> เหนือบรรทัดนั้น</p>
+</div>
+
+<p>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="listTasks" data-server="reference">Swagger (reference API): listTasks</button>
+  <button type="button" class="btn btn-sm btn-outline-primary" data-action="swagger" data-op="getTask" data-server="reference">Swagger (reference API): getTask</button>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>If the Robot tab says it cannot connect, wait half a minute after starting the container, then reload the tab. If <code>docker compose start ws-robot</code> complains that a network is not found, run <code>docker compose --profile robot up -d --force-recreate ws-robot</code>.</p>
+</details>

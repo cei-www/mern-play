@@ -1,0 +1,96 @@
+<h2>Step 5.4: Filter and sort controls</h2>
+
+<div lang="en">
+<p><code>SortBar</code> has three selects: <em>Show</em> (all, open or done), <em>Sort by</em> and <em>Order</em>. <code>value</code> is an object <code>{ done, sort, order }</code> and <code>onChange</code> receives a new object. The page builds the query string from it (with <code>toQuery</code> in <code>api.js</code>) and passes it to <code>TaskList</code>.</p>
+<p>The helper <code>set(key)</code> makes one change handler per select: it copies the object and replaces one key.</p>
+</div>
+<div lang="th">
+<p><code>SortBar</code> มี select 3 ตัว: <em>Show</em> (all, open หรือ done), <em>Sort by</em> และ <em>Order</em> <code>value</code> คือ object <code>{ done, sort, order }</code> และ <code>onChange</code> รับ object ใหม่ หน้าเว็บสร้าง query string จากมัน (ด้วย <code>toQuery</code> ใน <code>api.js</code>) แล้วส่งให้ <code>TaskList</code></p>
+<p>ตัวช่วย <code>set(key)</code> สร้าง handler ให้ select แต่ละตัว: คัดลอก object แล้วแทนที่หนึ่ง key</p>
+</div>
+
+<p class="where">Edit <code>client/src/components/SortBar.jsx</code> (in the Explorer: build &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; SortBar.jsx). Write the code between the comments <code>@tutorial:begin s5-4-sort-bar</code> and <code>@tutorial:end s5-4-sort-bar</code>, inside the function.</p>
+
+<pre data-snippet data-file="client/src/components/SortBar.jsx" data-zone="s5-4-sort-bar"><code class="language-javascript">const set = (key) =&gt; (event) =&gt; onChange({ ...value, [key]: event.target.value });
+
+return (
+  &lt;div className="sort-bar"&gt;
+    &lt;label&gt;
+      Show
+      &lt;select value={value.done} onChange={set('done')}&gt;
+        &lt;option value=""&gt;all&lt;/option&gt;
+        &lt;option value="0"&gt;open&lt;/option&gt;
+        &lt;option value="1"&gt;done&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/label&gt;
+    &lt;label&gt;
+      Sort by
+      &lt;select value={value.sort} onChange={set('sort')}&gt;
+        &lt;option value=""&gt;newest&lt;/option&gt;
+        &lt;option value="due_date"&gt;due date&lt;/option&gt;
+        &lt;option value="priority"&gt;priority&lt;/option&gt;
+        &lt;option value="title"&gt;title&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/label&gt;
+    &lt;label&gt;
+      Order
+      &lt;select value={value.order} onChange={set('order')}&gt;
+        &lt;option value="asc"&gt;ascending&lt;/option&gt;
+        &lt;option value="desc"&gt;descending&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/label&gt;
+  &lt;/div&gt;
+);</code></pre>
+
+<div lang="en">
+<p>Save and use the controls in <strong>Preview</strong>. Then select a group in the group buttons: now the list is filtered too, because the page sends <code>group_id</code> and your route from step 5.2 understands it.</p>
+</div>
+<div lang="th">
+<p>บันทึกแล้วลองใช้ตัวควบคุมใน <strong>Preview</strong> จากนั้นเลือก group ที่ปุ่ม group: ตอนนี้รายการถูกกรองด้วย เพราะหน้าเว็บส่ง <code>group_id</code> และ route จาก step 5.2 เข้าใจมัน</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5173" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>Each <code>&lt;select&gt;</code> needs <code>value={value.sort}</code> and <code>onChange={set('sort')}</code>. An option with <code>value=""</code> means "not chosen", which <code>toQuery</code> leaves out.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/components/SortBar.jsx</code>, between the comments of <code>s5-4-sort-bar</code>:</p>
+  <pre data-snippet data-file="client/src/components/SortBar.jsx" data-zone="s5-4-sort-bar"><code class="language-javascript">const set = (key) =&gt; (event) =&gt; onChange({ ...value, [key]: event.target.value });
+
+return (
+  &lt;div className="sort-bar"&gt;
+    &lt;label&gt;
+      Show
+      &lt;select value={value.done} onChange={set('done')}&gt;
+        &lt;option value=""&gt;all&lt;/option&gt;
+        &lt;option value="0"&gt;open&lt;/option&gt;
+        &lt;option value="1"&gt;done&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/label&gt;
+    &lt;label&gt;
+      Sort by
+      &lt;select value={value.sort} onChange={set('sort')}&gt;
+        &lt;option value=""&gt;newest&lt;/option&gt;
+        &lt;option value="due_date"&gt;due date&lt;/option&gt;
+        &lt;option value="priority"&gt;priority&lt;/option&gt;
+        &lt;option value="title"&gt;title&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/label&gt;
+    &lt;label&gt;
+      Order
+      &lt;select value={value.order} onChange={set('order')}&gt;
+        &lt;option value="asc"&gt;ascending&lt;/option&gt;
+        &lt;option value="desc"&gt;descending&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/label&gt;
+  &lt;/div&gt;
+);</code></pre>
+</details>
+
+<div data-check="sort-bar-code"></div>

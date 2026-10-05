@@ -106,9 +106,8 @@ export function parseModule(raw: unknown, where: string): ModuleDef {
 
   if (problems.length > 0) throw new CourseError(`${where}: lesson.yaml is not valid`, problems);
 
-  const startHint = isRecord(raw.startHint) && str(raw.startHint.gui) && str(raw.startHint.cli)
-    ? { gui: raw.startHint.gui, cli: raw.startHint.cli }
-    : undefined;
+  const startHint =
+    isRecord(raw.startHint) && str(raw.startHint.gui) && str(raw.startHint.cli) ? { gui: raw.startHint.gui, cli: raw.startHint.cli } : undefined;
   return {
     id: raw.id as string,
     title: raw.title as string,

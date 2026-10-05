@@ -1,0 +1,20 @@
+<h2>Step 4.7: Check Story 4</h2>
+
+<div lang="en">
+<p>The check calls your groups routes, creates a group and reads your <code>GroupFilter</code> code.</p>
+</div>
+<div lang="th">
+<p>การตรวจจะเรียก route ของ groups สร้าง group และอ่านโค้ด <code>GroupFilter</code> ของคุณ</p>
+</div>
+
+<div data-check="list-groups">
+  <pre><code>  PASS  GET /api/groups lists the groups with their task counts
+  PASS  POST /api/groups creates a group
+  PASS  POST /api/groups with an empty name answers 400
+  PASS  GroupFilter.jsx loads and shows the groups</code></pre>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>A <code>404</code> on <code>/api/groups</code> means the router is not mounted (step 4.3). A <code>500</code> is an error in the SQL: read the log with <code>docker compose logs --tail 30 ws-main</code>.</p>
+</details>

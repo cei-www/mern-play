@@ -82,7 +82,8 @@ export async function runHttp(id: string, def: HttpDef, ctx: CheckContext): Prom
   }
   if (def.expect?.json !== undefined) {
     const problems = matchValue(json, def.expect.json, '$', ctx.vars);
-    if (problems.length > 0) return fail(`${label} answered ${response.status}, but the response body is not what was expected.${def.hint ? ` ${def.hint}` : ''}`, problems);
+    if (problems.length > 0)
+      return fail(`${label} answered ${response.status}, but the response body is not what was expected.${def.hint ? ` ${def.hint}` : ''}`, problems);
   }
 
   const saved: Record<string, unknown> = {};

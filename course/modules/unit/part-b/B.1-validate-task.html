@@ -1,0 +1,109 @@
+<h2>Step B.1: Test validation: valid, invalid and boundaries</h2>
+
+<div lang="en">
+<p><code>validateTask(body)</code> in <code>src/server/validateTask.js</code> checks the body of a request. It returns <code>{ value }</code> when the task is fine and <code>{ error }</code> when it is not. Rules: the title is 1 to 100 characters after trimming; the priority is 1, 2 or 3 (2 when missing).</p>
+<p>A good set of tests for a rule like this has three kinds of cases:</p>
+<ul>
+  <li><strong>valid</strong>: what is accepted and what it returns;</li>
+  <li><strong>invalid</strong>: each way to be wrong;</li>
+  <li><strong>boundaries</strong>: the values right at the edge. Bugs live at edges: a <code>&gt;</code> that should have been <code>&gt;=</code>. Here 100 characters are fine and 101 are not.</li>
+</ul>
+<p>When many cases differ only in their data, write the test once and give it a table with <code>it.each</code>. Each row becomes its own test, and <code>%s</code> in the name is replaced by the first value of the row.</p>
+</div>
+<div lang="th">
+<p><code>validateTask(body)</code> ใน <code>src/server/validateTask.js</code> ตรวจ body ของ request คืน <code>{ value }</code> เมื่อ task ถูกต้อง และ <code>{ error }</code> เมื่อไม่ถูก กฎคือ: title ยาว 1 ถึง 100 ตัวอักษรหลังตัดช่องว่างหัวท้าย priority เป็น 1, 2 หรือ 3 (เป็น 2 เมื่อไม่ส่งมา)</p>
+<p>ชุด test ที่ดีสำหรับกฎแบบนี้มีสามประเภท:</p>
+<ul>
+  <li><strong>valid</strong>: อะไรที่รับ และคืนอะไร</li>
+  <li><strong>invalid</strong>: ทุกวิธีที่ผิดได้</li>
+  <li><strong>boundary</strong>: ค่าที่อยู่ตรงขอบ บั๊กชอบอยู่ที่ขอบ: <code>&gt;</code> ที่ควรเป็น <code>&gt;=</code> ตรงนี้ 100 ตัวอักษรได้ และ 101 ไม่ได้</li>
+</ul>
+<p>เมื่อหลายกรณีต่างกันแค่ข้อมูล ให้เขียน test ครั้งเดียวแล้วให้ตารางด้วย <code>it.each</code> แต่ละแถวกลายเป็น test ของตัวเอง และ <code>%s</code> ในชื่อถูกแทนด้วยค่าแรกของแถว</p>
+</div>
+
+<p class="where">Create the file <code>tests/validateTask.test.js</code> (in the Explorer: unit &rsaquo; tests &rsaquo; validateTask.test.js; right-click the folder, then <em>New File</em>). Paste the code into it and save.</p>
+<pre data-snippet data-file="tests/validateTask.test.js" data-position="end"><code class="language-javascript">import { describe, expect, it } from 'vitest';
+import { validateTask } from '../src/server/validateTask.js';
+
+describe('validateTask', () =&gt; {
+  it('accepts a title and gives it priority 2 when none is sent', () =&gt; {
+    expect(validateTask({ title: 'Buy milk' })).toEqual({ value: { title: 'Buy milk', priority: 2 } });
+  });
+
+  it('removes spaces around the title', () =&gt; {
+    expect(validateTask({ title: '  Buy milk  ' }).value.title).toBe('Buy milk');
+  });
+
+  it.each([
+    ['an empty title', { title: '' }],
+    ['a title of only spaces', { title: '   ' }],
+    ['no title at all', {}],
+    ['a title that is not text', { title: 42 }],
+  ])('rejects %s', (_name, body) =&gt; {
+    expect(validateTask(body).error).toMatch(/title is required/);
+  });
+
+  it('accepts a title of exactly 100 characters', () =&gt; {
+    expect(validateTask({ title: 'a'.repeat(100) }).error).toBeUndefined();
+  });
+
+  it('rejects a title of 101 characters', () =&gt; {
+    expect(validateTask({ title: 'a'.repeat(101) }).error).toMatch(/1-100/);
+  });
+
+  it.each([0, 4, '3', null])('rejects the priority %s', (priority) =&gt; {
+    expect(validateTask({ title: 'Buy milk', priority }).error).toBe('priority must be 1, 2 or 3');
+  });
+});</code></pre>
+
+<div lang="en">
+<p>Run <code>tutorial check B.1</code>. It also puts small bugs into <code>validateTask.js</code> (in a copy, never in your file) and wants your tests to <em>notice</em>. A test that passes whatever the code does is worth nothing.</p>
+</div>
+<div lang="th">
+<p>รัน <code>tutorial check B.1</code> มันยังใส่บั๊กเล็ก ๆ ลงใน <code>validateTask.js</code> (ในสำเนา ไม่แตะไฟล์ของคุณ) และต้องการให้ test ของคุณ <em>จับได้</em> test ที่ผ่านไม่ว่าโค้ดจะทำอะไรก็ไม่มีค่า</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>If the check says a bug was not caught, read its hint: it names the case that is missing, for example "no test tries a title of 101 characters".</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/validateTask.test.js</code> (create the file):</p>
+  <pre data-snippet data-file="tests/validateTask.test.js" data-position="end"><code class="language-javascript">import { describe, expect, it } from 'vitest';
+import { validateTask } from '../src/server/validateTask.js';
+
+describe('validateTask', () =&gt; {
+  it('accepts a title and gives it priority 2 when none is sent', () =&gt; {
+    expect(validateTask({ title: 'Buy milk' })).toEqual({ value: { title: 'Buy milk', priority: 2 } });
+  });
+
+  it('removes spaces around the title', () =&gt; {
+    expect(validateTask({ title: '  Buy milk  ' }).value.title).toBe('Buy milk');
+  });
+
+  it.each([
+    ['an empty title', { title: '' }],
+    ['a title of only spaces', { title: '   ' }],
+    ['no title at all', {}],
+    ['a title that is not text', { title: 42 }],
+  ])('rejects %s', (_name, body) =&gt; {
+    expect(validateTask(body).error).toMatch(/title is required/);
+  });
+
+  it('accepts a title of exactly 100 characters', () =&gt; {
+    expect(validateTask({ title: 'a'.repeat(100) }).error).toBeUndefined();
+  });
+
+  it('rejects a title of 101 characters', () =&gt; {
+    expect(validateTask({ title: 'a'.repeat(101) }).error).toMatch(/1-100/);
+  });
+
+  it.each([0, 4, '3', null])('rejects the priority %s', (priority) =&gt; {
+    expect(validateTask({ title: 'Buy milk', priority }).error).toBe('priority must be 1, 2 or 3');
+  });
+});</code></pre>
+</details>
+
+<div data-check="validate-tests"></div>

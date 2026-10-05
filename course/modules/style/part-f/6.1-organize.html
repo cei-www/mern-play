@@ -1,0 +1,29 @@
+<h2>Step 6.1: Keep long class lists tidy</h2>
+
+<div lang="en">
+<p>Look at the class list of a task row now. It is long. That is normal in Tailwind, and it is fine <em>if</em> you handle it well:</p>
+<ul>
+  <li><strong>Extract components, not classes.</strong> When you copy the same long list in many places (every button of the app), make it one React component (<code>&lt;Button&gt;</code>) and keep the classes there once. This is Tailwind's main answer to repetition.</li>
+  <li><strong>Sort the classes.</strong> A fixed order (layout first, then spacing, type, colors, states) makes a list easy to scan. The official <code>prettier-plugin-tailwindcss</code> sorts them for you when you save. (It is not installed in this workspace; in your own projects add it with <code>npm install -D prettier-plugin-tailwindcss</code>.)</li>
+  <li><strong>Use the theme.</strong> A color or a size you use in many places belongs in <code>@theme</code> (step 3.4), not repeated as an arbitrary value.</li>
+  <li><strong>Read, do not fight.</strong> If a class is not working, look in the developer tools (step 1.5) which rule wins, instead of adding more classes.</li>
+</ul>
+<p>In this course the classes of each step were kept in separate zones so that every step shows exactly where to type. In a real project you would write one string per element, in the order above.</p>
+</div>
+<div lang="th">
+<p>ลองดูรายการ class ของแถว task ตอนนี้ มันยาว ซึ่งเป็นเรื่องปกติของ Tailwind และไม่เป็นไร <em>ถ้า</em> จัดการให้ดี:</p>
+<ul>
+  <li><strong>แยกเป็น component ไม่ใช่แยก class</strong> เมื่อคุณคัดลอกรายการยาว ๆ เดียวกันหลายที่ (ปุ่มทุกปุ่มของแอป) ให้ทำเป็น React component เดียว (<code>&lt;Button&gt;</code>) และเก็บ class ไว้ที่นั่นครั้งเดียว นี่คือคำตอบหลักของ Tailwind ต่อการซ้ำ</li>
+  <li><strong>เรียง class</strong> ลำดับตายตัว (layout ก่อน แล้ว spacing, type, สี, state) ทำให้สแกนรายการได้ง่าย <code>prettier-plugin-tailwindcss</code> ทางการจะเรียงให้เมื่อคุณบันทึก (workspace นี้ไม่ได้ติดตั้งไว้ ในโปรเจกต์ของคุณเองให้เพิ่มด้วย <code>npm install -D prettier-plugin-tailwindcss</code>)</li>
+  <li><strong>ใช้ theme</strong> สีหรือขนาดที่ใช้หลายที่ควรอยู่ใน <code>@theme</code> (step 3.4) ไม่ใช่เขียนซ้ำเป็น arbitrary value</li>
+  <li><strong>อ่าน ไม่ใช่ต่อสู้</strong> ถ้า class ไม่ทำงาน ให้ดูใน developer tools (step 1.5) ว่ากฎไหนชนะ แทนที่จะเพิ่ม class</li>
+</ul>
+<p>ในคอร์สนี้ class ของแต่ละ step ถูกเก็บใน zone แยก เพื่อให้ทุก step ชี้ได้ว่าให้พิมพ์ตรงไหน ในโปรเจกต์จริงคุณจะเขียนหนึ่งสตริงต่อหนึ่งองค์ประกอบ ตามลำดับข้างต้น</p>
+</div>
+
+<div lang="en">
+<p>Optional experiment: make a component <code>Badge</code> in a new file <code>src/components/Badge.jsx</code> that takes a text and a color, and use it for the group and priority badges.</p>
+</div>
+<div lang="th">
+<p>ทดลองเพิ่มเติม (ไม่บังคับ): สร้าง component <code>Badge</code> ในไฟล์ใหม่ <code>src/components/Badge.jsx</code> ที่รับข้อความกับสี แล้วใช้กับ badge ของ group และ priority</p>
+</div>

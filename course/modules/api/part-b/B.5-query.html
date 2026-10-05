@@ -1,0 +1,61 @@
+<h2>Step B.5: Query strings: filter and sort</h2>
+
+<div lang="en">
+<p>Test the options of the list. <code>params=done=0</code> adds <code>?done=0</code> to the URL. A <code>FOR</code> loop checks <em>every</em> task of the answer: the loop body is indented and the loop ends with <code>END</code>.</p>
+<p>To test sorting without depending on the data, check the <em>property</em>: each priority is greater than or equal to the one before it.</p>
+</div>
+<div lang="th">
+<p>ทดสอบตัวเลือกของรายการ <code>params=done=0</code> ต่อ <code>?done=0</code> ท้าย URL ลูป <code>FOR</code> ตรวจ task <em>ทุกชิ้น</em> ในคำตอบ: เนื้อลูปเยื้องเข้าไป และลูปจบด้วย <code>END</code></p>
+<p>เพื่อทดสอบการเรียงลำดับโดยไม่ผูกกับข้อมูล ให้ตรวจ <em>คุณสมบัติ</em>: priority แต่ละตัวมากกว่าหรือเท่ากับตัวก่อนหน้า</p>
+</div>
+
+<p class="where">Edit <code>tests/02_tasks_read.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 02_tasks_read.robot).</p>
+
+<pre data-snippet data-file="tests/02_tasks_read.robot" data-position="end"><code class="language-plaintext">Open Filter Returns Only Open Tasks
+    ${response}=    GET    ${BASE_URL}/api/tasks    params=done=0
+    ${tasks}=    Set Variable    ${response.json()}
+    FOR    ${task}    IN    @{tasks}
+        Should Be Equal As Integers    ${task}[done]    0
+    END
+
+Sort By Priority Is Ascending
+    ${response}=    GET    ${BASE_URL}/api/tasks    params=sort=priority&amp;order=asc
+    ${tasks}=    Set Variable    ${response.json()}
+    ${previous}=    Set Variable    ${0}
+    FOR    ${task}    IN    @{tasks}
+        Should Be True    ${task}[priority] &gt;= ${previous}
+        ${previous}=    Set Variable    ${task}[priority]
+    END</code></pre>
+
+<pre data-command><code>robot --outputdir results tests/02_tasks_read.robot</code></pre>
+
+<p>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="listTasks" data-server="reference">Swagger (reference API): listTasks</button>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>In the sort test keep the previous priority in a variable and update it at the end of every loop turn: <code>${previous}=    Set Variable    ${task}[priority]</code>.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/02_tasks_read.robot</code>:</p>
+  <pre data-snippet data-file="tests/02_tasks_read.robot" data-position="end"><code class="language-plaintext">Open Filter Returns Only Open Tasks
+    ${response}=    GET    ${BASE_URL}/api/tasks    params=done=0
+    ${tasks}=    Set Variable    ${response.json()}
+    FOR    ${task}    IN    @{tasks}
+        Should Be Equal As Integers    ${task}[done]    0
+    END
+
+Sort By Priority Is Ascending
+    ${response}=    GET    ${BASE_URL}/api/tasks    params=sort=priority&amp;order=asc
+    ${tasks}=    Set Variable    ${response.json()}
+    ${previous}=    Set Variable    ${0}
+    FOR    ${task}    IN    @{tasks}
+        Should Be True    ${task}[priority] &gt;= ${previous}
+        ${previous}=    Set Variable    ${task}[priority]
+    END</code></pre>
+</details>
+
+<div data-check="read-tests-5"></div>

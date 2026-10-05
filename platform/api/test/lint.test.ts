@@ -31,7 +31,7 @@ describe('lintCourse', () => {
   });
 
   it('validates the check definitions in lesson.yaml', () => {
-    const withChecks = (checks: string) => LESSON_YAML.replace(/checks:\n  c-1-6: .*\n/, checks);
+    const withChecks = (checks: string) => LESSON_YAML.replace(/checks:\n {2}c-1-6: .*\n/, checks);
     const lintWith = (checks: string): string[] => {
       course.write('modules/build/lesson.yaml', withChecks(checks));
       lesson(GOOD_LESSON);
@@ -44,16 +44,27 @@ describe('lintCourse', () => {
     expect(lintWith('checks:\n  c-1-6: { type: file }\n')[0]).toMatch(/file check needs a path/);
     expect(lintWith('checks:\n  c-1-6: { type: test }\n')[0]).toMatch(/test check needs a command/);
     expect(lintWith('checks:\n  c-1-6: { type: flow, steps: [ { type: sql } ] }\n')[0]).toMatch(/steps\[0\]: sql check needs a query/);
+    expect(lintWith('checks:\n  c-1-6: { type: robot }\n')).toEqual([]);
+    expect(lintWith('checks:\n  c-1-6: { type: mutation }\n')).toEqual([
+      'check-def: check "c-1-6": mutation check needs a suite (a robot or test check)',
+      'check-def: check "c-1-6": mutation check needs mutants',
+    ]);
+    expect(lintWith('checks:\n  c-1-6: { type: mutation, control: "http://localhost:3001/x", mutants: [a], suite: { type: test } }\n')).toEqual([
+      'check-def: check "c-1-6": suite: test check needs a command list',
+    ]);
+    expect(
+      lintWith('checks:\n  c-1-6: { type: mutation, suite: { type: test, command: [a] }, mutants: [{ name: m, file: src/a.js, find: "x", replace: "y" }] }\n'),
+    ).toEqual([]);
+    expect(lintWith('checks:\n  c-1-6: { type: mutation, suite: { type: test, command: [a] }, mutants: [{ name: m, file: src/a.js }] }\n')[0]).toMatch(
+      /needs file, find and replace/,
+    );
     expect(lintWith('checks:\n  c-1-6: 5\n')[0]).toMatch(/must be a mapping/);
   });
 
   it('reports duplicate step ids and undefined checks in lesson.yaml', () => {
     course.write(
       'modules/build/lesson.yaml',
-      LESSON_YAML.replace(
-        'checks: [c-1-6] }',
-        'checks: [nope] }\n      - { id: "1.6", title: Again, type: read, file: story-1/1.6.html }',
-      ),
+      LESSON_YAML.replace('checks: [c-1-6] }', 'checks: [nope] }\n      - { id: "1.6", title: Again, type: read, file: story-1/1.6.html }'),
     );
     lesson(GOOD_LESSON);
     expect(rules()).toEqual(expect.arrayContaining(['duplicate-step', 'check-id']));
@@ -106,6 +117,14 @@ describe('lintCourse', () => {
     });
   });
 
+  it('accepts several solution folders and finds the file in any of them', () => {
+    lesson(GOOD_LESSON);
+    course.write('first/build/other.js', 'x');
+    course.write('second/build/server/routes/tasks.js', '// @tutorial:begin story-1-list\nx\n// @tutorial:end story-1-list\n');
+    expect(lintCourse(course.dir, { solutionDir: [`${course.dir}/first`, `${course.dir}/second`] })).toEqual([]);
+    expect(lintCourse(course.dir, { solutionDir: [`${course.dir}/first`] }).map((i) => i.rule)).toEqual(['snippet-solution']);
+  });
+
   it('rejects unescaped HTML inside a code snippet', () => {
     lesson(GOOD_LESSON.replace('(req, res) =&gt;', '(req, res) => <b>bold</b>'));
     expect(rules()).toContain('snippet-code');
@@ -130,7 +149,7 @@ describe('lintCourse', () => {
       expect(rules()).toContain('lang-pair');
     });
 
-    it('does not allow Thai in hints, solutions, exercises, checkpoints or headings', () => {
+    it('does not allow Thai in hints, solutions or headings', () => {
       const withThaiHint = GOOD_LESSON.replace(
         '<details><summary>Hint</summary><p>Use db.query.</p></details>',
         '<details><summary>Hint</summary><div lang="en"><p>Use db.query.</p></div><div lang="th"><p>ใช้ db.query</p></div></details>',
@@ -138,7 +157,22 @@ describe('lintCourse', () => {
       lesson(withThaiHint);
       expect(rules()).toContain('lang-scope');
 
-      lesson(GOOD_LESSON.replace('<p class="where">', '<div class="exercise"><div lang="en"><p>E</p></div><div lang="th"><p>ท</p></div></div>\n  <p class="where">'));
+      lesson(GOOD_LESSON.replace('<h2>Step 1.6: GET /api/tasks</h2>', '<h2>Step 1.6 <span lang="en">A</span><span lang="th">ก</span></h2>'));
+      expect(rules()).toContain('lang-scope');
+    });
+
+    it('allows a Thai statement in checkpoint exercises, but not inside their hints', () => {
+      const statement =
+        '<div class="checkpoint"><div class="exercise"><div lang="en"><p>E</p></div><div lang="th"><p>ท</p></div></div></div>\n  <p class="where">';
+      lesson(GOOD_LESSON.replace('<p class="where">', statement));
+      expect(lintCourse(course.dir)).toEqual([]);
+
+      lesson(
+        GOOD_LESSON.replace(
+          '<p class="where">',
+          '<div class="exercise"><details><summary>Hint</summary><div lang="en"><p>H</p></div><div lang="th"><p>ท</p></div></details></div>\n  <p class="where">',
+        ),
+      );
       expect(rules()).toContain('lang-scope');
     });
   });

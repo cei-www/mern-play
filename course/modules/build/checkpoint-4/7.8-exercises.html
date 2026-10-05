@@ -1,0 +1,74 @@
+<h2>Step 7.8: Checkpoint 4: two exercises</h2>
+
+<div class="checkpoint">
+  <div lang="en">
+    <p>About 15 minutes. Both exercises are optional. Try first, then the hint, and only then the solution.</p>
+  </div>
+  <div lang="th">
+    <p>ใช้เวลาประมาณ 15 นาที โจทย์ทั้งสองข้อเป็นทางเลือก ลองทำเองก่อน แล้วค่อยเปิด hint และเปิด solution เป็นลำดับสุดท้าย</p>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 7 (easier): GET /api/stats/group/:id</h3>
+    <div lang="en">
+      <p>Add the route <code>GET /api/stats/group/1</code>. It answers <code>{ "name": "Work", "total": 6, "done": 3 }</code> for that group (the real numbers of the database). When the group does not exist, answer <code>404</code> with <code>{ "error": "Group not found" }</code>. Put it under the stats router you wrote in Checkpoint 1.</p>
+    </div>
+    <div lang="th">
+      <p>เพิ่ม route <code>GET /api/stats/group/1</code> ให้ตอบ <code>{ "name": "Work", "total": 6, "done": 3 }</code> ของ group นั้น (ตัวเลขจริงของฐานข้อมูล) ถ้าไม่มี group ให้ตอบ <code>404</code> พร้อม <code>{ "error": "Group not found" }</code> ใส่ใน router ของ stats ที่คุณเขียนไว้ใน Checkpoint 1</p>
+    </div>
+    <p class="where">Edit <code>server/routes/stats.js</code> (in the Explorer: build &rsaquo; server &rsaquo; routes &rsaquo; stats.js). Write the code between the comments <code>@tutorial:begin exercise-7-group-stats</code> and <code>@tutorial:end exercise-7-group-stats</code>.</p>
+    <p><button type="button" class="btn btn-sm btn-outline-primary" data-action="swagger" data-op="groupStats" data-server="app">Try it in Swagger: groupStats</button></p>
+    <details>
+      <summary>Hint</summary>
+      <p>Two queries: one for the group name (404 when there is no row), one for <code>COUNT(*)</code> and <code>SUM(done)</code> of the tasks with that <code>group_id</code>.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>server/routes/stats.js</code>, between the comments of <code>exercise-7-group-stats</code>:</p>
+      <pre data-snippet data-file="server/routes/stats.js" data-zone="exercise-7-group-stats"><code class="language-javascript">router.get('/group/:id', async (req, res, next) =&gt; {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'id must be a whole number' });
+  try {
+    const [[group]] = await db.query('SELECT name FROM task_groups WHERE id = ?', [id]);
+    if (!group) return res.status(404).json({ error: 'Group not found' });
+    const [[totals]] = await db.query(
+      'SELECT COUNT(*) AS total, CAST(COALESCE(SUM(done), 0) AS UNSIGNED) AS done FROM tasks WHERE group_id = ?',
+      [id],
+    );
+    res.json({ name: group.name, total: totals.total, done: totals.done });
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 8 (harder): RetryButton</h3>
+    <div lang="en">
+      <p>Write the component <code>RetryButton</code>. When loading the tasks fails, the page shows it. It is a button that says <code>Try again</code> and calls the prop <code>onRetry</code> when clicked. To see it, stop your API: add a typo to <code>server/app.js</code> so the server crashes, or ask for a wrong URL temporarily.</p>
+    </div>
+    <div lang="th">
+      <p>เขียน component <code>RetryButton</code> เมื่อโหลด task ล้มเหลว หน้าเว็บจะแสดงมัน เป็นปุ่มที่เขียนว่า <code>Try again</code> และเรียก prop <code>onRetry</code> เมื่อคลิก หากอยากเห็น ให้ทำให้ API ล่ม: ใส่ตัวพิมพ์ผิดใน <code>server/app.js</code> ให้เซิร์ฟเวอร์ crash หรือขอ URL ผิดชั่วคราว</p>
+    </div>
+    <p class="where">Edit <code>client/src/components/RetryButton.jsx</code> (in the Explorer: build &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; RetryButton.jsx). Write the code between the comments <code>@tutorial:begin exercise-8-retry-button</code> and <code>@tutorial:end exercise-8-retry-button</code>, inside the function.</p>
+    <details>
+      <summary>Hint</summary>
+      <p><code>&lt;button type="button" onClick={onRetry}&gt;</code>. Use the prop directly as the click handler.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>client/src/components/RetryButton.jsx</code>, between the comments of <code>exercise-8-retry-button</code>:</p>
+      <pre data-snippet data-file="client/src/components/RetryButton.jsx" data-zone="exercise-8-retry-button"><code class="language-javascript">return (
+  &lt;button type="button" onClick={onRetry}&gt;
+    Try again
+  &lt;/button&gt;
+);</code></pre>
+    </details>
+  </div>
+</div>
+
+<div data-check="exercise-7-group-stats">
+  <pre><code>  PASS  GET /api/stats/group/:id returns the totals of a group
+  PASS  RetryButton.jsx has a Try again button</code></pre>
+</div>

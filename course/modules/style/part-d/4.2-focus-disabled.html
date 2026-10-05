@@ -1,0 +1,48 @@
+<h2>Step 4.2: Focus rings and disabled buttons</h2>
+
+<div lang="en">
+<p>Two more states for the form.</p>
+<ul>
+  <li><code>focus:</code> (not <code>focus-visible:</code>) fits a text field: it shows when the field is clicked or tabbed into. <code>focus:ring-2</code> draws a ring around it and <code>focus:ring-brand-500/30</code> colors it with 30% opacity (the slash is an <em>opacity modifier</em>). <code>focus:outline-none</code> removes the default outline because the ring replaces it.</li>
+  <li><code>disabled:</code> applies when the element has the <code>disabled</code> attribute. The Add button is disabled while the title is empty (the code <code>disabled={!title.trim()}</code> is already there).</li>
+</ul>
+</div>
+<div lang="th">
+<p>อีกสอง state สำหรับฟอร์ม</p>
+<ul>
+  <li><code>focus:</code> (ไม่ใช่ <code>focus-visible:</code>) เหมาะกับช่องข้อความ: แสดงเมื่อคลิกหรือกด Tab เข้าไปที่ช่อง <code>focus:ring-2</code> วงแหวนรอบช่อง และ <code>focus:ring-brand-500/30</code> ใส่สีด้วยความทึบ 30% (เครื่องหมาย / คือ <em>opacity modifier</em>) <code>focus:outline-none</code> เอา outline เริ่มต้นออก เพราะวงแหวนมาแทน</li>
+  <li><code>disabled:</code> ใช้เมื่อองค์ประกอบมี attribute <code>disabled</code> ปุ่ม Add ถูก disable ขณะ title ว่าง (โค้ด <code>disabled={!title.trim()}</code> มีอยู่แล้ว)</li>
+</ul>
+</div>
+
+<p class="where">Edit <code>client/src/components/TaskForm.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskForm.jsx). Write the code between the comments <code>@tutorial:begin s4-2-input-focus</code> and <code>@tutorial:end s4-2-input-focus</code>, in the class list of the title <code>input</code>.</p>
+<pre data-snippet data-file="client/src/components/TaskForm.jsx" data-zone="s4-2-input-focus"><code class="language-javascript">'focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30',</code></pre>
+
+<p class="where">Edit <code>client/src/components/TaskForm.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskForm.jsx). Write the code between the comments <code>@tutorial:begin s4-2-add-disabled</code> and <code>@tutorial:end s4-2-add-disabled</code>, in the class list of the Add <code>button</code>.</p>
+<pre data-snippet data-file="client/src/components/TaskForm.jsx" data-zone="s4-2-add-disabled"><code class="language-javascript">'disabled:cursor-not-allowed disabled:opacity-50',</code></pre>
+
+<div lang="en">
+<p>The app is in the <strong>Preview</strong> tab (port <em>App (for Tailwind)</em>). It reloads by itself when you save.</p>
+</div>
+<div lang="th">
+<p>แอปอยู่ใน tab <strong>Preview</strong> (พอร์ต <em>App (for Tailwind)</em>) และโหลดใหม่เองเมื่อคุณบันทึก</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>A disabled button should look disabled <em>and</em> not invite a click: <code>opacity-50</code> fades it, <code>cursor-not-allowed</code> changes the mouse pointer.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/components/TaskForm.jsx</code>, between the comments of <code>s4-2-input-focus</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskForm.jsx" data-zone="s4-2-input-focus"><code class="language-javascript">'focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30',</code></pre>
+  <p class="where">In <code>client/src/components/TaskForm.jsx</code>, between the comments of <code>s4-2-add-disabled</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskForm.jsx" data-zone="s4-2-add-disabled"><code class="language-javascript">'disabled:cursor-not-allowed disabled:opacity-50',</code></pre>
+</details>
+
+<div data-check="focus-input"></div>

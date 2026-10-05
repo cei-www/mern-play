@@ -40,7 +40,7 @@ export interface CheckContext {
 
 /** A check as written in lesson.yaml. Only `type` is common to all kinds. */
 export interface CheckDef {
-  type: 'http' | 'sql' | 'file' | 'test' | 'flow';
+  type: 'http' | 'sql' | 'file' | 'test' | 'flow' | 'robot' | 'mutation';
   /** Shown to the learner when the check passes, for example "GET /api/tasks answers 200". */
   title?: string;
   [key: string]: unknown;

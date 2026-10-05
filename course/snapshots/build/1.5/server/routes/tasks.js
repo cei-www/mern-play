@@ -17,11 +17,11 @@ async function findTask(id) {
   return rows[0];
 }
 
-// @tutorial:begin s2-1-validate
-// TODO (s2-1-validate): write your code here
+// @tutorial:begin s2-3-validate
+// TODO (s2-3-validate): write your code here
 
 
-// @tutorial:end s2-1-validate
+// @tutorial:end s2-3-validate
 
 // @tutorial:begin s5-2-filter-sort
 // TODO (s5-2-filter-sort): write your code here
@@ -47,17 +47,17 @@ async function findTask(id) {
 
 // @tutorial:end s7-2-get-one
 
-// @tutorial:begin s2-2-create-task
-// TODO (s2-2-create-task): write your code here
+// @tutorial:begin s2-4-create-task
+// TODO (s2-4-create-task): write your code here
 
 
-// @tutorial:end s2-2-create-task
+// @tutorial:end s2-4-create-task
 
-// @tutorial:begin s3-2-set-done
-// TODO (s3-2-set-done): write your code here
+// @tutorial:begin s3-3-set-done
+// TODO (s3-3-set-done): write your code here
 
 
-// @tutorial:end s3-2-set-done
+// @tutorial:end s3-3-set-done
 
 // @tutorial:begin s7-3-update-task
 // TODO (s7-3-update-task): write your code here

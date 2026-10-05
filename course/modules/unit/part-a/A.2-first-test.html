@@ -1,0 +1,64 @@
+<h2>Step A.2: Your first test</h2>
+
+<div lang="en">
+<p>The function <code>buildOrderBy(sort, order)</code> in <code>src/server/orderBy.js</code> makes the <code>ORDER BY</code> part of the task list query. It is a <strong>pure function</strong>: the same input always gives the same output, and it touches nothing outside itself. These are the easiest functions to test.</p>
+<p>Create a test file for it. Four tools are in the code below: <code>describe</code> groups tests, <code>it</code> is one test (its text says what must be true), <code>expect(...)</code> takes the real value and <code>.toBe(...)</code> says what it must be. They come from <code>'vitest'</code>.</p>
+</div>
+<div lang="th">
+<p>ฟังก์ชัน <code>buildOrderBy(sort, order)</code> ใน <code>src/server/orderBy.js</code> สร้างส่วน <code>ORDER BY</code> ของ query รายการ task มันเป็น <strong>pure function</strong>: ข้อมูลเข้าเหมือนเดิมให้ผลลัพธ์เหมือนเดิมเสมอ และไม่แตะอะไรนอกตัวมัน ฟังก์ชันแบบนี้ทดสอบง่ายที่สุด</p>
+<p>สร้างไฟล์ test ให้มัน โค้ดด้านล่างมีเครื่องมือสี่อย่าง: <code>describe</code> จัดกลุ่ม test, <code>it</code> คือหนึ่ง test (ข้อความบอกว่าต้องเป็นจริงอะไร), <code>expect(...)</code> รับค่าจริง และ <code>.toBe(...)</code> บอกว่าต้องเป็นค่าอะไร ทั้งหมดนำเข้าจาก <code>'vitest'</code></p>
+</div>
+
+<p class="where">Create the file <code>tests/orderBy.test.js</code> (in the Explorer: unit &rsaquo; tests &rsaquo; orderBy.test.js; right-click the folder, then <em>New File</em>). Paste the code into it and save.</p>
+<pre data-snippet data-file="tests/orderBy.test.js" data-position="end"><code class="language-javascript">import { describe, expect, it } from 'vitest';
+import { buildOrderBy } from '../src/server/orderBy.js';
+
+describe('buildOrderBy', () =&gt; {
+  it('sorts by creation time, oldest first, when nothing is given', () =&gt; {
+    // Arrange: nothing to prepare, the function has defaults.
+    // Act
+    const clause = buildOrderBy();
+    // Assert
+    expect(clause).toBe('ORDER BY t.created_at ASC');
+  });
+});</code></pre>
+
+<div lang="en">
+<p>Run it in the terminal:</p>
+</div>
+<div lang="th">
+<p>รันใน terminal:</p>
+</div>
+
+<pre data-command><code>npx vitest run tests/orderBy.test.js</code></pre>
+
+<div lang="en">
+<p>You should see <code>1 passed</code>. A test that has never failed has not proved much: in the next step you will see one fail.</p>
+</div>
+<div lang="th">
+<p>ควรเห็น <code>1 passed</code> test ที่ไม่เคยล้มยังพิสูจน์อะไรไม่ได้มาก step ถัดไปคุณจะได้เห็นมันล้ม</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>The import path is relative to the test file: <code>../src/server/orderBy.js</code> (up one folder, then into <code>src</code>). A name with a typo gives "is not a function" or "Failed to resolve import".</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/orderBy.test.js</code> (create the file):</p>
+  <pre data-snippet data-file="tests/orderBy.test.js" data-position="end"><code class="language-javascript">import { describe, expect, it } from 'vitest';
+import { buildOrderBy } from '../src/server/orderBy.js';
+
+describe('buildOrderBy', () =&gt; {
+  it('sorts by creation time, oldest first, when nothing is given', () =&gt; {
+    // Arrange: nothing to prepare, the function has defaults.
+    // Act
+    const clause = buildOrderBy();
+    // Assert
+    expect(clause).toBe('ORDER BY t.created_at ASC');
+  });
+});</code></pre>
+</details>
+
+<div data-check="first-test"></div>

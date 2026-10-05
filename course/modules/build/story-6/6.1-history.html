@@ -1,0 +1,32 @@
+<h2>Step 6.1: History is a query</h2>
+
+<div lang="en">
+<blockquote class="blockquote"><p>As a user, I want to look back at the tasks I finished, so that I can see what I achieved.</p></blockquote>
+<p>History does not need a new table. A finished task already has <code>done = 1</code> and a time in <code>completed_at</code> (Story 3). History is a <strong>query</strong> on the same table: the done tasks of the last N days, newest first.</p>
+</div>
+<div lang="th">
+<blockquote class="blockquote"><p>As a user, I want to look back at the tasks I finished, so that I can see what I achieved.</p></blockquote>
+<p>history ไม่ต้องมีตารางใหม่ task ที่เสร็จแล้วมี <code>done = 1</code> และเวลาใน <code>completed_at</code> อยู่แล้ว (Story 3) history คือ <strong>query</strong> บนตารางเดิม: task ที่เสร็จใน N วันล่าสุด เรียงจากใหม่ไปเก่า</p>
+</div>
+
+<pre class="code-block"><code class="language-sql">SELECT t.*, g.name AS group_name
+FROM tasks t
+LEFT JOIN task_groups g ON g.id = t.group_id
+WHERE t.done = 1 AND t.completed_at &gt;= NOW() - INTERVAL 7 DAY
+ORDER BY t.completed_at DESC;</code></pre>
+
+<div lang="en">
+<p>Run it in the <strong>Database</strong> tab, then change <code>7</code> to <code>1</code> and compare. The sample data has tasks finished one hour ago, one day ago and several days ago.</p>
+</div>
+<div lang="th">
+<p>รันใน tab <strong>Database</strong> แล้วเปลี่ยน <code>7</code> เป็น <code>1</code> และเปรียบเทียบ ข้อมูลตัวอย่างมี task ที่เสร็จเมื่อ 1 ชั่วโมงก่อน 1 วันก่อน และหลายวันก่อน</p>
+</div>
+
+<div lang="en">
+<p>To start this story from a clean state, type:</p>
+</div>
+<div lang="th">
+<p>ถ้าอยากเริ่ม story นี้จากสถานะที่สะอาด ให้พิมพ์:</p>
+</div>
+
+<pre data-command><code>tutorial goto 6.1</code></pre>

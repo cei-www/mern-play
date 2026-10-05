@@ -1,0 +1,51 @@
+<h2>Step 4.5: POST /api/groups</h2>
+
+<div lang="en">
+<p>Creating a group needs a name (1 to 50 characters) and an optional colour such as <code>#0d6efd</code>. Validate both and answer <code>400</code> with a clear message, otherwise insert and answer <code>201</code> with the new group (its count of tasks is 0).</p>
+</div>
+<div lang="th">
+<p>การสร้าง group ต้องมีชื่อ (1 ถึง 50 ตัวอักษร) และสีเป็นทางเลือก เช่น <code>#0d6efd</code> ตรวจทั้งสองอย่างและตอบ <code>400</code> พร้อมข้อความที่ชัดเจน ถ้าผ่านก็ insert แล้วตอบ <code>201</code> พร้อม group ใหม่ (จำนวน task เป็น 0)</p>
+</div>
+
+<p class="where">Edit <code>server/routes/groups.js</code> (in the Explorer: build &rsaquo; server &rsaquo; routes &rsaquo; groups.js). Write the code between the comments <code>@tutorial:begin s4-5-create-group</code> and <code>@tutorial:end s4-5-create-group</code>.</p>
+
+<pre data-snippet data-file="server/routes/groups.js" data-zone="s4-5-create-group"><code class="language-javascript">router.post('/', async (req, res, next) =&gt; {
+  const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
+  if (name.length &lt; 1 || name.length &gt; 50) return res.status(400).json({ error: 'name is required (1-50 characters)' });
+  const color = req.body.color ?? '#6c757d';
+  if (!/^#[0-9a-fA-F]{6}$/.test(color)) return res.status(400).json({ error: 'color must look like #0d6efd' });
+  try {
+    const [result] = await db.query('INSERT INTO task_groups (user_id, name, color) VALUES (?, ?, ?)', [USER_ID, name, color]);
+    res.status(201).json({ id: result.insertId, name, color, task_count: 0 });
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+
+<p>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="createGroup" data-server="app">Try it in Swagger: createGroup</button>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>A regular expression can check a colour: <code>/^#[0-9a-fA-F]{6}$/.test(color)</code>. Use <code>?? '#6c757d'</code> to give a default when the client sends none.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>server/routes/groups.js</code>, between the comments of <code>s4-5-create-group</code>:</p>
+  <pre data-snippet data-file="server/routes/groups.js" data-zone="s4-5-create-group"><code class="language-javascript">router.post('/', async (req, res, next) =&gt; {
+  const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
+  if (name.length &lt; 1 || name.length &gt; 50) return res.status(400).json({ error: 'name is required (1-50 characters)' });
+  const color = req.body.color ?? '#6c757d';
+  if (!/^#[0-9a-fA-F]{6}$/.test(color)) return res.status(400).json({ error: 'color must look like #0d6efd' });
+  try {
+    const [result] = await db.query('INSERT INTO task_groups (user_id, name, color) VALUES (?, ?, ?)', [USER_ID, name, color]);
+    res.status(201).json({ id: result.insertId, name, color, task_count: 0 });
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+</details>
+
+<div data-check="create-group"></div>

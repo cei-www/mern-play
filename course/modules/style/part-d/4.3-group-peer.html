@@ -1,0 +1,65 @@
+<h2>Step 4.3: group and peer</h2>
+
+<div lang="en">
+<p>Sometimes the thing that changes is <em>not</em> the element you hover or click. Tailwind has two helpers for this.</p>
+<ul>
+  <li><strong><code>group</code></strong>: mark a parent with <code>group</code>, and children can react to the parent's state with <code>group-hover:</code>. The Delete button of a row stays hidden (<code>opacity-0</code>) until the mouse is over the <em>row</em> (<code>group-hover:opacity-100</code>), and it also shows when it has focus (<code>focus:opacity-100</code>), so a keyboard user can reach it.</li>
+  <li><strong><code>peer</code></strong>: mark an element with <code>peer</code>, and its <em>next siblings</em> can react with <code>peer-checked:</code>. The title comes right after the checkbox, so when the checkbox is ticked the title gets a line through it and a softer color, with no JavaScript.</li>
+</ul>
+</div>
+<div lang="th">
+<p>บางครั้งสิ่งที่เปลี่ยนไม่ใช่องค์ประกอบที่คุณ hover หรือคลิก Tailwind มีตัวช่วยสองอย่าง</p>
+<ul>
+  <li><strong><code>group</code></strong>: ติด <code>group</code> ที่ parent แล้วลูกจะตอบสนองต่อ state ของ parent ด้วย <code>group-hover:</code> ปุ่ม Delete ของแถวซ่อนอยู่ (<code>opacity-0</code>) จนกว่าเมาส์จะอยู่เหนือ <em>แถว</em> (<code>group-hover:opacity-100</code>) และแสดงเมื่อมี focus ด้วย (<code>focus:opacity-100</code>) ผู้ใช้คีย์บอร์ดจึงเข้าถึงได้</li>
+  <li><strong><code>peer</code></strong>: ติด <code>peer</code> ที่องค์ประกอบหนึ่ง แล้ว <em>พี่น้องที่ตามมา</em> ตอบสนองด้วย <code>peer-checked:</code> ได้ ชื่อ task อยู่ถัดจาก checkbox พอดี เมื่อติ๊ก checkbox ชื่อจะมีเส้นขีดทับและสีอ่อนลง โดยไม่ใช้ JavaScript</li>
+</ul>
+</div>
+
+<p class="where">Edit <code>client/src/components/TaskItem.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskItem.jsx). Write the code between the comments <code>@tutorial:begin s4-3-row-group</code> and <code>@tutorial:end s4-3-row-group</code>, in the class list of the <code>li</code>.</p>
+<pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s4-3-row-group"><code class="language-javascript">'group',</code></pre>
+
+<p class="where">Edit <code>client/src/components/TaskItem.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskItem.jsx). Write the code between the comments <code>@tutorial:begin s4-3-checkbox</code> and <code>@tutorial:end s4-3-checkbox</code>, in the class list of the checkbox <code>input</code>.</p>
+<pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s4-3-checkbox"><code class="language-javascript">'peer size-4 accent-brand-600',</code></pre>
+
+<p class="where">Edit <code>client/src/components/TaskItem.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskItem.jsx). Write the code between the comments <code>@tutorial:begin s4-3-title-peer</code> and <code>@tutorial:end s4-3-title-peer</code>, in the class list of the title <code>span</code>.</p>
+<pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s4-3-title-peer"><code class="language-javascript">'peer-checked:text-slate-400 peer-checked:line-through',</code></pre>
+
+<p class="where">Edit <code>client/src/components/TaskItem.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskItem.jsx). Write the code between the comments <code>@tutorial:begin s4-3-delete-hover</code> and <code>@tutorial:end s4-3-delete-hover</code>, in the class list of the Delete <code>button</code>.</p>
+<pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s4-3-delete-hover"><code class="language-javascript">'text-sm text-red-600 opacity-0 transition group-hover:opacity-100 focus:opacity-100',</code></pre>
+
+<div lang="en">
+<p>Hover a row: Delete appears. Tick a task: its title is crossed out. Both work because of the <em>order in the markup</em>: the checkbox must come before the title.</p>
+</div>
+<div lang="th">
+<p>เลื่อนเมาส์ไปเหนือแถว: Delete ปรากฏ ติ๊ก task: ชื่อถูกขีดทับ ทั้งสองทำงานเพราะ <em>ลำดับใน markup</em>: checkbox ต้องมาก่อนชื่อ</p>
+</div>
+
+<div lang="en">
+<p>The app is in the <strong>Preview</strong> tab (port <em>App (for Tailwind)</em>). It reloads by itself when you save.</p>
+</div>
+<div lang="th">
+<p>แอปอยู่ใน tab <strong>Preview</strong> (พอร์ต <em>App (for Tailwind)</em>) และโหลดใหม่เองเมื่อคุณบันทึก</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p><code>peer-</code> works only for siblings that come <em>after</em> the peer in the HTML. <code>accent-brand-600</code> colors the native checkbox; <code>size-4</code> sets width and height together.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/components/TaskItem.jsx</code>, between the comments of <code>s4-3-row-group</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s4-3-row-group"><code class="language-javascript">'group',</code></pre>
+  <p class="where">In <code>client/src/components/TaskItem.jsx</code>, between the comments of <code>s4-3-checkbox</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s4-3-checkbox"><code class="language-javascript">'peer size-4 accent-brand-600',</code></pre>
+  <p class="where">In <code>client/src/components/TaskItem.jsx</code>, between the comments of <code>s4-3-title-peer</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s4-3-title-peer"><code class="language-javascript">'peer-checked:text-slate-400 peer-checked:line-through',</code></pre>
+  <p class="where">In <code>client/src/components/TaskItem.jsx</code>, between the comments of <code>s4-3-delete-hover</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s4-3-delete-hover"><code class="language-javascript">'text-sm text-red-600 opacity-0 transition group-hover:opacity-100 focus:opacity-100',</code></pre>
+</details>
+
+<div data-check="peer-checkbox"></div>

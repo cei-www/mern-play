@@ -1,0 +1,69 @@
+<h2>Step 5.6: Checkpoint 3: two exercises</h2>
+
+<div class="checkpoint">
+  <div lang="en">
+    <p>About 15 minutes. Both exercises are optional. Try first, then the hint, and only then the solution.</p>
+  </div>
+  <div lang="th">
+    <p>ใช้เวลาประมาณ 15 นาที โจทย์ทั้งสองข้อเป็นทางเลือก ลองทำเองก่อน แล้วค่อยเปิด hint และเปิด solution เป็นลำดับสุดท้าย</p>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 5 (easier): GET /api/high-priority</h3>
+    <div lang="en">
+      <p>Write <code>GET /api/high-priority</code>. It answers the tasks with priority 3 that are not done yet, ordered by due date (the earliest first; tasks without a due date last). Include <code>group_name</code>.</p>
+    </div>
+    <div lang="th">
+      <p>เขียน <code>GET /api/high-priority</code> ให้ตอบ task ที่ priority เป็น 3 และยังไม่เสร็จ เรียงตามวันครบกำหนด (ใกล้สุดก่อน task ที่ไม่มีวันครบกำหนดอยู่ท้ายสุด) พร้อม <code>group_name</code></p>
+    </div>
+    <p class="where">Edit <code>server/routes/highPriority.js</code> (in the Explorer: build &rsaquo; server &rsaquo; routes &rsaquo; highPriority.js). Write the code between the comments <code>@tutorial:begin exercise-5-high-priority</code> and <code>@tutorial:end exercise-5-high-priority</code>.</p>
+    <p><button type="button" class="btn btn-sm btn-outline-primary" data-action="swagger" data-op="highPriority" data-server="app">Try it in Swagger: highPriority</button></p>
+    <details>
+      <summary>Hint</summary>
+      <p><code>ORDER BY t.due_date IS NULL, t.due_date</code> puts tasks without a due date last. The file is already connected at <code>/api/high-priority</code>.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>server/routes/highPriority.js</code>, between the comments of <code>exercise-5-high-priority</code>:</p>
+      <pre data-snippet data-file="server/routes/highPriority.js" data-zone="exercise-5-high-priority"><code class="language-javascript">router.get('/', async (req, res, next) =&gt; {
+  try {
+    const [rows] = await db.query(
+      `SELECT t.*, g.name AS group_name
+       FROM tasks t
+       LEFT JOIN task_groups g ON g.id = t.group_id
+       WHERE t.priority = 3 AND t.done = 0
+       ORDER BY t.due_date IS NULL, t.due_date, t.id`,
+    );
+    res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 6 (harder): EmptyState</h3>
+    <div lang="en">
+      <p>Write the component <code>EmptyState</code>. When there are no tasks at all, the page shows it. It must say <code>No tasks yet</code> and invite the user to add one. To see it, delete every task (or use the empty database after <code>DELETE FROM tasks</code> in the Database tab; <code>reset-db</code> brings the data back).</p>
+    </div>
+    <div lang="th">
+      <p>เขียน component <code>EmptyState</code> เมื่อไม่มี task เลย หน้าเว็บจะแสดงมัน ต้องมีข้อความ <code>No tasks yet</code> และชวนให้เพิ่ม task หากอยากเห็น ให้ลบ task ทั้งหมด (หรือรัน <code>DELETE FROM tasks</code> ใน tab Database; <code>reset-db</code> คืนข้อมูลให้)</p>
+    </div>
+    <p class="where">Edit <code>client/src/components/EmptyState.jsx</code> (in the Explorer: build &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; EmptyState.jsx). Write the code between the comments <code>@tutorial:begin exercise-6-empty-state</code> and <code>@tutorial:end exercise-6-empty-state</code>, inside the function.</p>
+    <details>
+      <summary>Hint</summary>
+      <p>Return a <code>&lt;p&gt;</code> (or a <code>&lt;div&gt;</code>) with the text. A component can return a single element.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>client/src/components/EmptyState.jsx</code>, between the comments of <code>exercise-6-empty-state</code>:</p>
+      <pre data-snippet data-file="client/src/components/EmptyState.jsx" data-zone="exercise-6-empty-state"><code class="language-javascript">return &lt;p className="empty"&gt;No tasks yet. Add your first task above.&lt;/p&gt;;</code></pre>
+    </details>
+  </div>
+</div>
+
+<div data-check="exercise-5-high-priority">
+  <pre><code>  PASS  GET /api/high-priority returns open priority 3 tasks
+  PASS  EmptyState.jsx says "No tasks yet"</code></pre>
+</div>

@@ -1,0 +1,27 @@
+<h2>Step 3.1: PUT or PATCH</h2>
+
+<div lang="en">
+<p>You can change a task in two ways, and the HTTP method says which one you mean.</p>
+<ul>
+  <li><strong>PUT</strong> replaces the whole task: you send every field. You will build this in Story 7.</li>
+  <li><strong>PATCH</strong> changes a part of it: you send only what changes.</li>
+</ul>
+<p>Marking a task as done changes only <code>done</code> (and the time it was completed), so it is a <code>PATCH</code>. The route is <code>PATCH /api/tasks/:id/done</code> and the body is <code>{ "done": true }</code>.</p>
+</div>
+<div lang="th">
+<p>แก้ task ได้ 2 แบบ และ HTTP method บอกว่าคุณหมายถึงแบบไหน</p>
+<ul>
+  <li><strong>PUT</strong> แทนที่ทั้ง task: ส่งทุกฟิลด์ คุณจะทำใน Story 7</li>
+  <li><strong>PATCH</strong> แก้บางส่วน: ส่งเฉพาะสิ่งที่เปลี่ยน</li>
+</ul>
+<p>การทำเครื่องหมายว่าเสร็จเปลี่ยนแค่ <code>done</code> (กับเวลาที่ทำเสร็จ) จึงเป็น <code>PATCH</code> route คือ <code>PATCH /api/tasks/:id/done</code> และ body คือ <code>{ "done": true }</code></p>
+</div>
+
+<div lang="en">
+<blockquote class="blockquote"><p>As a user, I want to tick a task as done, so that I can see my progress and find it later in the history.</p></blockquote>
+<p>Acceptance: done sets <code>completed_at</code> to now, "not done" sets it back to empty, an id that does not exist answers 404, and the page shows a checkbox.</p>
+</div>
+<div lang="th">
+<blockquote class="blockquote"><p>As a user, I want to tick a task as done, so that I can see my progress and find it later in the history.</p></blockquote>
+<p>เกณฑ์: เมื่อ done ให้ตั้ง <code>completed_at</code> เป็นเวลาปัจจุบัน เมื่อยกเลิกให้กลับเป็นค่าว่าง id ที่ไม่มีอยู่ตอบ 404 และหน้าเว็บมี checkbox</p>
+</div>

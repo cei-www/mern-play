@@ -1,0 +1,60 @@
+<h2>Step B.2: The sort whitelist rejects unsafe values</h2>
+
+<div lang="en">
+<p>Remember why <code>buildOrderBy</code> has a list of allowed columns: the sort value ends up <em>inside the SQL text</em>, so a request like <code>?sort=title;DROP TABLE tasks</code> must never get through. This is a security rule, and a rule like this needs tests that try to <em>break</em> it.</p>
+<p>Add tests that send things that are not allowed and expect an error. <code>toThrow(...)</code> needs the code wrapped in a function, so that Vitest can call it and catch the error: <code>expect(() =&gt; buildOrderBy('x')).toThrow('text')</code>. The names <code>constructor</code>, <code>toString</code> and <code>__proto__</code> exist on every JavaScript object, so a careless "is it in the list" check lets them in. Try them.</p>
+</div>
+<div lang="th">
+<p>จำได้ไหมว่าทำไม <code>buildOrderBy</code> มีรายการคอลัมน์ที่อนุญาต: ค่า sort ไปอยู่ <em>ในข้อความ SQL</em> request อย่าง <code>?sort=title;DROP TABLE tasks</code> จึงต้องผ่านไปไม่ได้ นี่คือกฎด้านความปลอดภัย และกฎแบบนี้ต้องมี test ที่พยายาม <em>ทำลาย</em> มัน</p>
+<p>เพิ่ม test ที่ส่งสิ่งที่ไม่อนุญาตและคาดว่าจะเกิด error <code>toThrow(...)</code> ต้องห่อโค้ดไว้ในฟังก์ชัน เพื่อให้ Vitest เรียกและจับ error เอง: <code>expect(() =&gt; buildOrderBy('x')).toThrow('text')</code> ชื่อ <code>constructor</code>, <code>toString</code> และ <code>__proto__</code> มีอยู่ในทุก object ของ JavaScript การเช็ก "อยู่ในรายการไหม" แบบลวก ๆ จึงปล่อยมันผ่าน ลองดู</p>
+</div>
+
+<p class="where">Edit <code>tests/orderBy.test.js</code> (in the Explorer: unit &rsaquo; tests &rsaquo; orderBy.test.js). Add the code at the end of the file.</p>
+<pre data-snippet data-file="tests/orderBy.test.js" data-position="end"><code class="language-javascript">describe('buildOrderBy safety', () =&gt; {
+  it('rejects a column that is not on the list', () =&gt; {
+    expect(() =&gt; buildOrderBy('password')).toThrow('sort must be one of');
+  });
+
+  it('rejects SQL that is put into sort', () =&gt; {
+    expect(() =&gt; buildOrderBy('title; DROP TABLE tasks')).toThrow();
+    expect(() =&gt; buildOrderBy('1 OR 1=1')).toThrow();
+  });
+
+  it.each(['constructor', 'toString', '__proto__'])('rejects the object property name "%s"', (name) =&gt; {
+    expect(() =&gt; buildOrderBy(name)).toThrow('sort must be one of');
+  });
+
+  it('rejects an order that is not asc or desc', () =&gt; {
+    expect(() =&gt; buildOrderBy('title', 'sideways')).toThrow('order must be asc or desc');
+  });
+});</code></pre>
+
+<details>
+  <summary>Hint</summary>
+  <p>The error messages are in <code>src/server/orderBy.js</code>. <code>toThrow('text')</code> passes when the message <em>contains</em> that text.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/orderBy.test.js</code> (at the end of the file):</p>
+  <pre data-snippet data-file="tests/orderBy.test.js" data-position="end"><code class="language-javascript">describe('buildOrderBy safety', () =&gt; {
+  it('rejects a column that is not on the list', () =&gt; {
+    expect(() =&gt; buildOrderBy('password')).toThrow('sort must be one of');
+  });
+
+  it('rejects SQL that is put into sort', () =&gt; {
+    expect(() =&gt; buildOrderBy('title; DROP TABLE tasks')).toThrow();
+    expect(() =&gt; buildOrderBy('1 OR 1=1')).toThrow();
+  });
+
+  it.each(['constructor', 'toString', '__proto__'])('rejects the object property name "%s"', (name) =&gt; {
+    expect(() =&gt; buildOrderBy(name)).toThrow('sort must be one of');
+  });
+
+  it('rejects an order that is not asc or desc', () =&gt; {
+    expect(() =&gt; buildOrderBy('title', 'sideways')).toThrow('order must be asc or desc');
+  });
+});</code></pre>
+</details>
+
+<div data-check="whitelist-tests"></div>

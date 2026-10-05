@@ -1,0 +1,106 @@
+<h2>Step C.4: Filter and sort UI: test behavior, not looks</h2>
+
+<div lang="en">
+<p><code>SortBar</code> in <code>src/client/components/SortBar.jsx</code> has two menus and calls <code>onChange({ sort, order })</code>. The point of this step is <strong>what you assert</strong>.</p>
+<p>Good component tests describe <em>behavior</em>: what the user does, and what they see or what the component reports. Bad ones stick to <em>details</em>: a class name (<code>.btn-primary</code>), a position in the tree, the exact HTML. Such tests break when you restyle or tidy the page, though nothing is wrong, and then people stop trusting them. See the difference:</p>
+</div>
+<div lang="th">
+<p><code>SortBar</code> ใน <code>src/client/components/SortBar.jsx</code> มีสองเมนูและเรียก <code>onChange({ sort, order })</code> จุดสำคัญของ step นี้คือ <strong>คุณ assert อะไร</strong></p>
+<p>test ของ component ที่ดีบรรยาย <em>พฤติกรรม</em>: ผู้ใช้ทำอะไร และเห็นอะไร หรือ component รายงานอะไร ส่วน test ที่แย่ยึด <em>รายละเอียด</em>: ชื่อ class (<code>.btn-primary</code>) ตำแหน่งใน tree หรือ HTML ตรงตัว test แบบนั้นล้มเมื่อคุณปรับสไตล์หรือจัดโค้ดใหม่ ทั้งที่ไม่มีอะไรผิด แล้วคนก็เลิกเชื่อมัน ดูความต่าง:</p>
+</div>
+
+<pre class="code-block"><code class="language-javascript">// Brittle: breaks when someone renames a class or moves a div.
+expect(container.querySelector('.sort-bar select:nth-child(2)').value).toBe('desc');
+
+// Behavior: the user chooses "Order: Descending" and the component reports it.
+await user.selectOptions(screen.getByLabelText('Order'), 'desc');
+expect(onChange).toHaveBeenCalledWith({ sort: 'priority', order: 'desc' });</code></pre>
+
+<div lang="en">
+<p>Write the tests for the sort bar: it shows the current choice, and each menu reports its new value <em>and keeps the other one</em> (a classic bug is to forget it).</p>
+</div>
+<div lang="th">
+<p>เขียน test ให้ sort bar: มันแสดงตัวเลือกปัจจุบัน และแต่ละเมนูรายงานค่าใหม่ <em>และคงค่าของอีกเมนูไว้</em> (บั๊กคลาสสิกคือลืมส่วนนี้)</p>
+</div>
+
+<p class="where">Create the file <code>tests/SortBar.test.jsx</code> (in the Explorer: unit &rsaquo; tests &rsaquo; SortBar.test.jsx; right-click the folder, then <em>New File</em>). Paste the code into it and save.</p>
+<pre data-snippet data-file="tests/SortBar.test.jsx" data-position="end"><code class="language-javascript">import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
+import SortBar from '../src/client/components/SortBar.jsx';
+
+describe('SortBar', () =&gt; {
+  it('shows the current choice', () =&gt; {
+    render(&lt;SortBar sort="priority" order="desc" onChange={() =&gt; {}} /&gt;);
+
+    expect(screen.getByLabelText('Sort by')).toHaveValue('priority');
+    expect(screen.getByLabelText('Order')).toHaveValue('desc');
+  });
+
+  it('reports the new sort and keeps the order', async () =&gt; {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(&lt;SortBar sort="created_at" order="desc" onChange={onChange} /&gt;);
+
+    await user.selectOptions(screen.getByLabelText('Sort by'), 'title');
+
+    expect(onChange).toHaveBeenCalledWith({ sort: 'title', order: 'desc' });
+  });
+
+  it('reports the new order and keeps the sort', async () =&gt; {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(&lt;SortBar sort="priority" order="asc" onChange={onChange} /&gt;);
+
+    await user.selectOptions(screen.getByLabelText('Order'), 'desc');
+
+    expect(onChange).toHaveBeenCalledWith({ sort: 'priority', order: 'desc' });
+  });
+});</code></pre>
+
+<pre data-command><code>npx vitest run tests/SortBar.test.jsx</code></pre>
+
+<details>
+  <summary>Hint</summary>
+  <p><code>toHaveValue('priority')</code> reads the chosen option of a menu. <code>selectOptions</code> takes the value or the visible text of an option.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/SortBar.test.jsx</code> (create the file):</p>
+  <pre data-snippet data-file="tests/SortBar.test.jsx" data-position="end"><code class="language-javascript">import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
+import SortBar from '../src/client/components/SortBar.jsx';
+
+describe('SortBar', () =&gt; {
+  it('shows the current choice', () =&gt; {
+    render(&lt;SortBar sort="priority" order="desc" onChange={() =&gt; {}} /&gt;);
+
+    expect(screen.getByLabelText('Sort by')).toHaveValue('priority');
+    expect(screen.getByLabelText('Order')).toHaveValue('desc');
+  });
+
+  it('reports the new sort and keeps the order', async () =&gt; {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(&lt;SortBar sort="created_at" order="desc" onChange={onChange} /&gt;);
+
+    await user.selectOptions(screen.getByLabelText('Sort by'), 'title');
+
+    expect(onChange).toHaveBeenCalledWith({ sort: 'title', order: 'desc' });
+  });
+
+  it('reports the new order and keeps the sort', async () =&gt; {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    render(&lt;SortBar sort="priority" order="asc" onChange={onChange} /&gt;);
+
+    await user.selectOptions(screen.getByLabelText('Order'), 'desc');
+
+    expect(onChange).toHaveBeenCalledWith({ sort: 'priority', order: 'desc' });
+  });
+});</code></pre>
+</details>
+
+<div data-check="sortbar-tests"></div>

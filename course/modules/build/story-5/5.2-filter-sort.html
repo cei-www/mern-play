@@ -1,0 +1,134 @@
+<h2>Step 5.2: Filter and sort GET /api/tasks</h2>
+
+<div lang="en">
+<p>You will add a second route for <code>GET /</code> <strong>above</strong> the plain one from Story 1. Express tries routes in order:</p>
+<ul>
+  <li>If the request has none of the four options, the new route calls <code>next()</code> and the plain route answers, as before.</li>
+  <li>If it has options, the new route checks them, builds the SQL and answers.</li>
+</ul>
+<p>Two safety rules matter here:</p>
+<ul>
+  <li><strong>Values</strong> (<code>done</code>, <code>group_id</code>) go into the query as <code>?</code> placeholders, like before.</li>
+  <li>The <strong>column name</strong> for sorting cannot be a placeholder (see the next step). It comes from a <em>whitelist</em>: the object <code>SORT_COLUMNS</code> maps the allowed words to real column names, and any other word is refused with <code>400</code>.</li>
+</ul>
+</div>
+<div lang="th">
+<p>คุณจะเพิ่ม route ที่สองสำหรับ <code>GET /</code> <strong>ไว้เหนือ</strong> route ธรรมดาจาก Story 1 Express ลองทีละ route ตามลำดับ:</p>
+<ul>
+  <li>ถ้า request ไม่มีตัวเลือกทั้งสี่ route ใหม่จะเรียก <code>next()</code> แล้ว route ธรรมดาตอบเหมือนเดิม</li>
+  <li>ถ้ามีตัวเลือก route ใหม่จะตรวจ สร้าง SQL และตอบ</li>
+</ul>
+<p>กฎความปลอดภัย 2 ข้อที่สำคัญตรงนี้:</p>
+<ul>
+  <li><strong>ค่า</strong> (<code>done</code>, <code>group_id</code>) ใส่ใน query ด้วย placeholder <code>?</code> เหมือนเดิม</li>
+  <li><strong>ชื่อคอลัมน์</strong> สำหรับเรียงลำดับใช้ placeholder ไม่ได้ (ดู step ถัดไป) จึงมาจาก <em>whitelist</em>: object <code>SORT_COLUMNS</code> แปลงคำที่อนุญาตเป็นชื่อคอลัมน์จริง และคำอื่นถูกปฏิเสธด้วย <code>400</code></li>
+</ul>
+</div>
+
+<p class="where">Edit <code>server/routes/tasks.js</code> (in the Explorer: build &rsaquo; server &rsaquo; routes &rsaquo; tasks.js). Write the code between the comments <code>@tutorial:begin s5-2-filter-sort</code> and <code>@tutorial:end s5-2-filter-sort</code>.</p>
+
+<pre data-snippet data-file="server/routes/tasks.js" data-zone="s5-2-filter-sort"><code class="language-javascript">// Only these columns may be used for sorting. The value goes into the SQL text,
+// so it must never come straight from the request.
+const SORT_COLUMNS = { created_at: 't.created_at', due_date: 't.due_date', priority: 't.priority', title: 't.title' };
+
+// Handles GET /api/tasks when the request has filter or sort options.
+// Without options it calls next() and the plain route below answers.
+router.get('/', async (req, res, next) =&gt; {
+  const { done, group_id: groupId, sort, order = 'asc' } = req.query;
+  if (done === undefined &amp;&amp; groupId === undefined &amp;&amp; sort === undefined &amp;&amp; req.query.order === undefined) return next();
+
+  const where = [];
+  const params = [];
+  if (done !== undefined) {
+    if (done !== '0' &amp;&amp; done !== '1') return res.status(400).json({ error: 'done must be 0 or 1' });
+    where.push('t.done = ?');
+    params.push(Number(done));
+  }
+  if (groupId !== undefined) {
+    if (!/^\d+$/.test(groupId)) return res.status(400).json({ error: 'group_id must be a whole number' });
+    where.push('t.group_id = ?');
+    params.push(Number(groupId));
+  }
+  if (sort !== undefined &amp;&amp; !(sort in SORT_COLUMNS)) {
+    return res.status(400).json({ error: `sort must be one of: ${Object.keys(SORT_COLUMNS).join(', ')}` });
+  }
+  if (order !== 'asc' &amp;&amp; order !== 'desc') return res.status(400).json({ error: 'order must be asc or desc' });
+
+  const column = SORT_COLUMNS[sort ?? 'created_at'];
+  // Tasks without a due date go last when sorting by due date.
+  const nullsLast = column === 't.due_date' ? 't.due_date IS NULL, ' : '';
+  const sql = `${SELECT_TASKS} ${where.length ? `WHERE ${where.join(' AND ')}` : ''} ORDER BY ${nullsLast}${column} ${order}, t.id`;
+  try {
+    const [rows] = await db.query(sql, params);
+    res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+
+<div lang="en">
+<p>Save the file. Try these in Swagger (<code>listTasks</code>) or in the address bar of Preview, and compare with the data:</p>
+</div>
+<div lang="th">
+<p>บันทึกไฟล์ ลองต่อไปนี้ใน Swagger (<code>listTasks</code>) หรือในแถบที่อยู่ของ Preview แล้วเทียบกับข้อมูล:</p>
+</div>
+
+<pre class="code-block"><code class="language-text">/api/tasks?done=0
+/api/tasks?group_id=1
+/api/tasks?sort=title&amp;order=desc
+/api/tasks?sort=nope</code></pre>
+
+<p>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="listTasks" data-server="app">Try it in Swagger: listTasks</button>
+  <a href="#" class="btn btn-sm btn-outline-primary" data-action="preview" data-port="3000" data-path="/api/tasks?done=0&sort=priority&order=desc">Open an example</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>Start with the <code>if</code> that calls <code>next()</code> when nothing is set. Then build two arrays: <code>where</code> (pieces such as <code>'t.done = ?'</code>) and <code>params</code> (their values). Join the pieces with <code>AND</code>. For the sort column use <code>SORT_COLUMNS[sort ?? 'created_at']</code>.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>server/routes/tasks.js</code>, between the comments of <code>s5-2-filter-sort</code>:</p>
+  <pre data-snippet data-file="server/routes/tasks.js" data-zone="s5-2-filter-sort"><code class="language-javascript">// Only these columns may be used for sorting. The value goes into the SQL text,
+// so it must never come straight from the request.
+const SORT_COLUMNS = { created_at: 't.created_at', due_date: 't.due_date', priority: 't.priority', title: 't.title' };
+
+// Handles GET /api/tasks when the request has filter or sort options.
+// Without options it calls next() and the plain route below answers.
+router.get('/', async (req, res, next) =&gt; {
+  const { done, group_id: groupId, sort, order = 'asc' } = req.query;
+  if (done === undefined &amp;&amp; groupId === undefined &amp;&amp; sort === undefined &amp;&amp; req.query.order === undefined) return next();
+
+  const where = [];
+  const params = [];
+  if (done !== undefined) {
+    if (done !== '0' &amp;&amp; done !== '1') return res.status(400).json({ error: 'done must be 0 or 1' });
+    where.push('t.done = ?');
+    params.push(Number(done));
+  }
+  if (groupId !== undefined) {
+    if (!/^\d+$/.test(groupId)) return res.status(400).json({ error: 'group_id must be a whole number' });
+    where.push('t.group_id = ?');
+    params.push(Number(groupId));
+  }
+  if (sort !== undefined &amp;&amp; !(sort in SORT_COLUMNS)) {
+    return res.status(400).json({ error: `sort must be one of: ${Object.keys(SORT_COLUMNS).join(', ')}` });
+  }
+  if (order !== 'asc' &amp;&amp; order !== 'desc') return res.status(400).json({ error: 'order must be asc or desc' });
+
+  const column = SORT_COLUMNS[sort ?? 'created_at'];
+  // Tasks without a due date go last when sorting by due date.
+  const nullsLast = column === 't.due_date' ? 't.due_date IS NULL, ' : '';
+  const sql = `${SELECT_TASKS} ${where.length ? `WHERE ${where.join(' AND ')}` : ''} ORDER BY ${nullsLast}${column} ${order}, t.id`;
+  try {
+    const [rows] = await db.query(sql, params);
+    res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+</details>
+
+<div data-check="filter-open"></div>

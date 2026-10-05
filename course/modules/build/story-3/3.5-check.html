@@ -1,0 +1,19 @@
+<h2>Step 3.5: Check Story 3</h2>
+
+<div lang="en">
+<p>The check marks a new task as done through your API, reads <code>completed_at</code> in MySQL, unmarks it and asks for an id that does not exist.</p>
+</div>
+<div lang="th">
+<p>การตรวจจะทำเครื่องหมายว่าเสร็จกับ task ใหม่ผ่าน API ของคุณ อ่าน <code>completed_at</code> ใน MySQL ยกเลิกเครื่องหมาย และขอ id ที่ไม่มีอยู่</p>
+</div>
+
+<div data-check="set-done">
+  <pre><code>  PASS  PATCH sets and clears completed_at
+  PASS  PATCH on an id that does not exist answers 404
+  PASS  TaskItem.jsx has a checkbox that calls the API</code></pre>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>If the second line fails, make sure your route answers <code>404</code> when the task does not exist, and not <code>200</code> with an empty body.</p>
+</details>

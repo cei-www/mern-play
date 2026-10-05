@@ -1,0 +1,59 @@
+<h2>Step 3.1: Typography</h2>
+
+<div lang="en">
+<p>Text styling is a handful of classes you will use everywhere:</p>
+<ul>
+  <li>size: <code>text-sm</code>, <code>text-base</code>, <code>text-xl</code>, <code>text-3xl</code> ...</li>
+  <li>weight: <code>font-medium</code>, <code>font-semibold</code>, <code>font-bold</code></li>
+  <li>letter spacing and line height: <code>tracking-tight</code>, <code>leading-snug</code></li>
+  <li>color: <code>text-slate-900</code> is a very dark gray, <code>text-slate-500</code> a soft one. Colors come in named families (<code>slate</code>, <code>red</code>, <code>sky</code> ...) with shades from 50 (lightest) to 950 (darkest).</li>
+</ul>
+<p>Give the title a tighter, darker look, the task title a medium weight (<code>flex-1</code> also makes it take the free space of the row, pushing the other items to the right), and the due date a small, soft gray.</p>
+</div>
+<div lang="th">
+<p>การจัดรูปตัวอักษรใช้ class ไม่กี่ตัวที่คุณจะใช้ทุกที่:</p>
+<ul>
+  <li>ขนาด: <code>text-sm</code>, <code>text-base</code>, <code>text-xl</code>, <code>text-3xl</code> ...</li>
+  <li>น้ำหนัก: <code>font-medium</code>, <code>font-semibold</code>, <code>font-bold</code></li>
+  <li>ระยะห่างตัวอักษรและความสูงบรรทัด: <code>tracking-tight</code>, <code>leading-snug</code></li>
+  <li>สี: <code>text-slate-900</code> คือเทาเข้มมาก <code>text-slate-500</code> คือเทาอ่อน สีมีเป็นตระกูลที่ตั้งชื่อ (<code>slate</code>, <code>red</code>, <code>sky</code> ...) และเฉดตั้งแต่ 50 (อ่อนสุด) ถึง 950 (เข้มสุด)</li>
+</ul>
+<p>ทำให้ชื่อหน้าชิดและเข้มขึ้น ชื่อ task น้ำหนักปานกลาง (<code>flex-1</code> ทำให้มันกินที่ว่างของแถวด้วย ดันรายการอื่นไปทางขวา) และวันครบกำหนดเป็นตัวเล็กสีเทาอ่อน</p>
+</div>
+
+<p class="where">Edit <code>client/src/App.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; App.jsx). Write the code between the comments <code>@tutorial:begin s3-1-title-type</code> and <code>@tutorial:end s3-1-title-type</code>, in the class list of the <code>h1</code> (below the classes of step 1.4).</p>
+<pre data-snippet data-file="client/src/App.jsx" data-zone="s3-1-title-type"><code class="language-javascript">'tracking-tight text-slate-900',</code></pre>
+
+<p class="where">Edit <code>client/src/components/TaskItem.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskItem.jsx). Write the code between the comments <code>@tutorial:begin s3-1-title-weight</code> and <code>@tutorial:end s3-1-title-weight</code>, in the class list of the <code>span</code> that shows the task title.</p>
+<pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s3-1-title-weight"><code class="language-javascript">'flex-1 font-medium',</code></pre>
+
+<p class="where">Edit <code>client/src/components/TaskItem.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskItem.jsx). Write the code between the comments <code>@tutorial:begin s3-1-due-type</code> and <code>@tutorial:end s3-1-due-type</code>, in the class list of the <code>span</code> that shows the due date.</p>
+<pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s3-1-due-type"><code class="language-javascript">'text-sm text-slate-500',</code></pre>
+
+<div lang="en">
+<p>The app is in the <strong>Preview</strong> tab (port <em>App (for Tailwind)</em>). It reloads by itself when you save.</p>
+</div>
+<div lang="th">
+<p>แอปอยู่ใน tab <strong>Preview</strong> (พอร์ต <em>App (for Tailwind)</em>) และโหลดใหม่เองเมื่อคุณบันทึก</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>Classes of different zones are joined by <code>cx</code> into one list. They do not replace each other: the final list of the heading is the classes of every step.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/App.jsx</code>, between the comments of <code>s3-1-title-type</code>:</p>
+  <pre data-snippet data-file="client/src/App.jsx" data-zone="s3-1-title-type"><code class="language-javascript">'tracking-tight text-slate-900',</code></pre>
+  <p class="where">In <code>client/src/components/TaskItem.jsx</code>, between the comments of <code>s3-1-title-weight</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s3-1-title-weight"><code class="language-javascript">'flex-1 font-medium',</code></pre>
+  <p class="where">In <code>client/src/components/TaskItem.jsx</code>, between the comments of <code>s3-1-due-type</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s3-1-due-type"><code class="language-javascript">'text-sm text-slate-500',</code></pre>
+</details>
+
+<div data-check="type-title"></div>

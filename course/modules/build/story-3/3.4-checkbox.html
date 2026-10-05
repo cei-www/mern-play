@@ -1,0 +1,60 @@
+<h2>Step 3.4: The checkbox</h2>
+
+<div lang="en">
+<p>Each row (<code>TaskItem</code>) gets a checkbox. When it changes, the page calls <code>PATCH</code> and then asks the list to reload with <code>onChanged()</code>.</p>
+<p>This is a safe, simple way: the page waits for the server and then shows what the server says. (A faster-feeling way, the <em>optimistic update</em>, changes the screen first and corrects it if the server refuses. You can try it as your own experiment.)</p>
+</div>
+<div lang="th">
+<p>แต่ละแถว (<code>TaskItem</code>) จะมี checkbox เมื่อเปลี่ยนค่า หน้าเว็บเรียก <code>PATCH</code> แล้วสั่งให้รายการโหลดใหม่ด้วย <code>onChanged()</code></p>
+<p>วิธีนี้ปลอดภัยและง่าย: หน้าเว็บรอ server แล้วแสดงตามที่ server บอก (วิธีที่รู้สึกเร็วกว่าคือ <em>optimistic update</em> ซึ่งเปลี่ยนหน้าจอก่อนแล้วแก้กลับถ้า server ปฏิเสธ ลองทำเองเป็นการทดลองได้)</p>
+</div>
+
+<p class="where">Edit <code>client/src/components/TaskItem.jsx</code> (in the Explorer: build &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskItem.jsx). Write the code between the comments <code>@tutorial:begin s3-4-done-checkbox</code> and <code>@tutorial:end s3-4-done-checkbox</code> (they look like <code>{/* ... */}</code> here, because they sit inside JSX).</p>
+
+<pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s3-4-done-checkbox"><code class="language-javascript">&lt;input
+  type="checkbox"
+  checked={task.done === 1}
+  aria-label={`Mark "${task.title}" as done`}
+  onChange={(event) =&gt;
+    fetch(`/api/tasks/${task.id}/done`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ done: event.target.checked }),
+    }).then(() =&gt; onChanged?.())
+  }
+/&gt;</code></pre>
+
+<div lang="en">
+<p>Save and tick a task in <strong>Preview</strong>. It gets a line through it. Untick it to bring it back.</p>
+</div>
+<div lang="th">
+<p>บันทึกแล้วลองติ๊ก task ใน <strong>Preview</strong> จะมีเส้นขีดทับ ติ๊กออกเพื่อให้กลับมา</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5173" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>The checkbox is <code>checked</code> when <code>task.done === 1</code> (MySQL gives 0 or 1, not true or false). Use <code>event.target.checked</code> for the new value.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/components/TaskItem.jsx</code>, between the comments of <code>s3-4-done-checkbox</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s3-4-done-checkbox"><code class="language-javascript">&lt;input
+  type="checkbox"
+  checked={task.done === 1}
+  aria-label={`Mark "${task.title}" as done`}
+  onChange={(event) =&gt;
+    fetch(`/api/tasks/${task.id}/done`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ done: event.target.checked }),
+    }).then(() =&gt; onChanged?.())
+  }
+/&gt;</code></pre>
+</details>
+
+<div data-check="done-checkbox-code"></div>

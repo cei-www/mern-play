@@ -18,7 +18,11 @@ describe('http check', () => {
     });
     try {
       const { io } = fakeIo();
-      const r = await runCheck('c', { type: 'http', title: 'hello works', request: { url: `${server.url}/api/hello` }, expect: { status: 200, json: { hello: 'world' } } }, ws.ctx(io));
+      const r = await runCheck(
+        'c',
+        { type: 'http', title: 'hello works', request: { url: `${server.url}/api/hello` }, expect: { status: 200, json: { hello: 'world' } } },
+        ws.ctx(io),
+      );
       expect(r).toMatchObject({ passed: true, message: 'hello works' });
     } finally {
       await server.close();
@@ -90,7 +94,11 @@ describe('http check', () => {
       });
     });
     try {
-      const def = { type: 'http', request: { method: 'post', url: `${server.url}/api/tasks`, body: { title: 'x' } }, expect: { status: 201, headers: { 'content-type': 'json' } } } as const;
+      const def = {
+        type: 'http',
+        request: { method: 'post', url: `${server.url}/api/tasks`, body: { title: 'x' } },
+        expect: { status: 201, headers: { 'content-type': 'json' } },
+      } as const;
       expect((await runCheck('c', def, ws.ctx(fakeIo().io))).passed).toBe(true);
       expect(seen).toBe('POST application/json {"title":"x"}');
       const bad = { ...def, expect: { status: 201, headers: { 'content-type': 'xml' } } } as const;
@@ -107,7 +115,9 @@ describe('http check', () => {
   });
 
   it('only calls localhost and reports broken definitions', async () => {
-    expect((await runCheck('c', { type: 'http', request: { url: 'https://example.com/' } }, ws.ctx(fakeIo().io))).message).toBe('Checks may only call localhost.');
+    expect((await runCheck('c', { type: 'http', request: { url: 'https://example.com/' } }, ws.ctx(fakeIo().io))).message).toBe(
+      'Checks may only call localhost.',
+    );
     expect((await runCheck('c', { type: 'http' }, ws.ctx(fakeIo().io))).message).toMatch(/no request url/);
     expect((await runCheck('c', { type: 'http', request: { url: 'nope' } }, ws.ctx(fakeIo().io))).message).toMatch(/invalid url/);
   });
@@ -218,7 +228,14 @@ describe('test check', () => {
     JSON.stringify({
       numTotalTests: 3,
       numFailedTests: failed,
-      testResults: [{ assertionResults: [{ fullName: 'adds', status: 'passed' }, { fullName: 'removes', status: failed ? 'failed' : 'passed', failureMessages: ['AssertionError: expected 1 to be 2\n  at x'] }] }],
+      testResults: [
+        {
+          assertionResults: [
+            { fullName: 'adds', status: 'passed' },
+            { fullName: 'removes', status: failed ? 'failed' : 'passed', failureMessages: ['AssertionError: expected 1 to be 2\n  at x'] },
+          ],
+        },
+      ],
     });
 
   it('passes on exit code 0 and fails with the last output lines otherwise', async () => {
@@ -231,17 +248,31 @@ describe('test check', () => {
   it('reads a vitest/jest JSON report and names the failing tests', async () => {
     const ok = await runCheck('c', { type: 'test', command: ['x'], format: 'vitest-json' }, ws.ctx(fakeIo({ run: { stdout: report(0) } }).io));
     expect(ok).toMatchObject({ passed: true, message: 'All 3 tests passed.' });
-    const bad = await runCheck('c', { type: 'test', command: ['x'], format: 'jest-json' }, ws.ctx(fakeIo({ run: { code: 1, stdout: `noise\n${report(1)}\nmore` } }).io));
+    const bad = await runCheck(
+      'c',
+      { type: 'test', command: ['x'], format: 'jest-json' },
+      ws.ctx(fakeIo({ run: { code: 1, stdout: `noise\n${report(1)}\nmore` } }).io),
+    );
     expect(bad.message).toBe('1 of 3 tests failed.');
     expect(bad.detail).toEqual(['removes: AssertionError: expected 1 to be 2']);
   });
 
   it('handles no tests, unreadable reports, timeouts and commands that cannot start', async () => {
-    const none = await runCheck('c', { type: 'test', command: ['x'], format: 'vitest-json' }, ws.ctx(fakeIo({ run: { stdout: '{"numTotalTests":0,"numFailedTests":0}' } }).io));
+    const none = await runCheck(
+      'c',
+      { type: 'test', command: ['x'], format: 'vitest-json' },
+      ws.ctx(fakeIo({ run: { stdout: '{"numTotalTests":0,"numFailedTests":0}' } }).io),
+    );
     expect(none.message).toMatch(/No tests were found/);
-    expect((await runCheck('c', { type: 'test', command: ['x'], format: 'vitest-json' }, ws.ctx(fakeIo({ run: { stdout: 'garbage' } }).io))).message).toMatch(/not produce a readable result/);
-    expect((await runCheck('c', { type: 'test', command: ['x'], timeoutMs: 3000 }, ws.ctx(fakeIo({ run: { timedOut: true, code: null } }).io))).message).toMatch(/longer than 3 seconds/);
-    expect((await runCheck('c', { type: 'test', command: ['x'] }, ws.ctx(fakeIo({ run: { code: null, stderr: 'spawn x ENOENT' } }).io))).message).toMatch(/could not start/);
+    expect((await runCheck('c', { type: 'test', command: ['x'], format: 'vitest-json' }, ws.ctx(fakeIo({ run: { stdout: 'garbage' } }).io))).message).toMatch(
+      /not produce a readable result/,
+    );
+    expect(
+      (await runCheck('c', { type: 'test', command: ['x'], timeoutMs: 3000 }, ws.ctx(fakeIo({ run: { timedOut: true, code: null } }).io))).message,
+    ).toMatch(/longer than 3 seconds/);
+    expect((await runCheck('c', { type: 'test', command: ['x'] }, ws.ctx(fakeIo({ run: { code: null, stderr: 'spawn x ENOENT' } }).io))).message).toMatch(
+      /could not start/,
+    );
   });
 
   it('runs inside the module folder and never outside it', async () => {
@@ -270,7 +301,12 @@ describe('flow check', () => {
         type: 'flow',
         title: 'Creating a task stores it',
         steps: [
-          { type: 'http', request: { method: 'POST', url: `${server.url}/api/tasks`, body: { title: 'Buy milk' } }, expect: { status: 201 }, save: { taskId: '$.id' } },
+          {
+            type: 'http',
+            request: { method: 'POST', url: `${server.url}/api/tasks`, body: { title: 'Buy milk' } },
+            expect: { status: 201 },
+            save: { taskId: '$.id' },
+          },
           { type: 'sql', database: 'taskapp', query: 'SELECT title FROM tasks WHERE id = {{taskId}}', expect: { first: { title: 'Buy milk' } } },
         ],
       } as const;

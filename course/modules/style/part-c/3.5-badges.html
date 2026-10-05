@@ -1,0 +1,42 @@
+<h2>Step 3.5: Badges</h2>
+
+<div lang="en">
+<p>A <em>badge</em> is a small pill of text. Combine what you know: <code>rounded-full</code> for the pill shape, a light background (<code>bg-sky-100</code>), dark text of the same family (<code>text-sky-800</code>), small type (<code>text-xs font-medium</code>) and a little padding (<code>px-2 py-0.5</code>; the dot is part of the number, <code>0.5</code> is half a step).</p>
+<p>Style the group badge. For the priority badge write the shape and the type now; the <em>colors</em> by priority are Exercise 2 of the checkpoint.</p>
+</div>
+<div lang="th">
+<p><em>badge</em> คือแคปซูลข้อความเล็ก ๆ รวมสิ่งที่รู้แล้ว: <code>rounded-full</code> เพื่อทรงแคปซูล พื้นอ่อน (<code>bg-sky-100</code>) ตัวอักษรเข้มของตระกูลสีเดียวกัน (<code>text-sky-800</code>) ตัวเล็ก (<code>text-xs font-medium</code>) และ padding เล็กน้อย (<code>px-2 py-0.5</code> จุดเป็นส่วนของตัวเลข <code>0.5</code> คือครึ่งขั้น)</p>
+<p>จัดสไตล์ badge ของ group ส่วน badge ของ priority เขียนรูปทรงและตัวอักษรตอนนี้ ส่วน <em>สี</em> ตาม priority เป็นโจทย์ข้อ 2 ของ checkpoint</p>
+</div>
+
+<p class="where">Edit <code>client/src/components/TaskItem.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskItem.jsx). Write the code between the comments <code>@tutorial:begin s3-5-group-badge</code> and <code>@tutorial:end s3-5-group-badge</code>, in the class list of the <code>span</code> that shows the group name.</p>
+<pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s3-5-group-badge"><code class="language-javascript">'rounded-full bg-sky-100 px-2 py-0.5 text-xs font-medium text-sky-800',</code></pre>
+
+<p class="where">Edit <code>client/src/components/TaskItem.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskItem.jsx). Write the code between the comments <code>@tutorial:begin s3-5-priority-base</code> and <code>@tutorial:end s3-5-priority-base</code>, in the class list of the <code>span</code> that shows the priority.</p>
+<pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s3-5-priority-base"><code class="language-javascript">'rounded px-2 py-0.5 text-xs font-semibold uppercase',</code></pre>
+
+<div lang="en">
+<p>The app is in the <strong>Preview</strong> tab (port <em>App (for Tailwind)</em>). It reloads by itself when you save.</p>
+</div>
+<div lang="th">
+<p>แอปอยู่ใน tab <strong>Preview</strong> (พอร์ต <em>App (for Tailwind)</em>) และโหลดใหม่เองเมื่อคุณบันทึก</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p><code>uppercase</code> shows "high" as "HIGH". Without colors the priority badges look all the same: that is what the checkpoint fixes.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/components/TaskItem.jsx</code>, between the comments of <code>s3-5-group-badge</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s3-5-group-badge"><code class="language-javascript">'rounded-full bg-sky-100 px-2 py-0.5 text-xs font-medium text-sky-800',</code></pre>
+  <p class="where">In <code>client/src/components/TaskItem.jsx</code>, between the comments of <code>s3-5-priority-base</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s3-5-priority-base"><code class="language-javascript">'rounded px-2 py-0.5 text-xs font-semibold uppercase',</code></pre>
+</details>
+
+<div data-check="badge-group"></div>

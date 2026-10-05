@@ -1,0 +1,54 @@
+<h2>Step B.5: Test the error paths</h2>
+
+<div lang="en">
+<p>Most bugs hide where things go wrong, and that is where tests are often missing. <code>createTask</code> has two error paths:</p>
+<ul>
+  <li>the input is invalid: it must throw <code>ValidationError</code> and <strong>never call the database</strong>. The spy proves it with <code>not.toHaveBeenCalled()</code>;</li>
+  <li>the database fails: the error must reach the caller (so the route can answer 500) and not be swallowed. <code>mockRejectedValue</code> makes the stub fail.</li>
+</ul>
+<p>For code that returns a promise, write <code>await expect(promise).rejects.toThrow(...)</code>, and mark the test function <code>async</code>.</p>
+</div>
+<div lang="th">
+<p>บั๊กส่วนใหญ่ซ่อนอยู่ตรงที่เรื่องผิดพลาด และตรงนั้นมักไม่มี test <code>createTask</code> มีสอง error path:</p>
+<ul>
+  <li>ข้อมูลไม่ถูกต้อง: ต้อง throw <code>ValidationError</code> และ <strong>ห้ามเรียกฐานข้อมูล</strong> spy พิสูจน์ได้ด้วย <code>not.toHaveBeenCalled()</code></li>
+  <li>ฐานข้อมูลล้มเหลว: error ต้องไปถึงผู้เรียก (เพื่อให้ route ตอบ 500 ได้) และไม่ถูกกลืน <code>mockRejectedValue</code> ทำให้ stub ล้มเหลว</li>
+</ul>
+<p>สำหรับโค้ดที่คืน promise ให้เขียน <code>await expect(promise).rejects.toThrow(...)</code> และทำเครื่องหมายฟังก์ชัน test เป็น <code>async</code></p>
+</div>
+
+<p class="where">Edit <code>tests/taskService.test.js</code> (in the Explorer: unit &rsaquo; tests &rsaquo; taskService.test.js). Add the code at the end of the file.</p>
+<pre data-snippet data-file="tests/taskService.test.js" data-position="end"><code class="language-javascript">describe('createTask errors', () =&gt; {
+  it('rejects an invalid task and never touches the database', async () =&gt; {
+    await expect(createTask({ title: '' })).rejects.toThrow(ValidationError);
+    expect(db.query).not.toHaveBeenCalled();
+  });
+
+  it('lets a database failure through to the caller', async () =&gt; {
+    db.query.mockRejectedValue(new Error('connection lost'));
+    await expect(createTask({ title: 'Buy milk' })).rejects.toThrow('connection lost');
+  });
+});</code></pre>
+
+<details>
+  <summary>Hint</summary>
+  <p><code>ValidationError</code> is already imported at the top of the file by the code of step B.4.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/taskService.test.js</code> (at the end of the file):</p>
+  <pre data-snippet data-file="tests/taskService.test.js" data-position="end"><code class="language-javascript">describe('createTask errors', () =&gt; {
+  it('rejects an invalid task and never touches the database', async () =&gt; {
+    await expect(createTask({ title: '' })).rejects.toThrow(ValidationError);
+    expect(db.query).not.toHaveBeenCalled();
+  });
+
+  it('lets a database failure through to the caller', async () =&gt; {
+    db.query.mockRejectedValue(new Error('connection lost'));
+    await expect(createTask({ title: 'Buy milk' })).rejects.toThrow('connection lost');
+  });
+});</code></pre>
+</details>
+
+<div data-check="service-errors"></div>

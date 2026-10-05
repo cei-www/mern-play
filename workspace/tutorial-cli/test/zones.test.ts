@@ -35,9 +35,7 @@ describe('stripZones', () => {
   it('replaces zone content with one TODO line and two blank lines, keeping the markers', () => {
     const r = stripZones(JS, { include: notExercise });
     expect(r.stripped).toEqual(['story-1-list']);
-    expect(r.content).toContain(
-      '// @tutorial:begin story-1-list\n// TODO (story-1-list): write your code here\n\n\n// @tutorial:end story-1-list',
-    );
+    expect(r.content).toContain('// @tutorial:begin story-1-list\n// TODO (story-1-list): write your code here\n\n\n// @tutorial:end story-1-list');
   });
 
   it('leaves exercise zones alone unless asked', () => {

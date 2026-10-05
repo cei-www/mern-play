@@ -1,0 +1,78 @@
+<h2>Step F.2: Checkpoint 2: two exercises</h2>
+
+<div class="checkpoint">
+  <div lang="en">
+    <p>About 15 minutes. Both exercises are optional. Your tests are checked against deliberate bugs again.</p>
+  </div>
+  <div lang="th">
+    <p>ใช้เวลาประมาณ 15 นาที โจทย์ทั้งสองข้อเป็นทางเลือก เทสต์ของคุณจะถูกตรวจกับบั๊กที่ใส่ไว้โดยตั้งใจอีกครั้ง</p>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 3 (harder): a keyword that compares the API with the database</h3>
+    <div lang="en">
+      <p>Write the keyword <code>Task Count Should Match Database</code> in the resource file. It gets the list of tasks from the API, counts them, counts the rows of <code>tasks</code> with SQL, and fails when the numbers differ. Then write a test <code>Api And Database Agree On The Task Count</code> that uses it.</p>
+    </div>
+    <div lang="th">
+      <p>เขียน keyword <code>Task Count Should Match Database</code> ในไฟล์ resource มันขอรายการ task จาก API นับจำนวน นับแถวของ <code>tasks</code> ด้วย SQL และล้มเมื่อตัวเลขต่างกัน จากนั้นเขียนเทสต์ <code>Api And Database Agree On The Task Count</code> ที่ใช้มัน</p>
+    </div>
+    <p class="where">Edit <code>resources/api.resource</code> (in the Explorer: api &rsaquo; resources &rsaquo; api.resource). First the keyword, at the end of the file.</p>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>resources/api.resource</code>, at the end:</p>
+      <pre data-snippet data-file="resources/api.resource" data-position="end"><code class="language-plaintext">Task Count Should Match Database
+    ${response}=    GET    ${BASE_URL}/api/tasks
+    ${api_count}=    Get Length    ${response.json()}
+    ${rows}=    Query    SELECT COUNT(*) FROM tasks
+    Should Be Equal As Integers    ${api_count}    ${rows}[0][0]</code></pre>
+    </details>
+    <p class="where">Create the file <code>tests/08_checkpoint_2.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 08_checkpoint_2.robot). Then the test.</p>
+    <details>
+      <summary>Hint</summary>
+      <p><code>Get Length    ${response.json()}</code> counts the API items. <code>Query    SELECT COUNT(*) FROM tasks</code> gives the database number as <code>${rows}[0][0]</code>. Compare with <code>Should Be Equal As Integers</code>.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>tests/08_checkpoint_2.robot</code> (the whole file so far):</p>
+      <pre data-snippet data-file="tests/08_checkpoint_2.robot" data-position="end"><code class="language-plaintext">*** Settings ***
+Resource    ../resources/api.resource
+Suite Setup    Connect To Test Database
+Suite Teardown    Disconnect From All Databases
+Test Teardown    Delete Test Tasks
+
+*** Test Cases ***
+Api And Database Agree On The Task Count
+    Task Count Should Match Database</code></pre>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 4 (harder): create, delete, delete again</h3>
+    <div lang="en">
+      <p>Write a test named <code>Deleted Task Is Gone</code>. It creates a task with the keyword <code>Create Task</code> (title starting with <code>Robot </code>), deletes it and expects 204, deletes it <em>again</em> and expects 404, and finally reads it with <code>GET</code> and expects 404.</p>
+    </div>
+    <div lang="th">
+      <p>เขียนเทสต์ชื่อ <code>Deleted Task Is Gone</code> สร้าง task ด้วย keyword <code>Create Task</code> (title ขึ้นต้นด้วย <code>Robot </code>) ลบมันและคาดหวัง 204 ลบ <em>อีกครั้ง</em> และคาดหวัง 404 และสุดท้ายอ่านด้วย <code>GET</code> และคาดหวัง 404</p>
+    </div>
+    <p class="where">Edit <code>tests/08_checkpoint_2.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 08_checkpoint_2.robot). Add at the end of the file.</p>
+    <details>
+      <summary>Hint</summary>
+      <p>The keyword <code>DELETE</code> works like <code>GET</code>. The second delete needs <code>expected_status=404</code>. The reference API has a hidden bug where deleting a missing task still answers 204; only the <em>second</em> delete notices it.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>tests/08_checkpoint_2.robot</code>, at the end:</p>
+      <pre data-snippet data-file="tests/08_checkpoint_2.robot" data-position="end"><code class="language-plaintext">Deleted Task Is Gone
+    ${id}=    Create Task    Robot delete me
+    ${first}=    DELETE    ${BASE_URL}/api/tasks/${id}
+    Should Be Equal As Integers    ${first.status_code}    204
+    ${second}=    DELETE    ${BASE_URL}/api/tasks/${id}    expected_status=404
+    ${read}=    GET    ${BASE_URL}/api/tasks/${id}    expected_status=404</code></pre>
+    </details>
+  </div>
+</div>
+
+<div data-check="cp2-count">
+  <pre><code>  PASS  The keyword and the test compare the API count with the database
+  PASS  The test "Deleted Task Is Gone" passes and catches a bad API</code></pre>
+</div>

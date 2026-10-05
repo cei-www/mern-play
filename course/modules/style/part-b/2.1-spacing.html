@@ -1,0 +1,65 @@
+<h2>Step 2.1: Padding, margin and gap</h2>
+
+<div lang="en">
+<p>Spacing is the first thing that makes a page feel designed. Tailwind uses one scale for all of it: the number is a step of <code>0.25rem</code> (4px at normal size). So <code>p-3</code> is 0.75rem of padding and <code>mb-4</code> is 1rem of margin at the bottom.</p>
+<table class="table table-sm">
+  <thead><tr><th>Class</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td><code>p-3</code></td><td>padding on all sides</td></tr>
+    <tr><td><code>px-3</code> / <code>py-1</code></td><td>padding left and right / top and bottom</td></tr>
+    <tr><td><code>m-2</code> <code>mb-4</code> <code>mt-2</code></td><td>margin (all sides, bottom, top)</td></tr>
+    <tr><td><code>gap-2</code></td><td>space between the children of a flex or grid box (next step)</td></tr>
+  </tbody>
+</table>
+<p>Give the page, every task row and the form some room.</p>
+</div>
+<div lang="th">
+<p>ระยะห่างคือสิ่งแรกที่ทำให้หน้าเว็บดูมีการออกแบบ Tailwind ใช้สเกลเดียวกับทุกอย่าง: ตัวเลขคือหนึ่งขั้นของ <code>0.25rem</code> (4px ที่ขนาดปกติ) ดังนั้น <code>p-3</code> คือ padding 0.75rem และ <code>mb-4</code> คือ margin ด้านล่าง 1rem</p>
+<table class="table table-sm">
+  <thead><tr><th>Class</th><th>ความหมาย</th></tr></thead>
+  <tbody>
+    <tr><td><code>p-3</code></td><td>padding ทุกด้าน</td></tr>
+    <tr><td><code>px-3</code> / <code>py-1</code></td><td>padding ซ้าย-ขวา / บน-ล่าง</td></tr>
+    <tr><td><code>m-2</code> <code>mb-4</code> <code>mt-2</code></td><td>margin (ทุกด้าน, ล่าง, บน)</td></tr>
+    <tr><td><code>gap-2</code></td><td>ช่องว่างระหว่างลูกของกล่อง flex หรือ grid (step ถัดไป)</td></tr>
+  </tbody>
+</table>
+<p>เพิ่มพื้นที่ให้หน้าเว็บ แถว task ทุกแถว และฟอร์ม</p>
+</div>
+
+<p class="where">Edit <code>client/src/App.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; App.jsx). Write the code between the comments <code>@tutorial:begin s2-1-page-spacing</code> and <code>@tutorial:end s2-1-page-spacing</code>, in the class list of <code>main</code>.</p>
+<pre data-snippet data-file="client/src/App.jsx" data-zone="s2-1-page-spacing"><code class="language-javascript">'p-3',</code></pre>
+
+<p class="where">Edit <code>client/src/components/TaskItem.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskItem.jsx). Write the code between the comments <code>@tutorial:begin s2-1-row-spacing</code> and <code>@tutorial:end s2-1-row-spacing</code>, in the class list of the <code>li</code>.</p>
+<pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s2-1-row-spacing"><code class="language-javascript">'mb-2 p-3',</code></pre>
+
+<p class="where">Edit <code>client/src/components/TaskForm.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskForm.jsx). Write the code between the comments <code>@tutorial:begin s2-1-form-spacing</code> and <code>@tutorial:end s2-1-form-spacing</code>, in the class list of the <code>form</code>.</p>
+<pre data-snippet data-file="client/src/components/TaskForm.jsx" data-zone="s2-1-form-spacing"><code class="language-javascript">'mb-4',</code></pre>
+
+<div lang="en">
+<p>The app is in the <strong>Preview</strong> tab (port <em>App (for Tailwind)</em>). It reloads by itself when you save.</p>
+</div>
+<div lang="th">
+<p>แอปอยู่ใน tab <strong>Preview</strong> (พอร์ต <em>App (for Tailwind)</em>) และโหลดใหม่เองเมื่อคุณบันทึก</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>Each zone is a string followed by a comma. If you want to try other numbers, change them and watch <strong>Preview</strong>, then put the lesson values back for the check.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/App.jsx</code>, between the comments of <code>s2-1-page-spacing</code>:</p>
+  <pre data-snippet data-file="client/src/App.jsx" data-zone="s2-1-page-spacing"><code class="language-javascript">'p-3',</code></pre>
+  <p class="where">In <code>client/src/components/TaskItem.jsx</code>, between the comments of <code>s2-1-row-spacing</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s2-1-row-spacing"><code class="language-javascript">'mb-2 p-3',</code></pre>
+  <p class="where">In <code>client/src/components/TaskForm.jsx</code>, between the comments of <code>s2-1-form-spacing</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskForm.jsx" data-zone="s2-1-form-spacing"><code class="language-javascript">'mb-4',</code></pre>
+</details>
+
+<div data-check="spacing-app"></div>

@@ -1,0 +1,55 @@
+<h2>Step 3.4: Your own theme</h2>
+
+<div lang="en">
+<p>Every project has its own colors. In Tailwind 4 you define them in your CSS with <code>@theme</code>. A variable named <code>--color-brand-600</code> immediately gives you the classes <code>text-brand-600</code>, <code>bg-brand-600</code>, <code>border-brand-600</code> and so on, with shades of your own.</p>
+<p>The classes of later steps (the selected tab and group in step 4.1, the focus ring in step 4.2) use <code>brand</code> colors, so they need to exist. Define two shades and color the title with one of them.</p>
+</div>
+<div lang="th">
+<p>ทุกโปรเจกต์มีสีของตัวเอง ใน Tailwind 4 คุณกำหนดสีใน CSS ของคุณด้วย <code>@theme</code> ตัวแปรชื่อ <code>--color-brand-600</code> ทำให้ได้ class <code>text-brand-600</code>, <code>bg-brand-600</code>, <code>border-brand-600</code> และอื่น ๆ ทันที ด้วยเฉดสีของคุณเอง</p>
+<p>class ใน step ถัด ๆ ไป (tab และ group ที่เลือกใน step 4.1, วงแหวน focus ใน step 4.2) ใช้สี <code>brand</code> จึงต้องมีสีนี้ก่อน กำหนดสองเฉดและใช้เฉดหนึ่งกับชื่อหน้า</p>
+</div>
+
+<p class="where">Edit <code>client/src/index.css</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; index.css). Write the code between the comments <code>@tutorial:begin s3-4-theme</code> and <code>@tutorial:end s3-4-theme</code> (below the import).</p>
+<pre data-snippet data-file="client/src/index.css" data-zone="s3-4-theme"><code class="language-css">@theme {
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+}</code></pre>
+
+<p class="where">Edit <code>client/src/App.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; App.jsx). Write the code between the comments <code>@tutorial:begin s3-4-title-brand</code> and <code>@tutorial:end s3-4-title-brand</code>, in the class list of the <code>h1</code>.</p>
+<pre data-snippet data-file="client/src/App.jsx" data-zone="s3-4-title-brand"><code class="language-javascript">'text-brand-600',</code></pre>
+
+<div lang="en">
+<p>Change the two color codes to any colors you like (for example a green: <code>#16a34a</code> and <code>#15803d</code>) and watch the page change everywhere at once. Put the lesson colors back when you are done.</p>
+</div>
+<div lang="th">
+<p>เปลี่ยนรหัสสีทั้งสองเป็นสีที่คุณชอบ (เช่นสีเขียว: <code>#16a34a</code> และ <code>#15803d</code>) และดูหน้าเว็บเปลี่ยนทุกที่พร้อมกัน แล้วใส่สีของบทเรียนกลับเมื่อเสร็จ</p>
+</div>
+
+<div lang="en">
+<p>The app is in the <strong>Preview</strong> tab (port <em>App (for Tailwind)</em>). It reloads by itself when you save.</p>
+</div>
+<div lang="th">
+<p>แอปอยู่ใน tab <strong>Preview</strong> (พอร์ต <em>App (for Tailwind)</em>) และโหลดใหม่เองเมื่อคุณบันทึก</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>The variable name must start with <code>--color-</code>. The part after it (<code>brand-600</code>) is the name you use in classes.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/index.css</code>, between the comments of <code>s3-4-theme</code>:</p>
+  <pre data-snippet data-file="client/src/index.css" data-zone="s3-4-theme"><code class="language-css">@theme {
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+}</code></pre>
+  <p class="where">In <code>client/src/App.jsx</code>, between the comments of <code>s3-4-title-brand</code>:</p>
+  <pre data-snippet data-file="client/src/App.jsx" data-zone="s3-4-title-brand"><code class="language-javascript">'text-brand-600',</code></pre>
+</details>
+
+<div data-check="theme-css"></div>

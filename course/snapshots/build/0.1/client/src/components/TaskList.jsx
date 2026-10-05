@@ -25,7 +25,7 @@ export default function TaskList({ query = '', reloadKey = 0, onChanged }) {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p role="alert">Could not load the tasks: {error}</p>;
-  if (tasks.length === 0) return <p>No tasks yet.</p>;
+  if (tasks.length === 0) return <p>Nothing to show here.</p>;
 
   return (
     <ul className="task-list">

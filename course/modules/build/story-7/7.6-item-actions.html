@@ -1,0 +1,88 @@
+<h2>Step 7.6: Edit and delete in the page</h2>
+
+<div lang="en">
+<p>Two buttons in each row. <em>Edit</em> asks for a new title (<code>window.prompt</code>), sends <code>PUT</code> with the other fields as they are, and shows the server's message if it refuses. <em>Delete</em> asks to confirm (<code>window.confirm</code>) and sends <code>DELETE</code>. Both then call <code>onChanged()</code> to reload.</p>
+<p>The pop-up boxes keep the lesson short. A real product would use a dialog in the page.</p>
+</div>
+<div lang="th">
+<p>ปุ่ม 2 ปุ่มในแต่ละแถว <em>Edit</em> ถามชื่อใหม่ (<code>window.prompt</code>) ส่ง <code>PUT</code> พร้อมฟิลด์อื่นตามเดิม และแสดงข้อความจาก server ถ้าถูกปฏิเสธ <em>Delete</em> ขอให้ยืนยัน (<code>window.confirm</code>) แล้วส่ง <code>DELETE</code> ทั้งสองปุ่มเรียก <code>onChanged()</code> เพื่อโหลดใหม่</p>
+<p>กล่องป๊อปอัปทำให้บทเรียนสั้น ผลิตภัณฑ์จริงจะใช้ dialog ในหน้าเว็บ</p>
+</div>
+
+<p class="where">Edit <code>client/src/components/TaskItem.jsx</code> (in the Explorer: build &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskItem.jsx). Write the code between the comments <code>@tutorial:begin s7-6-item-actions</code> and <code>@tutorial:end s7-6-item-actions</code> (inside JSX, so they look like <code>{/* ... */}</code>).</p>
+
+<pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s7-6-item-actions"><code class="language-javascript">&lt;button
+  type="button"
+  onClick={async () =&gt; {
+    const title = window.prompt('New title', task.title);
+    if (!title) return;
+    const res = await fetch(`/api/tasks/${task.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, priority: task.priority, due_date: task.due_date, group_id: task.group_id }),
+    });
+    if (!res.ok) window.alert((await res.json()).error);
+    onChanged?.();
+  }}
+&gt;
+  Edit
+&lt;/button&gt;
+&lt;button
+  type="button"
+  onClick={async () =&gt; {
+    if (!window.confirm(`Delete "${task.title}"?`)) return;
+    await fetch(`/api/tasks/${task.id}`, { method: 'DELETE' });
+    onChanged?.();
+  }}
+&gt;
+  Delete
+&lt;/button&gt;</code></pre>
+
+<div lang="en">
+<p>Save and edit a title, then delete a task in <strong>Preview</strong>. Try to edit with an empty title: the message comes from your API.</p>
+</div>
+<div lang="th">
+<p>บันทึกแล้วลองแก้ชื่อ และลบ task ใน <strong>Preview</strong> ลองแก้โดยใช้ชื่อว่าง: ข้อความมาจาก API ของคุณ</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5173" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>The <code>PUT</code> body needs every field: <code>title</code>, <code>priority</code>, <code>due_date</code>, <code>group_id</code>. Take the old ones from <code>task</code>.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/components/TaskItem.jsx</code>, between the comments of <code>s7-6-item-actions</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s7-6-item-actions"><code class="language-javascript">&lt;button
+  type="button"
+  onClick={async () =&gt; {
+    const title = window.prompt('New title', task.title);
+    if (!title) return;
+    const res = await fetch(`/api/tasks/${task.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, priority: task.priority, due_date: task.due_date, group_id: task.group_id }),
+    });
+    if (!res.ok) window.alert((await res.json()).error);
+    onChanged?.();
+  }}
+&gt;
+  Edit
+&lt;/button&gt;
+&lt;button
+  type="button"
+  onClick={async () =&gt; {
+    if (!window.confirm(`Delete "${task.title}"?`)) return;
+    await fetch(`/api/tasks/${task.id}`, { method: 'DELETE' });
+    onChanged?.();
+  }}
+&gt;
+  Delete
+&lt;/button&gt;</code></pre>
+</details>
+
+<div data-check="item-actions-code"></div>

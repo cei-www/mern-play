@@ -1,0 +1,269 @@
+# Module "unit": write unit tests for a cleaned-up piece of the Task Manager with Vitest and Testing Library.
+# Runs in ws-main. The learner's project is /workspace/unit: the code under test is in src/ (read-only by agreement),
+# the learner writes only tests/. There is no wipe: the project starts with an empty tests folder.
+# The finished tests are in course/solution/unit/tests; the markers "// @tutorial:begin <id>" cut them into the
+# pieces the lessons show. Mutation checks put a bug into a COPY of the project (mutants: file, find, replace)
+# and want the learner's tests to fail.
+id: unit
+title: Unit testing
+order: 3
+minutes: 180
+container: ws-main
+defaultTab: editor
+optional: false
+parts:
+  - id: part-a
+    title: "Part A: Foundations"
+    steps:
+      - { id: "A.1", title: What a unit test is, type: read, file: part-a/A.1-what-is-a-unit-test.html }
+      - { id: "A.2", title: Your first test, type: do, file: part-a/A.2-first-test.html, checks: [first-test] }
+      - { id: "A.3", title: Watch mode and reading a failure, type: do, file: part-a/A.3-watch-and-fail.html, checks: [orderby-three, orderby-mutation] }
+  - id: part-b
+    title: "Part B: Server logic without a database"
+    steps:
+      - { id: "B.1", title: "Test validation: valid, invalid and boundaries", type: do, file: part-b/B.1-validate-task.html, checks: [validate-tests, validate-mutation] }
+      - { id: "B.2", title: The sort whitelist rejects unsafe values, type: do, file: part-b/B.2-sort-whitelist.html, checks: [whitelist-tests, whitelist-mutation] }
+      - { id: "B.3", title: "Test doubles: stub, mock and spy", type: read, file: part-b/B.3-test-doubles.html }
+      - { id: "B.4", title: Mock db.query to test a service, type: do, file: part-b/B.4-mock-db.html, checks: [service-create, service-create-mutation] }
+      - { id: "B.5", title: Test the error paths, type: do, file: part-b/B.5-error-paths.html, checks: [service-errors, service-errors-mutation] }
+  - id: checkpoint-1
+    title: "Checkpoint 1"
+    steps:
+      - { id: "B.6", title: "Checkpoint 1: two exercises", type: practice, file: checkpoint-1/B.6-exercises.html, checks: [cp1-format, cp1-overdue] }
+  - id: part-c
+    title: "Part C: React components"
+    steps:
+      - { id: "C.1", title: Render a component and find things, type: do, file: part-c/C.1-render-and-query.html, checks: [render-tests, render-mutation] }
+      - { id: "C.2", title: Type and click with userEvent, type: do, file: part-c/C.2-user-events.html, checks: [form-tests, form-mutation] }
+      - { id: "C.3", title: "Mock fetch: loading, list and error", type: do, file: part-c/C.3-mock-fetch.html, checks: [list-tests, list-mutation] }
+      - { id: "C.4", title: "Filter and sort UI: test behavior, not looks", type: do, file: part-c/C.4-sort-ui.html, checks: [sortbar-tests, sortbar-mutation] }
+  - id: checkpoint-2
+    title: "Checkpoint 2"
+    steps:
+      - { id: "C.5", title: "Checkpoint 2: two exercises", type: practice, file: checkpoint-2/C.5-exercises.html, checks: [cp2-markdone, cp2-taskitem] }
+  - id: part-d
+    title: "Part D: Quality"
+    steps:
+      - { id: "D.1", title: Coverage and what not to test, type: read, file: part-d/D.1-quality.html }
+      - { id: "D.2", title: Final check, type: check, file: part-d/D.2-final-check.html, checks: [final-tests, final-coverage, final-mutation] }
+
+checks:
+  first-test:
+    title: "The first test of buildOrderBy passes"
+    type: test
+    format: vitest-json
+    reportFile: ".vitest/report.json"
+    timeoutMs: 90000
+    minTests: 1
+    command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/orderBy.test.js"]
+    hint: "Create tests/orderBy.test.js with the code of the step, save it, and run it with the command shown."
+  orderby-three:
+    title: "orderBy.test.js has at least three passing tests"
+    type: test
+    format: vitest-json
+    reportFile: ".vitest/report.json"
+    timeoutMs: 90000
+    minTests: 3
+    command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/orderBy.test.js"]
+    hint: "Add the second describe block of this step at the end of tests/orderBy.test.js."
+  orderby-mutation:
+    title: "Your orderBy tests notice a wrong default and a wrong column"
+    type: mutation
+    suite: { type: test, cwd: ".", format: vitest-json, reportFile: ".vitest/report.json", timeoutMs: 90000, command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/orderBy.test.js"] }
+    mutants:
+      - { name: default-sort-changed, file: src/server/orderBy.js, find: "sort = 'created_at'", replace: "sort = 'title'", tests: ["tests/orderBy.test.js"], hint: "no test calls buildOrderBy with nothing and checks the default" }
+      - { name: priority-column-wrong, file: src/server/orderBy.js, find: "priority: 't.priority'", replace: "priority: 't.title'", tests: ["tests/orderBy.test.js"], hint: "no test checks the clause for sorting by priority" }
+  validate-tests:
+    title: "validateTask.test.js has at least eight passing tests"
+    type: test
+    format: vitest-json
+    reportFile: ".vitest/report.json"
+    timeoutMs: 90000
+    minTests: 8
+    command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/validateTask.test.js"]
+    hint: "Create tests/validateTask.test.js with the code of the step."
+  validate-mutation:
+    title: "Your validateTask tests catch bugs at the boundary and in the rules"
+    type: mutation
+    suite: { type: test, cwd: ".", format: vitest-json, reportFile: ".vitest/report.json", timeoutMs: 90000, command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/validateTask.test.js"] }
+    mutants:
+      - { name: title-limit, file: src/server/validateTask.js, find: "title.length > 100", replace: "title.length > 101", tests: ["tests/validateTask.test.js"], hint: "no test tries a title of exactly 101 characters" }
+      - { name: title-not-trimmed, file: src/server/validateTask.js, find: ".trim() : ''", replace: " : ''", tests: ["tests/validateTask.test.js"], hint: "no test sends a title of only spaces" }
+      - { name: priority-unchecked, file: src/server/validateTask.js, find: "if (![1, 2, 3].includes(priority))", replace: "if (false)", tests: ["tests/validateTask.test.js"], hint: "no test sends a priority that is not 1, 2 or 3" }
+  whitelist-tests:
+    title: "orderBy.test.js now also has the safety tests"
+    type: test
+    format: vitest-json
+    reportFile: ".vitest/report.json"
+    timeoutMs: 90000
+    minTests: 8
+    command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/orderBy.test.js"]
+    hint: "Add the describe block of this step at the end of tests/orderBy.test.js."
+  whitelist-mutation:
+    title: "Your safety tests catch a whitelist that lets things through"
+    type: mutation
+    suite: { type: test, cwd: ".", format: vitest-json, reportFile: ".vitest/report.json", timeoutMs: 90000, command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/orderBy.test.js"] }
+    mutants:
+      - { name: allows-any-column, file: src/server/orderBy.js, find: "if (!Object.hasOwn(COLUMNS, sort)) {", replace: "if (false) {", tests: ["tests/orderBy.test.js"], hint: "no test sends a column that is not allowed" }
+      - { name: inherited-names, file: src/server/orderBy.js, find: "if (!Object.hasOwn(COLUMNS, sort)) {", replace: "if (!(sort in COLUMNS)) {", tests: ["tests/orderBy.test.js"], hint: "no test tries names like constructor or toString" }
+      - { name: bad-order-ok, file: src/server/orderBy.js, find: "if (order !== 'asc' && order !== 'desc') {", replace: "if (false) {", tests: ["tests/orderBy.test.js"], hint: "no test sends an order that is not asc or desc" }
+  service-create:
+    title: "The createTask test passes with a mocked database"
+    type: test
+    format: vitest-json
+    reportFile: ".vitest/report.json"
+    timeoutMs: 90000
+    minTests: 1
+    command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/taskService.test.js"]
+    hint: "Create tests/taskService.test.js with the code of the step."
+  service-create-mutation:
+    title: "Your createTask test checks the values sent to the database"
+    type: mutation
+    suite: { type: test, cwd: ".", format: vitest-json, reportFile: ".vitest/report.json", timeoutMs: 90000, command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/taskService.test.js"] }
+    mutants:
+      - { name: params-swapped, file: src/server/taskService.js, find: "[value.title, value.priority]", replace: "[value.priority, value.title]", tests: ["tests/taskService.test.js"], hint: "no test checks the values sent to the database and their order" }
+  service-errors:
+    title: "taskService.test.js has the error path tests"
+    type: test
+    format: vitest-json
+    reportFile: ".vitest/report.json"
+    timeoutMs: 90000
+    minTests: 3
+    command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/taskService.test.js"]
+    hint: "Add the describe block of this step at the end of tests/taskService.test.js."
+  service-errors-mutation:
+    title: "Your tests notice that an invalid task is no longer rejected"
+    type: mutation
+    suite: { type: test, cwd: ".", format: vitest-json, reportFile: ".vitest/report.json", timeoutMs: 90000, command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/taskService.test.js"] }
+    mutants:
+      - { name: validation-skipped, file: src/server/taskService.js, find: "if (error) throw new ValidationError(error);", replace: "if (false) throw new ValidationError(error);", tests: ["tests/taskService.test.js"], hint: "no test checks that an invalid task is rejected with ValidationError" }
+  cp1-format:
+    title: "Your formatDueDate tests catch three bugs"
+    type: mutation
+    suite: { type: test, cwd: ".", format: vitest-json, reportFile: ".vitest/report.json", timeoutMs: 90000, command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/formatDueDate.test.js"] }
+    mutants:
+      - { name: today-is-overdue-text, file: src/server/dates.js, find: "if (due === today) return 'Due today';", replace: "if (due === today) return `Overdue (${due})`;", tests: ["tests/formatDueDate.test.js"], hint: "no test checks the text for a date that is today" }
+      - { name: no-date-ignored, file: src/server/dates.js, find: "if (!dueDate) return 'No due date';", replace: "if (false) return 'No due date';", tests: ["tests/formatDueDate.test.js"], hint: "no test passes no date" }
+      - { name: past-as-future, file: src/server/dates.js, find: "if (due < today) return", replace: "if (due > today) return", tests: ["tests/formatDueDate.test.js"], hint: "no test checks a day in the past" }
+  cp1-overdue:
+    title: "Your isOverdue tests catch three bugs"
+    type: mutation
+    suite: { type: test, cwd: ".", format: vitest-json, reportFile: ".vitest/report.json", timeoutMs: 90000, command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/isOverdue.test.js"] }
+    mutants:
+      - { name: done-ignored-overdue, file: src/server/dates.js, find: "if (!task.due_date || task.done) return false;", replace: "if (!task.due_date) return false;", tests: ["tests/isOverdue.test.js"], hint: "no test has a done task with a past due date" }
+      - { name: today-is-overdue, file: src/server/dates.js, find: "return day(task.due_date) < day(now);", replace: "return day(task.due_date) <= day(now);", tests: ["tests/isOverdue.test.js"], hint: "no test has a task that is due today" }
+      - { name: no-date-overdue, file: src/server/dates.js, find: "if (!task.due_date || task.done) return false;", replace: "if (task.done) return false;", tests: ["tests/isOverdue.test.js"], hint: "no test has a task without a due date" }
+  render-tests:
+    title: "rendering.test.jsx has three passing tests"
+    type: test
+    format: vitest-json
+    reportFile: ".vitest/report.json"
+    timeoutMs: 90000
+    minTests: 3
+    command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/rendering.test.jsx"]
+    hint: "Create tests/rendering.test.jsx with the code of the step."
+  render-mutation:
+    title: "Your Summary test notices a wrong count"
+    type: mutation
+    suite: { type: test, cwd: ".", format: vitest-json, reportFile: ".vitest/report.json", timeoutMs: 90000, command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/rendering.test.jsx"] }
+    mutants:
+      - { name: summary-counts-open, file: src/client/components/Summary.jsx, find: "filter((task) => task.done)", replace: "filter((task) => !task.done)", tests: ["tests/rendering.test.jsx"], hint: "no test checks the number of done tasks" }
+  form-tests:
+    title: "TaskForm.test.jsx has three passing tests"
+    type: test
+    format: vitest-json
+    reportFile: ".vitest/report.json"
+    timeoutMs: 90000
+    minTests: 3
+    command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/TaskForm.test.jsx"]
+    hint: "Create tests/TaskForm.test.jsx with the code of the step."
+  form-mutation:
+    title: "Your form tests catch three bugs"
+    type: mutation
+    suite: { type: test, cwd: ".", format: vitest-json, reportFile: ".vitest/report.json", timeoutMs: 90000, command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/TaskForm.test.jsx"] }
+    mutants:
+      - { name: form-not-cleared, file: src/client/components/TaskForm.jsx, find: "onAdd({ title: trimmed, priority });\n    setTitle('');", replace: "onAdd({ title: trimmed, priority });", tests: ["tests/TaskForm.test.jsx"], hint: "no test checks that the field is empty after adding" }
+      - { name: empty-title-sent, file: src/client/components/TaskForm.jsx, find: "if (trimmed === '') return;", replace: "if (false) return;", tests: ["tests/TaskForm.test.jsx"], hint: "no test adds an empty title" }
+      - { name: priority-lost, file: src/client/components/TaskForm.jsx, find: "onAdd({ title: trimmed, priority })", replace: "onAdd({ title: trimmed, priority: 2 })", tests: ["tests/TaskForm.test.jsx"], hint: "no test chooses a priority before adding" }
+  list-tests:
+    title: "TaskList.test.jsx has four passing tests"
+    type: test
+    format: vitest-json
+    reportFile: ".vitest/report.json"
+    timeoutMs: 90000
+    minTests: 4
+    command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/TaskList.test.jsx"]
+    hint: "Create tests/TaskList.test.jsx with the code of the step."
+  list-mutation:
+    title: "Your list tests catch three bugs"
+    type: mutation
+    suite: { type: test, cwd: ".", format: vitest-json, reportFile: ".vitest/report.json", timeoutMs: 90000, command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/TaskList.test.jsx"] }
+    mutants:
+      - { name: error-hidden, file: src/client/components/TaskList.jsx, find: "if (error) return", replace: "if (false) return", tests: ["tests/TaskList.test.jsx"], hint: "no test makes the server fail" }
+      - { name: empty-message-lost, file: src/client/components/TaskList.jsx, find: "if (tasks.length === 0) return", replace: "if (false) return", tests: ["tests/TaskList.test.jsx"], hint: "no test shows the list when there are no tasks" }
+      - { name: http-errors-ignored, file: src/client/api.js, find: "if (!response.ok)", replace: "if (false)", tests: ["tests/TaskList.test.jsx"], hint: "no test answers with an error status" }
+  sortbar-tests:
+    title: "SortBar.test.jsx has three passing tests"
+    type: test
+    format: vitest-json
+    reportFile: ".vitest/report.json"
+    timeoutMs: 90000
+    minTests: 3
+    command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/SortBar.test.jsx"]
+    hint: "Create tests/SortBar.test.jsx with the code of the step."
+  sortbar-mutation:
+    title: "Your sort bar tests catch two bugs"
+    type: mutation
+    suite: { type: test, cwd: ".", format: vitest-json, reportFile: ".vitest/report.json", timeoutMs: 90000, command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/SortBar.test.jsx"] }
+    mutants:
+      - { name: sort-forgets-order, file: src/client/components/SortBar.jsx, find: "onChange({ sort: event.target.value, order })", replace: "onChange({ sort: event.target.value, order: 'asc' })", tests: ["tests/SortBar.test.jsx"], hint: "no test checks that choosing a sort keeps the order" }
+      - { name: order-forgets-sort, file: src/client/components/SortBar.jsx, find: "onChange({ sort, order: event.target.value })", replace: "onChange({ sort: 'created_at', order: event.target.value })", tests: ["tests/SortBar.test.jsx"], hint: "no test checks that choosing an order keeps the sort" }
+  cp2-markdone:
+    title: "Your markDone tests catch two bugs"
+    type: mutation
+    suite: { type: test, cwd: ".", format: vitest-json, reportFile: ".vitest/report.json", timeoutMs: 90000, command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/markDone.test.js"] }
+    mutants:
+      - { name: not-found-ignored, file: src/server/taskService.js, find: "if (result.affectedRows === 0)", replace: "if (false)", tests: ["tests/markDone.test.js"], hint: "no test marks a task that does not exist" }
+      - { name: done-flag-ignored, file: src/server/taskService.js, find: "[done ? 1 : 0, done ? 1 : 0, id]", replace: "[1, 1, id]", tests: ["tests/markDone.test.js"], hint: "no test marks a task as not done" }
+  cp2-taskitem:
+    title: "Your TaskItem tests catch two bugs"
+    type: mutation
+    suite: { type: test, cwd: ".", format: vitest-json, reportFile: ".vitest/report.json", timeoutMs: 90000, command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json", "tests/TaskItem.test.jsx"] }
+    mutants:
+      - { name: checkbox-inverted, file: src/client/components/TaskItem.jsx, find: "checked={Boolean(task.done)}", replace: "checked={!task.done}", tests: ["tests/TaskItem.test.jsx"], hint: "no test looks at the box of an open and of a done task" }
+      - { name: toggle-silent, file: src/client/components/TaskItem.jsx, find: "onChange={() => onToggle(task.id)}", replace: "onChange={() => {}}", tests: ["tests/TaskItem.test.jsx"], hint: "no test clicks the checkbox" }
+  final-tests:
+    title: "All your tests pass, and there are enough of them"
+    type: test
+    format: vitest-json
+    reportFile: ".vitest/report.json"
+    timeoutMs: 90000
+    minTests: 30
+    command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json"]
+    hint: "Run npm test and read the first failure."
+  final-coverage:
+    title: Coverage reaches the threshold
+    type: test
+    timeoutMs: 120000
+    command: ["./node_modules/.bin/vitest", "run", "--coverage"]
+    hint: "Run npm run coverage and look at Uncovered Line #s: a test is missing for those lines."
+  final-mutation:
+    title: "Your tests catch the bugs put into the code"
+    type: mutation
+    suite: { type: test, cwd: ".", format: vitest-json, reportFile: ".vitest/report.json", timeoutMs: 90000, command: ["./node_modules/.bin/vitest", "run", "--reporter=json", "--outputFile=.vitest/report.json"] }
+    mutants:
+      - { name: allows-any-column, file: src/server/orderBy.js, find: "if (!Object.hasOwn(COLUMNS, sort)) {", replace: "if (false) {", tests: ["tests/orderBy.test.js"], hint: "no test sends a column that is not allowed" }
+      - { name: inherited-names, file: src/server/orderBy.js, find: "if (!Object.hasOwn(COLUMNS, sort)) {", replace: "if (!(sort in COLUMNS)) {", tests: ["tests/orderBy.test.js"], hint: "no test tries names like constructor or toString" }
+      - { name: bad-order-ok, file: src/server/orderBy.js, find: "if (order !== 'asc' && order !== 'desc') {", replace: "if (false) {", tests: ["tests/orderBy.test.js"], hint: "no test sends an order that is not asc or desc" }
+      - { name: title-limit, file: src/server/validateTask.js, find: "title.length > 100", replace: "title.length > 101", tests: ["tests/validateTask.test.js"], hint: "no test tries a title of exactly 101 characters" }
+      - { name: title-not-trimmed, file: src/server/validateTask.js, find: ".trim() : ''", replace: " : ''", tests: ["tests/validateTask.test.js"], hint: "no test sends a title of only spaces" }
+      - { name: priority-unchecked, file: src/server/validateTask.js, find: "if (![1, 2, 3].includes(priority))", replace: "if (false)", tests: ["tests/validateTask.test.js"], hint: "no test sends a priority that is not 1, 2 or 3" }
+      - { name: params-swapped, file: src/server/taskService.js, find: "[value.title, value.priority]", replace: "[value.priority, value.title]", tests: ["tests/taskService.test.js"], hint: "no test checks the values sent to the database and their order" }
+      - { name: validation-skipped, file: src/server/taskService.js, find: "if (error) throw new ValidationError(error);", replace: "if (false) throw new ValidationError(error);", tests: ["tests/taskService.test.js"], hint: "no test checks that an invalid task is rejected with ValidationError" }
+      - { name: summary-counts-open, file: src/client/components/Summary.jsx, find: "filter((task) => task.done)", replace: "filter((task) => !task.done)", tests: ["tests/rendering.test.jsx"], hint: "no test checks the number of done tasks" }
+      - { name: form-not-cleared, file: src/client/components/TaskForm.jsx, find: "onAdd({ title: trimmed, priority });\n    setTitle('');", replace: "onAdd({ title: trimmed, priority });", tests: ["tests/TaskForm.test.jsx"], hint: "no test checks that the field is empty after adding" }
+      - { name: empty-title-sent, file: src/client/components/TaskForm.jsx, find: "if (trimmed === '') return;", replace: "if (false) return;", tests: ["tests/TaskForm.test.jsx"], hint: "no test adds an empty title" }
+      - { name: error-hidden, file: src/client/components/TaskList.jsx, find: "if (error) return", replace: "if (false) return", tests: ["tests/TaskList.test.jsx"], hint: "no test makes the server fail" }
+      - { name: empty-message-lost, file: src/client/components/TaskList.jsx, find: "if (tasks.length === 0) return", replace: "if (false) return", tests: ["tests/TaskList.test.jsx"], hint: "no test shows the list when there are no tasks" }
+      - { name: order-forgets-sort, file: src/client/components/SortBar.jsx, find: "onChange({ sort, order: event.target.value })", replace: "onChange({ sort: 'created_at', order: event.target.value })", tests: ["tests/SortBar.test.jsx"], hint: "no test checks that choosing an order keeps the sort" }
+    minKilled: 12

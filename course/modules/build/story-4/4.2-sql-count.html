@@ -1,0 +1,26 @@
+<h2>Step 4.2: Count with GROUP BY</h2>
+
+<div lang="en">
+<p>How many tasks does each group have? <code>GROUP BY</code> makes one result row per group and <code>COUNT</code> counts inside each. Run this in the <strong>Database</strong> tab:</p>
+</div>
+<div lang="th">
+<p>แต่ละ group มีกี่ task? <code>GROUP BY</code> ทำให้ผลลัพธ์หนึ่งแถวต่อหนึ่ง group และ <code>COUNT</code> นับในแต่ละกลุ่ม รันใน tab <strong>Database</strong>:</p>
+</div>
+
+<pre class="code-block"><code class="language-sql">SELECT g.id, g.name, g.color, COUNT(t.id) AS task_count
+FROM task_groups g
+LEFT JOIN tasks t ON t.group_id = g.id
+GROUP BY g.id
+ORDER BY g.name;</code></pre>
+
+<div lang="en">
+<p>Why <code>LEFT JOIN</code> and <code>COUNT(t.id)</code>? A group without tasks must still appear, with a count of 0. <code>COUNT(t.id)</code> skips the empty <code>NULL</code> that the join makes for it. Try creating a group in the <em>task_groups</em> table and see that it shows 0.</p>
+</div>
+<div lang="th">
+<p>ทำไมใช้ <code>LEFT JOIN</code> และ <code>COUNT(t.id)</code>? group ที่ไม่มี task ต้องยังปรากฏและมีจำนวนเป็น 0 <code>COUNT(t.id)</code> ไม่นับ <code>NULL</code> ที่ join สร้างขึ้นให้ ลองสร้าง group ใหม่ในตาราง <em>task_groups</em> แล้วดูว่าแสดง 0</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>With a plain <code>JOIN</code> (inner join) a group that has no tasks disappears from the result.</p>
+</details>

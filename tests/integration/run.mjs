@@ -54,9 +54,9 @@ async function waitForApp() {
   }
   bad('the Express app did not come back after a change');
 }
-const api = (method, url, body) => {
+const api = (method, url, body, port = 3000) => {
   const data = body === undefined ? '' : `-H 'Content-Type: application/json' -d '${JSON.stringify(body).replace(/'/g, "'\\''")}'`;
-  const r = exec(`curl -s -w '\\n%{http_code}' -X ${method} ${data} http://localhost:3000${url}`);
+  const r = exec(`curl -s -w '\\n%{http_code}' -X ${method} ${data} http://localhost:${port}${url}`);
   const lines = r.out.trimEnd().split('\n');
   const status = Number(lines.pop());
   const text = lines.join('\n');
@@ -76,7 +76,11 @@ function snippetsOf(stepId, { solutionsOnly = false } = {}) {
   return root
     .querySelectorAll('pre[data-snippet]')
     .filter((pre) => Boolean(pre.closest('details')) === solutionsOnly)
-    .map((pre) => ({ file: pre.getAttribute('data-file'), zone: pre.getAttribute('data-zone'), code: pre.querySelector('code').textContent.replace(/\n$/, '') }));
+    .map((pre) => ({
+      file: pre.getAttribute('data-file'),
+      zone: pre.getAttribute('data-zone'),
+      code: pre.querySelector('code').textContent.replace(/\n$/, ''),
+    }));
 }
 
 function putInZone(text, zone, code) {
@@ -103,7 +107,10 @@ function expectCheck(step, shouldPass, label) {
 }
 function expectInPlace(step, label) {
   const r = tutorial(`goto ${step} --yes`);
-  expect(r.code === 0 && /already in place/.test(r.out), `snapshot ${step} equals the learner's files ${label}${/already in place/.test(r.out) ? '' : `\n${r.out}`}`);
+  expect(
+    r.code === 0 && /already in place/.test(r.out),
+    `snapshot ${step} equals the learner's files ${label}${/already in place/.test(r.out) ? '' : `\n${r.out}`}`,
+  );
 }
 
 // ---- one run through the course ----
@@ -136,40 +143,58 @@ async function run(withExercises) {
   expect(exec('curl -s -o /dev/null -w "%{http_code}" http://localhost:5173/src/App.jsx').out === '200', 'after the wipe Vite still serves the React app');
   expectInPlace('1.1', 'right after the wipe');
 
-  // Story 1: apply each step's snippets, in order
-  const story = ['1.4', '1.5', '1.6', '1.8'];
+  // The rest of the course, step by step: apply the snippets of every "do" step exactly as printed in the lesson.
   const all = [...steps.keys()];
-  for (const id of story) {
-    expectCheck(id, false, 'before the step');
-    await applySnippets(snippetsOf(id));
-    expectCheck(id, true, 'after the step');
-    expectInPlace(all[all.indexOf(id) + 1], `after step ${id}`);
+  const exerciseSnippets = (id) => snippetsOf(id, { solutionsOnly: true }).filter((s) => s.zone.startsWith('exercise-'));
+  for (const [index, id] of all.entries()) {
+    const step = steps.get(id);
+    const next = all[index + 1];
+    if (index < all.indexOf('1.4')) continue; // Part 0 and the reading steps before the first code were done above
+    if (step.type === 'do' && snippetsOf(id).length > 0) {
+      const hasChecks = (step.checks ?? []).length > 0;
+      if (hasChecks) expectCheck(id, false, 'before the step');
+      await applySnippets(snippetsOf(id));
+      if (hasChecks) expectCheck(id, true, 'after the step');
+      if (next) expectInPlace(next, `after step ${id}`);
+    } else if (step.type === 'check') {
+      expectCheck(id, true, 'whole story');
+      if (id === '1.9') {
+        expect(api('GET', '/api/health').json?.status === 'ok', 'GET /api/health works');
+        const list = api('GET', '/api/tasks');
+        expect(list.status === 200 && Array.isArray(list.json) && list.json.length >= 14, 'GET /api/tasks returns the seeded tasks');
+        expect(exec('curl -s http://localhost:5173/src/components/TaskList.jsx').out.includes('/api/tasks'), 'Vite serves the finished TaskList');
+      }
+    } else if (step.type === 'practice') {
+      const solutions = exerciseSnippets(id);
+      expect(solutions.length === 2, `checkpoint ${id} has two solutions`);
+      if (withExercises) {
+        expectCheck(id, false, 'before the exercises');
+        await applySnippets(solutions);
+        expectCheck(id, true, 'after both exercises');
+      } else {
+        expectCheck(id, false, 'when the exercises are skipped (they are optional)');
+        expect(api('GET', '/api/tasks').status === 200, 'the app still lists tasks');
+      }
+      if (next) expectInPlace(next, `after checkpoint ${id}`);
+    }
   }
-  expectCheck('1.9', true, 'whole story');
-  expect(api('GET', '/api/health').json?.status === 'ok', 'GET /api/health works');
-  const list = api('GET', '/api/tasks');
-  expect(list.status === 200 && Array.isArray(list.json) && list.json.length >= 14, 'GET /api/tasks returns the seeded tasks');
-  expect(exec('curl -s http://localhost:5173/src/components/TaskList.jsx').out.includes('/api/tasks'), 'Vite serves the finished TaskList');
-
-  // Checkpoint 1
-  const exercisesSnippets = snippetsOf('1.10', { solutionsOnly: true });
-  expect(exercisesSnippets.length === 2, 'the checkpoint lesson has two solutions');
   if (withExercises) {
-    expectCheck('1.10', false, 'before the exercises');
-    await applySnippets(exercisesSnippets);
-    expectCheck('1.10', true, 'after both exercises');
     const stats = api('GET', '/api/stats');
     expect(stats.status === 200 && typeof stats.json?.total === 'number', 'GET /api/stats answers');
   } else {
-    expectCheck('1.10', false, 'when the exercises are skipped (they are optional)');
-    expect(api('GET', '/api/stats').status === 404, 'the skipped exercise route answers 404 and the app keeps working');
-    expect(api('GET', '/api/tasks').status === 200, 'the app still lists tasks');
+    expect(api('GET', '/api/stats').status === 404, 'a skipped exercise route answers 404 and the app keeps working');
   }
 }
 
 // ---- contract: the running app against course/openapi/taskapp.yaml ----
 const spec = parseYaml(fs.readFileSync(path.join(root, 'course/openapi/taskapp.yaml'), 'utf8'));
-const deref = (schema) => (schema?.$ref ? schema.$ref.replace('#/', '').split('/').reduce((o, k) => o[k], spec) : schema);
+const deref = (schema) =>
+  schema?.$ref
+    ? schema.$ref
+        .replace('#/', '')
+        .split('/')
+        .reduce((o, k) => o[k], spec)
+    : schema;
 
 function validate(value, schemaIn, at = '$') {
   const schema = deref(schemaIn);
@@ -177,10 +202,18 @@ function validate(value, schemaIn, at = '$') {
   if (value === null) return schema.nullable ? [] : [`${at}: null is not allowed`];
   const problems = [];
   switch (schema.type) {
-    case 'integer': if (!Number.isInteger(value)) problems.push(`${at}: expected an integer, got ${JSON.stringify(value)}`); break;
-    case 'number': if (typeof value !== 'number') problems.push(`${at}: expected a number`); break;
-    case 'string': if (typeof value !== 'string') problems.push(`${at}: expected a string, got ${JSON.stringify(value)}`); break;
-    case 'boolean': if (typeof value !== 'boolean') problems.push(`${at}: expected a boolean`); break;
+    case 'integer':
+      if (!Number.isInteger(value)) problems.push(`${at}: expected an integer, got ${JSON.stringify(value)}`);
+      break;
+    case 'number':
+      if (typeof value !== 'number') problems.push(`${at}: expected a number`);
+      break;
+    case 'string':
+      if (typeof value !== 'string') problems.push(`${at}: expected a string, got ${JSON.stringify(value)}`);
+      break;
+    case 'boolean':
+      if (typeof value !== 'boolean') problems.push(`${at}: expected a boolean`);
+      break;
     case 'array':
       if (!Array.isArray(value)) return [`${at}: expected an array`];
       value.forEach((item, i) => problems.push(...validate(item, schema.items, `${at}[${i}]`)));
@@ -198,8 +231,8 @@ function validate(value, schemaIn, at = '$') {
   return problems;
 }
 
-function contract() {
-  console.log('\n== Contract: the finished app against course/openapi/taskapp.yaml ==');
+function contract(label, port, { prepare, exercises }) {
+  console.log(`\n== Contract: ${label} against course/openapi/taskapp.yaml ==`);
   const operations = new Map();
   for (const [route, methods] of Object.entries(spec.paths)) {
     for (const [method, op] of Object.entries(methods)) if (op.operationId) operations.set(op.operationId, { route, method, op });
@@ -207,17 +240,15 @@ function contract() {
   const call = (operationId, { path: pathValue, query = '', body } = {}) => {
     const { route, method, op } = operations.get(operationId);
     const url = route.replace('{id}', String(pathValue ?? 1)) + query;
-    const r = api(method.toUpperCase(), url, body);
+    const r = api(method.toUpperCase(), url, body, port);
     const response = op.responses[String(r.status)];
-    if (!response) return bad(`${operationId}: status ${r.status} is not described in the spec`), r;
+    if (!response) return (bad(`${operationId}: status ${r.status} is not described in the spec`), r);
     const schema = response.$ref ? deref(response).content?.['application/json']?.schema : response.content?.['application/json']?.schema;
     const problems = schema && r.status !== 204 ? validate(r.json, schema) : [];
     expect(problems.length === 0, `${operationId} -> ${r.status} matches the spec${problems.length ? `: ${problems.slice(0, 3).join('; ')}` : ''}`);
     return r;
   };
-  // Needs the whole app: restore every step zone, keep the exercise work.
-  tutorial('goto 0.1 --yes');
-  return waitForApp().then(() => {
+  return Promise.resolve(prepare()).then(() => {
     call('health');
     call('listTasks');
     call('listTasks', { query: '?done=0&group_id=1&sort=due_date&order=desc' });
@@ -236,13 +267,48 @@ function contract() {
     call('createGroup', { body: { name: 'Contract group', color: '#112233' } });
     call('createGroup', { body: { name: '' } });
     call('stats');
+    if (exercises) {
+      call('groupStats', { path: 1 });
+      call('groupStats', { path: 999999 });
+      call('searchTasks', { query: '?q=milk' });
+      call('highPriority');
+    }
   });
+}
+
+/** The reference API can be switched to a deliberate bug from inside the container, and back. */
+function mutantControl(port) {
+  console.log(`\n== Mutants of the reference API on port ${port} ==`);
+  const control = (name) =>
+    exec(`curl -s -X POST -H 'Content-Type: application/json' -d '${JSON.stringify({ name })}' http://localhost:${port}/__control/mutant`).out;
+  expect(api('GET', '/api/tasks?sort=bogus', undefined, port).status === 400, 'an unsafe sort value is rejected');
+  control('unsafe-sort');
+  expect(api('GET', '/api/tasks?sort=bogus', undefined, port).status === 200, 'with the bug "unsafe-sort" on, it is accepted');
+  control('empty-title-ok');
+  expect(api('POST', '/api/tasks', { title: '' }, port).status === 201, 'with the bug "empty-title-ok" on, an empty title is created');
+  control('delete-missing-204');
+  expect(api('DELETE', '/api/tasks/999999', undefined, port).status === 204, 'with the bug "delete-missing-204" on, deleting a missing task answers 204');
+  control(null);
+  expect(
+    api('GET', '/api/tasks?sort=bogus', undefined, port).status === 400 && api('POST', '/api/tasks', { title: '' }, port).status === 400,
+    'switched off again, the API is correct',
+  );
+  tutorial('reset-db taskapp_style --yes'); // remove what the bugs let through
 }
 
 // ---- main ----
 const started = Date.now();
 await run(false);
 await run(true);
-await contract();
+await contract('the finished app (port 3000)', 3000, {
+  prepare: async () => {
+    tutorial('goto 0.1 --yes'); // every step zone restored, the exercise work is kept
+    await waitForApp();
+  },
+  // Every exercise is done in the second run, and goto keeps that work.
+  exercises: true,
+});
+await contract('the reference API (port 3002)', 3002, { prepare: () => {}, exercises: true });
+mutantControl(3002);
 console.log(`\n${failures === 0 ? 'ALL PASSED' : `${failures} FAILED`} in ${Math.round((Date.now() - started) / 1000)}s`);
 process.exit(failures === 0 ? 0 : 1);

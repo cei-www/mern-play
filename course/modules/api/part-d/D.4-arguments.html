@@ -1,0 +1,47 @@
+<h2>Step D.4: Arguments and return values</h2>
+
+<div lang="en">
+<p>A keyword can take <strong>arguments</strong> (<code>[Arguments]    ${title}    ${priority}=${2}</code>: the second has a default) and give back a value with <code>RETURN</code>. <code>Create Task</code> sends the request, checks for 201 and returns the new id. <code>Task Should Exist</code> takes an id and checks the database.</p>
+<p>Using it looks like this: <code>${id}=    Create Task    Robot demo    priority=${3}</code>.</p>
+</div>
+<div lang="th">
+<p>keyword รับ <strong>argument</strong> ได้ (<code>[Arguments]    ${title}    ${priority}=${2}</code>: ตัวที่สองมีค่าเริ่มต้น) และส่งค่ากลับด้วย <code>RETURN</code> <code>Create Task</code> ส่ง request ตรวจว่าได้ 201 และคืน id ใหม่ <code>Task Should Exist</code> รับ id แล้วตรวจฐานข้อมูล</p>
+<p>การเรียกใช้เป็นแบบนี้: <code>${id}=    Create Task    Robot demo    priority=${3}</code></p>
+</div>
+
+<p class="where">Edit <code>resources/api.resource</code> (in the Explorer: api &rsaquo; resources &rsaquo; api.resource). Add at the end of the file.</p>
+
+<pre data-snippet data-file="resources/api.resource" data-position="end"><code class="language-plaintext">Create Task
+    [Arguments]    ${title}    ${priority}=${2}
+    ${body}=    Create Dictionary    title=${title}    priority=${priority}
+    ${response}=    POST    ${BASE_URL}/api/tasks    json=${body}
+    Should Be Equal As Integers    ${response.status_code}    201
+    RETURN    ${response.json()}[id]
+
+Task Should Exist
+    [Arguments]    ${id}
+    ${rows}=    Query    SELECT COUNT(*) FROM tasks WHERE id = ${id}
+    Should Be Equal As Integers    ${rows}[0][0]    1</code></pre>
+
+<details>
+  <summary>Hint</summary>
+  <p>A name with variables must be written the same way where you use it: argument names such as <code>${title}</code> live only inside the keyword.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>resources/api.resource</code>, at the end:</p>
+  <pre data-snippet data-file="resources/api.resource" data-position="end"><code class="language-plaintext">Create Task
+    [Arguments]    ${title}    ${priority}=${2}
+    ${body}=    Create Dictionary    title=${title}    priority=${priority}
+    ${response}=    POST    ${BASE_URL}/api/tasks    json=${body}
+    Should Be Equal As Integers    ${response.status_code}    201
+    RETURN    ${response.json()}[id]
+
+Task Should Exist
+    [Arguments]    ${id}
+    ${rows}=    Query    SELECT COUNT(*) FROM tasks WHERE id = ${id}
+    Should Be Equal As Integers    ${rows}[0][0]    1</code></pre>
+</details>
+
+<div data-check="resource-3"></div>

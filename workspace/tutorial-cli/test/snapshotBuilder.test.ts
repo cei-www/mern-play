@@ -3,7 +3,17 @@ import os from 'node:os';
 import path from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { applySnapshot } from '../src/snapshots.js';
-import { buildSnapshots, diffSnapshots, parseStepId, SnapshotBuildError, stepOfZone, writeSnapshots } from '../src/snapshotBuilder.js';
+import {
+  buildSnapshots,
+  buildTemplate,
+  diffSnapshots,
+  diffTemplate,
+  parseStepId,
+  SnapshotBuildError,
+  stepOfZone,
+  writeSnapshots,
+  writeTemplate,
+} from '../src/snapshotBuilder.js';
 
 const ROUTES = `const router = require('express').Router();
 // @tutorial:begin s1-6-list
@@ -97,5 +107,29 @@ describe('writeSnapshots / diffSnapshots', () => {
     fs.appendFileSync(path.join(out, '1.5/server/routes.js'), '// edited\n');
     fs.writeFileSync(path.join(out, '1.5/stray.txt'), 'x');
     expect(diffSnapshots(built, out)).toEqual(['out of date: 1.5/server/routes.js', 'unexpected: 1.5/stray.txt']);
+  });
+});
+
+describe('buildTemplate', () => {
+  it('empties every step zone, keeps exercise zones and copies other files as they are', () => {
+    fs.writeFileSync(path.join(app(), 'server/image.bin'), Buffer.from([0, 1, 2]));
+    const files = buildTemplate(app());
+    const routes = files.get('server/routes.js')?.toString() ?? '';
+    expect(routes).toContain('TODO (s1-6-list)');
+    expect(routes).toContain('TODO (s2-2-create)');
+    expect(routes).toContain("router.get('/extra', mine);");
+    expect(files.get('server/plain.js')?.toString()).toBe('no zones here\n');
+    expect([...(files.get('server/image.bin') ?? [])]).toEqual([0, 1, 2]);
+  });
+
+  it('writes and verifies the template folder', () => {
+    const out = path.join(tmp, 'template');
+    const files = buildTemplate(app());
+    expect(diffTemplate(files, out).length).toBeGreaterThan(0);
+    writeTemplate(files, out);
+    expect(diffTemplate(files, out)).toEqual([]);
+    fs.appendFileSync(path.join(out, 'server/plain.js'), 'edited');
+    fs.writeFileSync(path.join(out, 'stray.txt'), 'x');
+    expect(diffTemplate(files, out)).toEqual(['out of date: server/plain.js', 'unexpected: stray.txt']);
   });
 });

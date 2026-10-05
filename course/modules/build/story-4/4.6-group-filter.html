@@ -1,0 +1,122 @@
+<h2>Step 4.6: Choose a group in the page</h2>
+
+<div lang="en">
+<p><code>GroupFilter</code> shows a button for <em>All</em> and one for every group, with its count, and a <em>+ Group</em> button. It reads <code>/api/groups</code> when it appears and again when the page reloads (<code>reloadKey</code>).</p>
+<p>The selected group has two jobs: a task you add goes into it (Story 2 already sends <code>group_id</code>), and in Story 5 it will filter the list. <strong>The list does not change yet when you click a group.</strong> That is Story 5.</p>
+</div>
+<div lang="th">
+<p><code>GroupFilter</code> แสดงปุ่ม <em>All</em> และปุ่มของแต่ละ group พร้อมจำนวน task กับปุ่ม <em>+ Group</em> มันอ่าน <code>/api/groups</code> เมื่อปรากฏ และอ่านอีกครั้งเมื่อหน้าโหลดใหม่ (<code>reloadKey</code>)</p>
+<p>group ที่เลือกมี 2 หน้าที่: task ที่คุณเพิ่มจะไปอยู่ใน group นั้น (Story 2 ส่ง <code>group_id</code> อยู่แล้ว) และใน Story 5 มันจะกรองรายการ <strong>ตอนนี้การคลิก group ยังไม่ทำให้รายการเปลี่ยน</strong> นั่นคือ Story 5</p>
+</div>
+
+<p class="where">Edit <code>client/src/components/GroupFilter.jsx</code> (in the Explorer: build &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; GroupFilter.jsx). Write the code between the comments <code>@tutorial:begin s4-6-group-filter</code> and <code>@tutorial:end s4-6-group-filter</code>, inside the function.</p>
+
+<pre data-snippet data-file="client/src/components/GroupFilter.jsx" data-zone="s4-6-group-filter"><code class="language-javascript">const [groups, setGroups] = useState([]);
+const [version, setVersion] = useState(0);
+
+useEffect(() =&gt; {
+  fetch('/api/groups')
+    .then((res) =&gt; res.json())
+    .then(setGroups)
+    .catch(() =&gt; setGroups([]));
+}, [reloadKey, version]);
+
+async function addGroup() {
+  const name = window.prompt('Name of the new group');
+  if (!name) return;
+  const res = await fetch('/api/groups', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name }),
+  });
+  if (!res.ok) window.alert((await res.json()).error);
+  setVersion((v) =&gt; v + 1);
+}
+
+return (
+  &lt;div className="groups" role="group" aria-label="Groups"&gt;
+    &lt;button type="button" className={value === null ? 'active' : ''} onClick={() =&gt; onChange(null)}&gt;
+      All
+    &lt;/button&gt;
+    {groups.map((group) =&gt; (
+      &lt;button
+        key={group.id}
+        type="button"
+        className={value === group.id ? 'active' : ''}
+        style={{ borderColor: group.color }}
+        onClick={() =&gt; onChange(group.id)}
+      &gt;
+        {group.name} ({group.task_count})
+      &lt;/button&gt;
+    ))}
+    &lt;button type="button" onClick={addGroup}&gt;
+      + Group
+    &lt;/button&gt;
+  &lt;/div&gt;
+);</code></pre>
+
+<div lang="en">
+<p>Save and look at <strong>Preview</strong>. Select Work, add a task, and see the Work count go up by one. Add a new group with <em>+ Group</em>.</p>
+</div>
+<div lang="th">
+<p>บันทึกแล้วดู <strong>Preview</strong> เลือก Work เพิ่ม task แล้วดูว่าจำนวนของ Work เพิ่มขึ้นหนึ่ง ลองเพิ่ม group ใหม่ด้วย <em>+ Group</em></p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5173" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>Mark the selected button with <code>className={value === group.id ? 'active' : ''}</code> and call <code>onChange(group.id)</code> on click. <code>onChange(null)</code> means "All".</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/components/GroupFilter.jsx</code>, between the comments of <code>s4-6-group-filter</code>:</p>
+  <pre data-snippet data-file="client/src/components/GroupFilter.jsx" data-zone="s4-6-group-filter"><code class="language-javascript">const [groups, setGroups] = useState([]);
+const [version, setVersion] = useState(0);
+
+useEffect(() =&gt; {
+  fetch('/api/groups')
+    .then((res) =&gt; res.json())
+    .then(setGroups)
+    .catch(() =&gt; setGroups([]));
+}, [reloadKey, version]);
+
+async function addGroup() {
+  const name = window.prompt('Name of the new group');
+  if (!name) return;
+  const res = await fetch('/api/groups', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name }),
+  });
+  if (!res.ok) window.alert((await res.json()).error);
+  setVersion((v) =&gt; v + 1);
+}
+
+return (
+  &lt;div className="groups" role="group" aria-label="Groups"&gt;
+    &lt;button type="button" className={value === null ? 'active' : ''} onClick={() =&gt; onChange(null)}&gt;
+      All
+    &lt;/button&gt;
+    {groups.map((group) =&gt; (
+      &lt;button
+        key={group.id}
+        type="button"
+        className={value === group.id ? 'active' : ''}
+        style={{ borderColor: group.color }}
+        onClick={() =&gt; onChange(group.id)}
+      &gt;
+        {group.name} ({group.task_count})
+      &lt;/button&gt;
+    ))}
+    &lt;button type="button" onClick={addGroup}&gt;
+      + Group
+    &lt;/button&gt;
+  &lt;/div&gt;
+);</code></pre>
+</details>
+
+<div data-check="group-filter-code"></div>

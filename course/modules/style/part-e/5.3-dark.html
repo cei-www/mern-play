@@ -1,0 +1,40 @@
+<h2>Step 5.3: Dark mode</h2>
+
+<div lang="en">
+<p>The <code>dark:</code> variant applies when the user's system prefers a dark theme. Put a dark background on the page, light text on the title and a dark card for the rows.</p>
+<p>This tutorial page is light only, but <em>your app</em> can have a dark mode. To see it without changing your computer: in the browser developer tools (<kbd>F12</kbd>), open the menu (three dots), <em>More tools</em>, <em>Rendering</em>, and set <em>Emulate CSS media feature prefers-color-scheme</em> to <em>dark</em>. (In Chrome. Other browsers have a similar option.)</p>
+</div>
+<div lang="th">
+<p>variant <code>dark:</code> ใช้เมื่อระบบของผู้ใช้ตั้งค่าธีมมืด ใส่พื้นหลังมืดให้หน้า ตัวอักษรสว่างให้ชื่อ และการ์ดสีเข้มให้แถว</p>
+<p>หน้า tutorial นี้เป็นโหมดสว่างอย่างเดียว แต่ <em>แอปของคุณ</em> มีโหมดมืดได้ เพื่อดูโดยไม่ต้องเปลี่ยนเครื่อง: ใน developer tools ของเบราว์เซอร์ (<kbd>F12</kbd>) เปิดเมนู (จุดสามจุด) <em>More tools</em> <em>Rendering</em> แล้วตั้ง <em>Emulate CSS media feature prefers-color-scheme</em> เป็น <em>dark</em> (ใน Chrome เบราว์เซอร์อื่นมีตัวเลือกคล้ายกัน)</p>
+</div>
+
+<p class="where">Edit <code>client/src/App.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; App.jsx). Write the code between the comments <code>@tutorial:begin s5-3-dark-page</code> and <code>@tutorial:end s5-3-dark-page</code>, in the class list of the outer <code>div</code>.</p>
+<pre data-snippet data-file="client/src/App.jsx" data-zone="s5-3-dark-page"><code class="language-javascript">'dark:bg-slate-900',</code></pre>
+
+<p class="where">Edit <code>client/src/App.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; App.jsx). Write the code between the comments <code>@tutorial:begin s5-3-dark-title</code> and <code>@tutorial:end s5-3-dark-title</code>, in the class list of the <code>h1</code>.</p>
+<pre data-snippet data-file="client/src/App.jsx" data-zone="s5-3-dark-title"><code class="language-javascript">'dark:text-slate-100',</code></pre>
+
+<p class="where">Edit <code>client/src/components/TaskItem.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskItem.jsx). Write the code between the comments <code>@tutorial:begin s5-3-dark-row</code> and <code>@tutorial:end s5-3-dark-row</code>, in the class list of the <code>li</code>.</p>
+<pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s5-3-dark-row"><code class="language-javascript">'dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100',</code></pre>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>Each <code>dark:</code> class replaces the light value only in dark mode: <code>bg-slate-50</code> stays for light, <code>dark:bg-slate-900</code> wins in dark.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/App.jsx</code>, between the comments of <code>s5-3-dark-page</code>:</p>
+  <pre data-snippet data-file="client/src/App.jsx" data-zone="s5-3-dark-page"><code class="language-javascript">'dark:bg-slate-900',</code></pre>
+  <p class="where">In <code>client/src/App.jsx</code>, between the comments of <code>s5-3-dark-title</code>:</p>
+  <pre data-snippet data-file="client/src/App.jsx" data-zone="s5-3-dark-title"><code class="language-javascript">'dark:text-slate-100',</code></pre>
+  <p class="where">In <code>client/src/components/TaskItem.jsx</code>, between the comments of <code>s5-3-dark-row</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s5-3-dark-row"><code class="language-javascript">'dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100',</code></pre>
+</details>
+
+<div data-check="dark-app"></div>

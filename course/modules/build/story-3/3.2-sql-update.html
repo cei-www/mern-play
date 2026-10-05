@@ -1,0 +1,25 @@
+<h2>Step 3.2: Update a row with SQL</h2>
+
+<div lang="en">
+<p><code>UPDATE</code> changes rows. <strong>Always write a <code>WHERE</code></strong>: without it every row changes. Try in the <strong>Database</strong> tab (<em>SQL command</em>), using the id of your test row from Story 2:</p>
+</div>
+<div lang="th">
+<p><code>UPDATE</code> แก้แถว <strong>ต้องเขียน <code>WHERE</code> เสมอ</strong> ถ้าไม่มี ทุกแถวจะถูกแก้ ลองใน tab <strong>Database</strong> (<em>SQL command</em>) โดยใช้ id ของแถวทดสอบจาก Story 2:</p>
+</div>
+
+<pre class="code-block"><code class="language-sql">UPDATE tasks SET done = 1, completed_at = NOW() WHERE title = 'Try INSERT';
+SELECT id, title, done, completed_at FROM tasks WHERE title = 'Try INSERT';
+
+UPDATE tasks SET done = 0, completed_at = NULL WHERE title = 'Try INSERT';</code></pre>
+
+<div lang="en">
+<p><code>NOW()</code> is the current time and <code>NULL</code> means "no value". The route will do the same with one query: <code>completed_at = IF(?, NOW(), NULL)</code> picks the time when the flag is 1 and <code>NULL</code> when it is 0.</p>
+</div>
+<div lang="th">
+<p><code>NOW()</code> คือเวลาปัจจุบัน และ <code>NULL</code> หมายถึง "ไม่มีค่า" route จะทำแบบเดียวกันด้วย query เดียว: <code>completed_at = IF(?, NOW(), NULL)</code> เลือกเวลาเมื่อ flag เป็น 1 และเลือก <code>NULL</code> เมื่อเป็น 0</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>If you forget the <code>WHERE</code>, run <code>reset-db</code> in the terminal to get the sample data back.</p>
+</details>

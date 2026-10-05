@@ -3,7 +3,7 @@ import { toQuery } from '../api.js';
 
 // The History tab: tasks completed in the last few days, newest first.
 export default function HistoryView({ groupId = null, reloadKey = 0 }) {
-  // @tutorial:begin s6-4-history-view
+  // @tutorial:begin s6-3-history-view
   const [days, setDays] = useState(7);
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState('');
@@ -44,5 +44,5 @@ export default function HistoryView({ groupId = null, reloadKey = 0 }) {
       </ul>
     </section>
   );
-  // @tutorial:end s6-4-history-view
+  // @tutorial:end s6-3-history-view
 }

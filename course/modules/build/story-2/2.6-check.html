@@ -1,0 +1,26 @@
+<h2>Step 2.6: Check Story 2</h2>
+
+<div lang="en">
+<p>Run the check. It creates a task through your API, looks for the new row in MySQL, sends an empty title and reads your form code.</p>
+</div>
+<div lang="th">
+<p>รันคำสั่งตรวจ มันจะสร้าง task ผ่าน API ของคุณ ค้นหาแถวใหม่ใน MySQL ส่ง title ว่าง และอ่านโค้ดฟอร์มของคุณ</p>
+</div>
+
+<div data-check="create-task">
+  <pre><code>  PASS  POST /api/tasks stores a task and answers 201
+  PASS  POST /api/tasks with an empty title answers 400
+  PASS  TaskForm.jsx sends the form with fetch</code></pre>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>The check leaves a task called "Created by the check" in your table. That is fine; <code>reset-db</code> cleans up.</p>
+</details>
+
+<div lang="en">
+<p>You can now add tasks from the page. Next: marking them as done.</p>
+</div>
+<div lang="th">
+<p>ตอนนี้เพิ่ม task จากหน้าเว็บได้แล้ว ถัดไป: ทำเครื่องหมายว่าเสร็จ</p>
+</div>

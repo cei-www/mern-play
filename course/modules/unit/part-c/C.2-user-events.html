@@ -1,0 +1,116 @@
+<h2>Step C.2: Type and click with userEvent</h2>
+
+<div lang="en">
+<p><code>TaskForm</code> in <code>src/client/components/TaskForm.jsx</code> shows a title field, a priority menu and an Add button. When the form is sent it calls the function it was given, <code>onAdd({ title, priority })</code>, and clears the field. Test what the <em>user</em> does and what the <em>user</em> sees:</p>
+<ul>
+  <li><code>userEvent.setup()</code> makes a user. <code>await user.type(field, 'text')</code>, <code>await user.selectOptions(menu, 'High')</code> and <code>await user.click(button)</code> do what a person does, key by key. They return promises, so use <code>await</code> and an <code>async</code> test.</li>
+  <li><code>vi.fn()</code> is the function you pass as <code>onAdd</code>: a spy. Afterwards ask it whether and how it was called.</li>
+</ul>
+<p>Three behaviors to test: it sends the title and priority; the field is empty afterwards; an empty title (or only spaces) sends nothing.</p>
+</div>
+<div lang="th">
+<p><code>TaskForm</code> ใน <code>src/client/components/TaskForm.jsx</code> แสดงช่อง title เมนู priority และปุ่ม Add เมื่อส่งฟอร์มมันเรียกฟังก์ชันที่ได้รับมา <code>onAdd({ title, priority })</code> และล้างช่อง ทดสอบสิ่งที่ <em>ผู้ใช้</em> ทำและสิ่งที่ <em>ผู้ใช้</em> เห็น:</p>
+<ul>
+  <li><code>userEvent.setup()</code> สร้างผู้ใช้ <code>await user.type(field, 'text')</code>, <code>await user.selectOptions(menu, 'High')</code> และ <code>await user.click(button)</code> ทำอย่างที่คนทำ ทีละปุ่ม คืน promise จึงต้องใช้ <code>await</code> และ test แบบ <code>async</code></li>
+  <li><code>vi.fn()</code> คือฟังก์ชันที่ส่งเป็น <code>onAdd</code>: spy ทีหลังถามมันได้ว่าถูกเรียกไหมและอย่างไร</li>
+</ul>
+<p>สามพฤติกรรมที่ต้องทดสอบ: ส่ง title และ priority; ช่องว่างหลังจากนั้น; title ว่าง (หรือมีแต่ช่องว่าง) ไม่ส่งอะไร</p>
+</div>
+
+<p class="where">Create the file <code>tests/TaskForm.test.jsx</code> (in the Explorer: unit &rsaquo; tests &rsaquo; TaskForm.test.jsx; right-click the folder, then <em>New File</em>). Paste the code into it and save.</p>
+<pre data-snippet data-file="tests/TaskForm.test.jsx" data-position="end"><code class="language-javascript">import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
+import TaskForm from '../src/client/components/TaskForm.jsx';
+
+describe('TaskForm', () =&gt; {
+  it('sends the title and the priority when the form is sent', async () =&gt; {
+    const user = userEvent.setup();
+    const onAdd = vi.fn();
+    render(&lt;TaskForm onAdd={onAdd} /&gt;);
+
+    await user.type(screen.getByLabelText('Title'), 'Buy milk');
+    await user.selectOptions(screen.getByLabelText('Priority'), 'High');
+    await user.click(screen.getByRole('button', { name: 'Add' }));
+
+    expect(onAdd).toHaveBeenCalledTimes(1);
+    expect(onAdd).toHaveBeenCalledWith({ title: 'Buy milk', priority: 3 });
+  });
+
+  it('empties the title field after adding', async () =&gt; {
+    const user = userEvent.setup();
+    render(&lt;TaskForm onAdd={() =&gt; {}} /&gt;);
+
+    await user.type(screen.getByLabelText('Title'), 'Buy milk');
+    await user.click(screen.getByRole('button', { name: 'Add' }));
+
+    expect(screen.getByLabelText('Title')).toHaveValue('');
+  });
+
+  it('does not add a title that is empty or only spaces', async () =&gt; {
+    const user = userEvent.setup();
+    const onAdd = vi.fn();
+    render(&lt;TaskForm onAdd={onAdd} /&gt;);
+
+    await user.click(screen.getByRole('button', { name: 'Add' }));
+    await user.type(screen.getByLabelText('Title'), '   ');
+    await user.click(screen.getByRole('button', { name: 'Add' }));
+
+    expect(onAdd).not.toHaveBeenCalled();
+  });
+});</code></pre>
+
+<pre data-command><code>npx vitest run tests/TaskForm.test.jsx</code></pre>
+
+<details>
+  <summary>Hint</summary>
+  <p>If a test hangs or says the field was not found, check the labels: <code>getByLabelText('Title')</code> must match the text of the label in <code>TaskForm.jsx</code> exactly.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/TaskForm.test.jsx</code> (create the file):</p>
+  <pre data-snippet data-file="tests/TaskForm.test.jsx" data-position="end"><code class="language-javascript">import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
+import TaskForm from '../src/client/components/TaskForm.jsx';
+
+describe('TaskForm', () =&gt; {
+  it('sends the title and the priority when the form is sent', async () =&gt; {
+    const user = userEvent.setup();
+    const onAdd = vi.fn();
+    render(&lt;TaskForm onAdd={onAdd} /&gt;);
+
+    await user.type(screen.getByLabelText('Title'), 'Buy milk');
+    await user.selectOptions(screen.getByLabelText('Priority'), 'High');
+    await user.click(screen.getByRole('button', { name: 'Add' }));
+
+    expect(onAdd).toHaveBeenCalledTimes(1);
+    expect(onAdd).toHaveBeenCalledWith({ title: 'Buy milk', priority: 3 });
+  });
+
+  it('empties the title field after adding', async () =&gt; {
+    const user = userEvent.setup();
+    render(&lt;TaskForm onAdd={() =&gt; {}} /&gt;);
+
+    await user.type(screen.getByLabelText('Title'), 'Buy milk');
+    await user.click(screen.getByRole('button', { name: 'Add' }));
+
+    expect(screen.getByLabelText('Title')).toHaveValue('');
+  });
+
+  it('does not add a title that is empty or only spaces', async () =&gt; {
+    const user = userEvent.setup();
+    const onAdd = vi.fn();
+    render(&lt;TaskForm onAdd={onAdd} /&gt;);
+
+    await user.click(screen.getByRole('button', { name: 'Add' }));
+    await user.type(screen.getByLabelText('Title'), '   ');
+    await user.click(screen.getByRole('button', { name: 'Add' }));
+
+    expect(onAdd).not.toHaveBeenCalled();
+  });
+});</code></pre>
+</details>
+
+<div data-check="form-tests"></div>

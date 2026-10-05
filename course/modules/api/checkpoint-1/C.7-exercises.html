@@ -1,0 +1,82 @@
+<h2>Step C.7: Checkpoint 1: two exercises</h2>
+
+<div class="checkpoint">
+  <div lang="en">
+    <p>About 15 minutes. Both exercises are optional. Try first, then the hint, and only then the solution. A good test <em>fails</em> when the API is wrong: your tests will be checked against deliberate bugs.</p>
+  </div>
+  <div lang="th">
+    <p>ใช้เวลาประมาณ 15 นาที โจทย์ทั้งสองข้อเป็นทางเลือก ลองทำเองก่อน แล้วค่อยเปิด hint และเปิด solution เป็นลำดับสุดท้าย เทสต์ที่ดีต้อง <em>ล้ม</em> เมื่อ API ผิด: เทสต์ของคุณจะถูกตรวจกับบั๊กที่ใส่ไว้โดยตั้งใจ</p>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 1 (easier): the groups contain Work</h3>
+    <div lang="en">
+      <p>Write a test named <code>Groups Contain Work</code>. It calls <code>GET /api/groups</code>, expects status 200 and checks that one of the groups is called <code>Work</code>.</p>
+    </div>
+    <div lang="th">
+      <p>เขียนเทสต์ชื่อ <code>Groups Contain Work</code> เรียก <code>GET /api/groups</code> คาดหวัง status 200 และตรวจว่ามี group หนึ่งชื่อ <code>Work</code></p>
+    </div>
+    <p class="where">Create the file <code>tests/04_checkpoint_1.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 04_checkpoint_1.robot).</p>
+    <details>
+      <summary>Hint</summary>
+      <p>Collect the names in a list: <code>${names}=    Create List</code>, then <code>Append To List    ${names}    ${group}[name]</code> inside a <code>FOR</code> loop (the library <code>Collections</code> has these keywords). Finish with <code>Should Contain    ${names}    Work</code>.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>tests/04_checkpoint_1.robot</code> (the whole file so far):</p>
+      <pre data-snippet data-file="tests/04_checkpoint_1.robot" data-position="end"><code class="language-plaintext">*** Settings ***
+Library    RequestsLibrary
+Library    Collections
+
+*** Variables ***
+${BASE_URL}    http://localhost:3001
+
+*** Test Cases ***
+Groups Contain Work
+    ${response}=    GET    ${BASE_URL}/api/groups
+    Should Be Equal As Integers    ${response.status_code}    200
+    ${names}=    Create List
+    FOR    ${group}    IN    @{response.json()}
+        Append To List    ${names}    ${group}[name]
+    END
+    Should Contain    ${names}    Work</code></pre>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 2 (harder): an empty group name is rejected</h3>
+    <div lang="en">
+      <p>Write a test named <code>Empty Group Name Is Rejected And Adds No Row</code>. It counts the rows of <code>task_groups</code>, sends <code>POST /api/groups</code> with an empty name, expects 400, counts again and checks that the number did not change.</p>
+    </div>
+    <div lang="th">
+      <p>เขียนเทสต์ชื่อ <code>Empty Group Name Is Rejected And Adds No Row</code> นับแถวของ <code>task_groups</code> ส่ง <code>POST /api/groups</code> ด้วยชื่อว่าง คาดหวัง 400 นับอีกครั้ง และตรวจว่าจำนวนไม่เปลี่ยน</p>
+    </div>
+    <p class="where">Edit <code>tests/04_checkpoint_1.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 04_checkpoint_1.robot). First the database settings (after the line <code>Library    Collections</code>), then the test at the end.</p>
+    <details>
+      <summary>Hint</summary>
+      <p>Use the same <code>Suite Setup</code> and <code>Suite Teardown</code> lines as in step C.4. <code>Query    SELECT COUNT(*) FROM task_groups</code> returns the count as <code>${rows}[0][0]</code>.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>tests/04_checkpoint_1.robot</code>, after <code>Library    Collections</code>:</p>
+      <pre data-snippet data-file="tests/04_checkpoint_1.robot" data-after="Library    Collections"><code class="language-plaintext">Library    DatabaseLibrary
+Suite Setup    Connect To Database    pymysql    db_name=taskapp_test    db_user=robot    db_password=robot_pw    db_host=db    db_port=3306
+Suite Teardown    Disconnect From All Databases</code></pre>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>tests/04_checkpoint_1.robot</code>, at the end:</p>
+      <pre data-snippet data-file="tests/04_checkpoint_1.robot" data-position="end"><code class="language-plaintext">Empty Group Name Is Rejected And Adds No Row
+    ${before}=    Query    SELECT COUNT(*) FROM task_groups
+    ${body}=    Create Dictionary    name=${EMPTY}
+    ${response}=    POST    ${BASE_URL}/api/groups    json=${body}    expected_status=400
+    ${after}=    Query    SELECT COUNT(*) FROM task_groups
+    Should Be Equal As Integers    ${after}[0][0]    ${before}[0][0]</code></pre>
+    </details>
+  </div>
+</div>
+
+<div data-check="cp1-groups-work">
+  <pre><code>  PASS  The test "Groups Contain Work" passes and catches a missing group
+  PASS  The test "Empty Group Name Is Rejected And Adds No Row" passes and catches a bad API</code></pre>
+</div>

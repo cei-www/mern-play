@@ -1,0 +1,116 @@
+<h2>Step 6.3: The History tab</h2>
+
+<div lang="en">
+<p>The page already has the two tabs <em>Tasks</em> and <em>History</em> (written for you in <code>App.jsx</code>). The History tab shows <code>HistoryView</code>: a select for the number of days and the finished tasks with the time they were completed.</p>
+<p>Notice <code>useEffect</code> with <code>[days, groupId, reloadKey]</code>: it loads again when the learner changes the days, picks another group, or something else changed a task.</p>
+</div>
+<div lang="th">
+<p>หน้าเว็บมี 2 tab <em>Tasks</em> และ <em>History</em> อยู่แล้ว (เขียนไว้ให้ใน <code>App.jsx</code>) tab History แสดง <code>HistoryView</code>: select จำนวนวัน และรายการ task ที่เสร็จแล้วพร้อมเวลาที่ทำเสร็จ</p>
+<p>สังเกต <code>useEffect</code> ที่มี <code>[days, groupId, reloadKey]</code>: มันโหลดใหม่เมื่อผู้ใช้เปลี่ยนจำนวนวัน เลือก group อื่น หรือมีสิ่งอื่นเปลี่ยน task</p>
+</div>
+
+<p class="where">Edit <code>client/src/components/HistoryView.jsx</code> (in the Explorer: build &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; HistoryView.jsx). Write the code between the comments <code>@tutorial:begin s6-3-history-view</code> and <code>@tutorial:end s6-3-history-view</code>, inside the function.</p>
+
+<pre data-snippet data-file="client/src/components/HistoryView.jsx" data-zone="s6-3-history-view"><code class="language-javascript">const [days, setDays] = useState(7);
+const [tasks, setTasks] = useState([]);
+const [error, setError] = useState('');
+
+useEffect(() =&gt; {
+  fetch(`/api/tasks/history${toQuery({ days, group_id: groupId })}`)
+    .then((res) =&gt; {
+      if (!res.ok) throw new Error(`The server answered ${res.status}`);
+      return res.json();
+    })
+    .then((data) =&gt; {
+      setTasks(data);
+      setError('');
+    })
+    .catch((err) =&gt; setError(err.message));
+}, [days, groupId, reloadKey]);
+
+return (
+  &lt;section&gt;
+    &lt;label&gt;
+      Completed in the last
+      &lt;select value={days} onChange={(e) =&gt; setDays(Number(e.target.value))}&gt;
+        &lt;option value={1}&gt;1 day&lt;/option&gt;
+        &lt;option value={7}&gt;7 days&lt;/option&gt;
+        &lt;option value={30}&gt;30 days&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/label&gt;
+    {error &amp;&amp; &lt;p role="alert"&gt;{error}&lt;/p&gt;}
+    {tasks.length === 0 &amp;&amp; !error &amp;&amp; &lt;p&gt;Nothing completed in this period.&lt;/p&gt;}
+    &lt;ul className="task-list"&gt;
+      {tasks.map((task) =&gt; (
+        &lt;li key={task.id} className="task task-done"&gt;
+          &lt;span className="task-title"&gt;{task.title}&lt;/span&gt;
+          {task.group_name &amp;&amp; &lt;span className="badge"&gt;{task.group_name}&lt;/span&gt;}
+          &lt;span className="due"&gt;done {task.completed_at}&lt;/span&gt;
+        &lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  &lt;/section&gt;
+);</code></pre>
+
+<div lang="en">
+<p>Save, open the <em>History</em> tab in <strong>Preview</strong>, change the days, then go back, tick a task as done, and look again.</p>
+</div>
+<div lang="th">
+<p>บันทึก เปิด tab <em>History</em> ใน <strong>Preview</strong> เปลี่ยนจำนวนวัน แล้วกลับไปติ๊ก task ให้เสร็จ และดูอีกครั้ง</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5173" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>The URL is built with <code>toQuery({ days, group_id: groupId })</code> (already imported at the top of the file). Remember the case with no results: show "Nothing completed in this period."</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/components/HistoryView.jsx</code>, between the comments of <code>s6-3-history-view</code>:</p>
+  <pre data-snippet data-file="client/src/components/HistoryView.jsx" data-zone="s6-3-history-view"><code class="language-javascript">const [days, setDays] = useState(7);
+const [tasks, setTasks] = useState([]);
+const [error, setError] = useState('');
+
+useEffect(() =&gt; {
+  fetch(`/api/tasks/history${toQuery({ days, group_id: groupId })}`)
+    .then((res) =&gt; {
+      if (!res.ok) throw new Error(`The server answered ${res.status}`);
+      return res.json();
+    })
+    .then((data) =&gt; {
+      setTasks(data);
+      setError('');
+    })
+    .catch((err) =&gt; setError(err.message));
+}, [days, groupId, reloadKey]);
+
+return (
+  &lt;section&gt;
+    &lt;label&gt;
+      Completed in the last
+      &lt;select value={days} onChange={(e) =&gt; setDays(Number(e.target.value))}&gt;
+        &lt;option value={1}&gt;1 day&lt;/option&gt;
+        &lt;option value={7}&gt;7 days&lt;/option&gt;
+        &lt;option value={30}&gt;30 days&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/label&gt;
+    {error &amp;&amp; &lt;p role="alert"&gt;{error}&lt;/p&gt;}
+    {tasks.length === 0 &amp;&amp; !error &amp;&amp; &lt;p&gt;Nothing completed in this period.&lt;/p&gt;}
+    &lt;ul className="task-list"&gt;
+      {tasks.map((task) =&gt; (
+        &lt;li key={task.id} className="task task-done"&gt;
+          &lt;span className="task-title"&gt;{task.title}&lt;/span&gt;
+          {task.group_name &amp;&amp; &lt;span className="badge"&gt;{task.group_name}&lt;/span&gt;}
+          &lt;span className="due"&gt;done {task.completed_at}&lt;/span&gt;
+        &lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  &lt;/section&gt;
+);</code></pre>
+</details>
+
+<div data-check="history-view-code"></div>

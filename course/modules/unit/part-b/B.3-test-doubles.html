@@ -1,0 +1,27 @@
+<h2>Step B.3: Test doubles: stub, mock and spy</h2>
+
+<div lang="en">
+<p>Some code cannot run in a unit test: it needs a database, the network or the clock. <code>createTask</code> calls <code>db.query</code>, which in real life talks to MySQL. For a unit test you replace the part that is outside with a <strong>test double</strong>, a stand-in you control. Three kinds, all made with Vitest's <code>vi</code>:</p>
+<ul>
+  <li><strong>Stub</strong>: gives a prepared answer. <code>db.query.mockResolvedValue([{ insertId: 42 }])</code> says "when called, answer with this".</li>
+  <li><strong>Spy</strong>: records how it was called, so you can check it afterwards: <code>expect(db.query).toHaveBeenCalledWith(...)</code>, <code>db.query.mock.calls[0]</code>.</li>
+  <li><strong>Mock</strong>: a stand-in for a whole module. <code>vi.mock('../src/server/db.js', () =&gt; ({ db: { query: vi.fn() } }))</code> replaces the file for the code under test, and <code>vi.fn()</code> makes a function that is stub and spy in one.</li>
+</ul>
+<p>What to remember: a double lets you test <em>your</em> code alone, fast and the same every time. The price: the double can be wrong about the real thing. That is why you also keep a few integration tests (the checks of module <code>build</code>).</p>
+<p>The rule of thumb: replace what is <em>slow, random or outside your control</em> (database, network, time). Do not replace the code you want to test.</p>
+</div>
+<div lang="th">
+<p>โค้ดบางอย่างรันใน unit test ไม่ได้: ต้องใช้ฐานข้อมูล เครือข่าย หรือนาฬิกา <code>createTask</code> เรียก <code>db.query</code> ซึ่งในของจริงคุยกับ MySQL สำหรับ unit test คุณแทนส่วนที่อยู่ข้างนอกด้วย <strong>test double</strong> ตัวแทนที่คุณควบคุมได้ มีสามแบบ ทำด้วย <code>vi</code> ของ Vitest ทั้งหมด:</p>
+<ul>
+  <li><strong>Stub</strong>: ตอบคำตอบที่เตรียมไว้ <code>db.query.mockResolvedValue([{ insertId: 42 }])</code> แปลว่า "เมื่อถูกเรียก ให้ตอบแบบนี้"</li>
+  <li><strong>Spy</strong>: จดว่าถูกเรียกอย่างไร เพื่อให้ตรวจทีหลังได้: <code>expect(db.query).toHaveBeenCalledWith(...)</code>, <code>db.query.mock.calls[0]</code></li>
+  <li><strong>Mock</strong>: ตัวแทนของทั้ง module <code>vi.mock('../src/server/db.js', () =&gt; ({ db: { query: vi.fn() } }))</code> แทนไฟล์นั้นให้โค้ดที่ทดสอบ และ <code>vi.fn()</code> สร้างฟังก์ชันที่เป็นทั้ง stub และ spy</li>
+</ul>
+<p>สิ่งที่ต้องจำ: double ให้คุณทดสอบโค้ด <em>ของคุณ</em> โดด ๆ เร็ว และเหมือนเดิมทุกครั้ง ราคาที่จ่าย: double อาจเข้าใจของจริงผิด จึงควรเก็บ integration test ไว้บ้าง (การตรวจของ module <code>build</code>)</p>
+<p>หลักง่าย ๆ: แทนสิ่งที่ <em>ช้า สุ่ม หรือคุมไม่ได้</em> (ฐานข้อมูล เครือข่าย เวลา) อย่าแทนโค้ดที่คุณอยากทดสอบ</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>Open <code>src/server/taskService.js</code> and find the one line that talks to the database. That is the line you will replace in the next step.</p>
+</details>

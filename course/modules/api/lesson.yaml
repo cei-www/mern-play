@@ -1,0 +1,289 @@
+# Module "api": test the Task Manager API with Robot Framework.
+# Runs in the container ws-robot (created but not started). The target is the reference API on :3001
+# (database taskapp_test). The learner writes only .robot and .resource files; the finished versions are in
+# course/solution/api, where the markers "# @tutorial:begin <id>" cut the code into the pieces the lessons show.
+id: api
+title: API automation with Robot Framework
+order: 4
+minutes: 180
+container: ws-robot
+defaultTab: robot
+optional: true
+startHint: { gui: "Docker Desktop -> Containers -> ws-robot -> Start", cli: "docker compose start ws-robot" }
+parts:
+  - id: part-a
+    title: "Part A: Hello, Robot"
+    steps:
+      - { id: "A.1", title: Why automate API tests, type: read, file: part-a/A.1-why-automate.html }
+      - { id: "A.2", title: How a Robot file looks, type: read, file: part-a/A.2-robot-files.html }
+      - { id: "A.3", title: Your first test, type: do, file: part-a/A.3-first-test.html, checks: [health-test] }
+      - { id: "A.4", title: Run Robot and read the report, type: do, file: part-a/A.4-run-and-report.html, checks: [report-exists] }
+      - { id: "A.5", title: Make a test fail on purpose, type: do, file: part-a/A.5-fail-on-purpose.html, checks: [health-body-test] }
+  - id: part-b
+    title: "Part B: Check responses"
+    steps:
+      - { id: "B.1", title: "GET /api/tasks: status and content type", type: do, file: part-b/B.1-list-status.html, checks: [read-tests-1] }
+      - { id: "B.2", title: "Read the JSON: count and fields", type: do, file: part-b/B.2-list-content.html, checks: [read-tests-2] }
+      - { id: "B.3", title: "GET /api/tasks/{id}: field values", type: do, file: part-b/B.3-one-task.html, checks: [read-tests-3] }
+      - { id: "B.4", title: Not found must be 404, type: do, file: part-b/B.4-not-found.html, checks: [read-tests-4] }
+      - { id: "B.5", title: "Query strings: filter and sort", type: do, file: part-b/B.5-query.html, checks: [read-tests-5] }
+  - id: part-c
+    title: "Part C: Create data and check the database"
+    steps:
+      - { id: "C.1", title: "POST /api/tasks: 201 and the body", type: do, file: part-c/C.1-create.html, checks: [create-tests-1] }
+      - { id: "C.2", title: An empty title returns 400, type: do, file: part-c/C.2-empty-title.html, checks: [create-tests-2] }
+      - { id: "C.3", title: Test isolation, type: read, file: part-c/C.3-isolation.html }
+      - { id: "C.4", title: Check the database too, type: do, file: part-c/C.4-database.html, checks: [create-tests-4] }
+      - { id: "C.5", title: "Setup and teardown: reset the data", type: do, file: part-c/C.5-teardown.html, checks: [create-tests-5] }
+      - { id: "C.6", title: PATCH done and completed_at in the database, type: do, file: part-c/C.6-done.html, checks: [create-tests-6] }
+  - id: checkpoint-1
+    title: "Checkpoint 1"
+    steps:
+      - { id: "C.7", title: "Checkpoint 1: two exercises", type: practice, file: checkpoint-1/C.7-exercises.html, checks: [cp1-groups-work, cp1-empty-group] }
+  - id: part-d
+    title: "Part D: Organize"
+    steps:
+      - { id: "D.1", title: The duplication problem, type: read, file: part-d/D.1-duplication.html }
+      - { id: "D.2", title: Variables and a resource file, type: do, file: part-d/D.2-resource.html, checks: [resource-1] }
+      - { id: "D.3", title: Your own keywords, type: do, file: part-d/D.3-keywords.html, checks: [resource-2] }
+      - { id: "D.4", title: Arguments and return values, type: do, file: part-d/D.4-arguments.html, checks: [resource-3] }
+      - { id: "D.5", title: Tests that read like sentences, type: do, file: part-d/D.5-refactor.html, checks: [clean-tests] }
+  - id: part-e
+    title: "Part E: Data-driven tests, tags, reports"
+    steps:
+      - { id: "E.1", title: Data-driven tests with Test Template, type: do, file: part-e/E.1-template.html, checks: [template-tests, template-used] }
+      - { id: "E.2", title: Tags and --include, type: do, file: part-e/E.2-tags.html, checks: [tags-tests] }
+      - { id: "E.3", title: An unsafe sort value returns 400, type: do, file: part-e/E.3-unsafe-sort.html, checks: [security-tests, security-mutation] }
+      - { id: "E.4", title: Read the report in depth, type: do, file: part-e/E.4-reports.html }
+  - id: part-f
+    title: "Part F: Final check"
+    steps:
+      - { id: "F.1", title: Final check, type: check, file: part-f/F.1-final-check.html, checks: [final-robot, final-mutation] }
+  - id: checkpoint-2
+    title: "Checkpoint 2"
+    steps:
+      - { id: "F.2", title: "Checkpoint 2: two exercises", type: practice, file: checkpoint-2/F.2-exercises.html, checks: [cp2-count, cp2-keyword, cp2-delete] }
+
+checks:
+  health-test:
+    title: The test "Health Returns 200" passes
+    type: robot
+    path: tests/01_health.robot
+    minTests: 1
+    requireTests: ["Health Returns 200"]
+    hint: "Create tests/01_health.robot with the test named exactly Health Returns 200, then read the message above."
+  report-exists:
+    title: Robot wrote its report to results/report.html
+    type: file
+    path: results/report.html
+    hint: "Run in the terminal, from the folder api: robot --outputdir results tests"
+  health-body-test:
+    title: Both health tests pass
+    type: robot
+    path: tests/01_health.robot
+    minTests: 2
+    requireTests: ["Health Returns 200", "Health Body Says Ok"]
+    hint: "Add the second test (step A.5) and make sure the word is ok again."
+  read-tests-1:
+    title: The test "List Tasks Returns 200 And Json" passes
+    type: robot
+    path: tests/02_tasks_read.robot
+    minTests: 1
+    requireTests: ["List Tasks Returns 200 And Json"]
+    hint: "Add the test to tests/02_tasks_read.robot with exactly this name, save, and run the check again."
+  read-tests-2:
+    title: Counting and field tests pass
+    type: robot
+    path: tests/02_tasks_read.robot
+    minTests: 2
+    requireTests: ["List Has At Least Ten Tasks", "First Task Has The Expected Fields"]
+    hint: "Add the test to tests/02_tasks_read.robot with exactly this name, save, and run the check again."
+  read-tests-3:
+    title: The test for one task passes
+    type: robot
+    path: tests/02_tasks_read.robot
+    minTests: 1
+    requireTests: ["Task 1 Has The Expected Title"]
+    hint: "Add the test to tests/02_tasks_read.robot with exactly this name, save, and run the check again."
+  read-tests-4:
+    title: The 404 test passes
+    type: robot
+    path: tests/02_tasks_read.robot
+    minTests: 1
+    requireTests: ["Unknown Task Returns 404"]
+    hint: "Add the test to tests/02_tasks_read.robot with exactly this name, save, and run the check again."
+  read-tests-5:
+    title: The filter and sort tests pass
+    type: robot
+    path: tests/02_tasks_read.robot
+    minTests: 2
+    requireTests: ["Open Filter Returns Only Open Tasks", "Sort By Priority Is Ascending"]
+    hint: "Add the test to tests/02_tasks_read.robot with exactly this name, save, and run the check again."
+  create-tests-1:
+    title: The test for POST /api/tasks passes
+    type: robot
+    path: tests/03_tasks_create.robot
+    minTests: 1
+    requireTests: ["Create Task Returns 201 And The Task"]
+    hint: "Add the test to tests/03_tasks_create.robot with exactly this name, save, and run the check again."
+  create-tests-2:
+    title: The empty title test passes
+    type: robot
+    path: tests/03_tasks_create.robot
+    minTests: 1
+    requireTests: ["Empty Title Is Rejected With 400"]
+    hint: "Add the test to tests/03_tasks_create.robot with exactly this name, save, and run the check again."
+  create-tests-4:
+    title: The database test passes
+    type: robot
+    path: tests/03_tasks_create.robot
+    minTests: 1
+    requireTests: ["Created Task Is Stored In The Database"]
+    hint: "Add the test to tests/03_tasks_create.robot with exactly this name, save, and run the check again."
+  create-tests-6:
+    title: The completed_at test passes
+    type: robot
+    path: tests/03_tasks_create.robot
+    minTests: 1
+    requireTests: ["Marking A Task Done Sets Completed At"]
+    hint: "Add the test to tests/03_tasks_create.robot with exactly this name, save, and run the check again."
+  create-tests-5:
+    title: The teardown removes the Robot tasks after the tests
+    type: flow
+    steps:
+      - type: robot
+        path: tests/03_tasks_create.robot
+        minTests: 3
+        hint: "Fix the failing tests first."
+      - type: sql
+        database: taskapp_test
+        query: "SELECT COUNT(*) AS n FROM tasks WHERE title LIKE 'Robot %'"
+        expect: { first: { n: 0 } }
+        hint: "Tasks called Robot ... are still in the database after the tests. Add the Test Teardown line of step C.5 to the Settings."
+  cp1-groups-work:
+    title: Your test for the groups list catches a missing group
+    type: mutation
+    suite:
+      type: robot
+      path: tests/04_checkpoint_1.robot
+      minTests: 1
+      requireTests: ["Groups Contain Work"]
+    control: "http://localhost:3001/__control/mutant"
+    mutants:
+      - { name: groups-without-work, hint: "the test does not notice that the group Work is missing" }
+  cp1-empty-group:
+    title: Your test for an empty group name catches a bad API
+    type: mutation
+    suite:
+      type: robot
+      path: tests/04_checkpoint_1.robot
+      minTests: 1
+      requireTests: ["Empty Group Name Is Rejected And Adds No Row"]
+    control: "http://localhost:3001/__control/mutant"
+    mutants:
+      - { name: group-empty-name-ok, hint: "no test sends an empty group name and expects 400" }
+  resource-1:
+    title: The resource file has the variables
+    type: file
+    path: resources/api.resource
+    contains: ["*** Variables ***", "${BASE_URL}", "${DB_NAME}"]
+    hint: "Create resources/api.resource with the settings and variables of step D.2."
+  resource-2:
+    title: The resource file has the first keywords
+    type: file
+    path: resources/api.resource
+    contains: ["*** Keywords ***", "Connect To Test Database", "Delete Test Tasks"]
+    hint: "Add the keywords of step D.3 at the end of resources/api.resource."
+  resource-3:
+    title: The resource file has Create Task and Task Should Exist
+    type: file
+    path: resources/api.resource
+    contains: ["Create Task", "[Arguments]", "RETURN", "Task Should Exist"]
+    hint: "Add the keywords of step D.4 at the end of resources/api.resource."
+  clean-tests:
+    title: The tests that use your keywords pass
+    type: robot
+    path: tests/05_tasks_clean.robot
+    minTests: 2
+    requireTests: ["New Task Is Stored", "Done Task Has A Completion Time"]
+    hint: "Add the two keywords of step D.5 to the resource file and create tests/05_tasks_clean.robot."
+  template-tests:
+    title: The data-driven tests pass
+    type: robot
+    path: tests/06_data_driven.robot
+    minTests: 3
+    hint: "Create tests/06_data_driven.robot with at least three rows of data."
+  template-used:
+    title: The file uses a Test Template
+    type: file
+    path: tests/06_data_driven.robot
+    contains: ["Test Template"]
+    hint: "Add the line Test Template to the Settings (step E.1)."
+  tags-tests:
+    title: The smoke tests run and pass
+    type: robot
+    path: tests/07_smoke_and_security.robot
+    minTests: 2
+    requireTests: ["Health Is Up", "Task List Is Not Empty"]
+    command: [robot, --include, smoke]
+    hint: "Give the two tests the tag smoke with [Tags]    smoke (step E.2)."
+  security-tests:
+    title: The unsafe sort test passes
+    type: robot
+    path: tests/07_smoke_and_security.robot
+    minTests: 4
+    requireTests: ["Unsafe Sort Value Is Rejected"]
+    hint: "Add the test of step E.3 to tests/07_smoke_and_security.robot."
+  security-mutation:
+    title: Your tests catch an API that accepts any sort value
+    type: mutation
+    suite:
+      type: robot
+      path: tests/07_smoke_and_security.robot
+      minTests: 4
+      requireTests: ["Unsafe Sort Value Is Rejected"]
+    control: "http://localhost:3001/__control/mutant"
+    mutants:
+      - { name: unsafe-sort, hint: "no test sends an unsafe sort value and expects 400" }
+  final-robot:
+    title: All your Robot tests pass
+    type: robot
+    path: tests
+    minTests: 20
+    hint: "Run robot --outputdir results tests and fix the red tests (see results/log.html). At least 20 tests are expected."
+  final-mutation:
+    title: Your tests catch deliberate bugs
+    type: mutation
+    suite:
+      type: robot
+      path: tests
+      minTests: 20
+    control: "http://localhost:3001/__control/mutant"
+    mutants:
+      - { name: empty-title-ok, hint: "no test sends an empty title and expects 400" }
+      - { name: done-no-timestamp, hint: "no test checks completed_at after marking a task done" }
+      - { name: unsafe-sort, hint: "no test sends an unsafe sort value and expects 400" }
+  cp2-count:
+    title: The test comparing the API with the database passes
+    type: robot
+    path: tests/08_checkpoint_2.robot
+    minTests: 1
+    requireTests: ["Api And Database Agree On The Task Count"]
+    hint: "Create tests/08_checkpoint_2.robot with exactly this test name."
+  cp2-keyword:
+    title: The resource file has the keyword Task Count Should Match Database
+    type: file
+    path: resources/api.resource
+    contains: ["Task Count Should Match Database"]
+    hint: "Add the keyword at the end of resources/api.resource."
+  cp2-delete:
+    title: Your test catches an API that forgets to answer 404 for a deleted task
+    type: mutation
+    suite:
+      type: robot
+      path: tests/08_checkpoint_2.robot
+      minTests: 1
+      requireTests: ["Deleted Task Is Gone"]
+    control: "http://localhost:3001/__control/mutant"
+    mutants:
+      - { name: delete-missing-204, hint: "the test does not delete the task a second time and expect 404" }

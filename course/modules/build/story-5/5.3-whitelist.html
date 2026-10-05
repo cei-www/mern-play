@@ -1,0 +1,24 @@
+<h2>Step 5.3: Why ORDER BY needs a whitelist</h2>
+
+<div lang="en">
+<p>A <code>?</code> placeholder always stands for a <em>value</em> and MySQL puts it in quotes. If you wrote <code>ORDER BY ?</code> and gave it <code>title</code>, MySQL would sort by the <em>text</em> "title" for every row, which is no sorting at all. A column name is part of the SQL <em>structure</em>, and only the SQL text can hold it.</p>
+<p>So the code puts the name into the text. If it came from the request, an attacker could send <code>sort=title; DROP TABLE tasks</code>. The whitelist cuts this off: the request chooses only a <em>key</em>; the SQL text always comes from your own object.</p>
+</div>
+<div lang="th">
+<p>placeholder <code>?</code> แทน <em>ค่า</em> เสมอ และ MySQL ใส่เครื่องหมายคำพูดให้ ถ้าคุณเขียน <code>ORDER BY ?</code> แล้วส่ง <code>title</code> MySQL จะเรียงตาม <em>ข้อความ</em> "title" ซึ่งเท่ากันทุกแถว จึงไม่ได้เรียงอะไรเลย ชื่อคอลัมน์เป็นส่วนของ <em>โครงสร้าง</em> SQL และอยู่ได้เฉพาะในข้อความ SQL</p>
+<p>โค้ดจึงใส่ชื่อลงในข้อความ ถ้าชื่อมาจาก request ผู้โจมตีอาจส่ง <code>sort=title; DROP TABLE tasks</code> whitelist ตัดปัญหานี้: request เลือกได้แค่ <em>key</em> ส่วนข้อความ SQL มาจาก object ของคุณเสมอ</p>
+</div>
+
+<div lang="en">
+<p>Try it on your own API. This must answer <strong>400</strong>, not 200 and not 500:</p>
+</div>
+<div lang="th">
+<p>ลองกับ API ของคุณ ต้องได้ <strong>400</strong> ไม่ใช่ 200 และไม่ใช่ 500:</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="3000" data-path="/api/tasks?sort=title;drop">Open /api/tasks?sort=title;drop</a>
+  <button type="button" class="btn btn-sm btn-outline-primary" data-action="swagger" data-op="listTasks" data-server="app">Try it in Swagger</button>
+</p>
+
+<div data-check="sort-unsafe"></div>

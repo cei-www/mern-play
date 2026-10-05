@@ -1,0 +1,115 @@
+<h2>Step C.5: Checkpoint 2: two exercises</h2>
+
+<div class="checkpoint">
+  <div lang="en">
+    <p>About 15 minutes. Both exercises are optional. Try first, then the hint, and only then the solution. The check puts bugs into the code and wants your tests to catch them.</p>
+  </div>
+  <div lang="th">
+    <p>ใช้เวลาประมาณ 15 นาที โจทย์ทั้งสองข้อเป็นทางเลือก ลองทำเองก่อน แล้วค่อยเปิด hint และเปิด solution เป็นลำดับสุดท้าย การตรวจจะใส่บั๊กลงในโค้ดและต้องการให้ test ของคุณจับได้</p>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 3 (harder): markDone with a mocked database</h3>
+    <div lang="en">
+      <p>Write tests for <code>markDone(id, done)</code> in <code>src/server/taskService.js</code>. It updates the task through <code>db.query</code> and returns <code>{ id, done }</code>; when no task has that id (<code>affectedRows</code> is 0) it throws <code>NotFoundError</code>. Mock the database as in step B.4. Cover: marking as done, marking as not done (<code>markDone(7, false)</code>), and a task that does not exist. Check the <em>parameters</em> of the query too: they carry the done flag and the id.</p>
+    </div>
+    <div lang="th">
+      <p>เขียน test ให้ <code>markDone(id, done)</code> ใน <code>src/server/taskService.js</code> มันอัปเดต task ผ่าน <code>db.query</code> และคืน <code>{ id, done }</code> เมื่อไม่มี task ที่มี id นั้น (<code>affectedRows</code> เป็น 0) มัน throw <code>NotFoundError</code> mock ฐานข้อมูลเหมือน step B.4 ครอบคลุม: ทำเครื่องหมายว่าเสร็จ ทำเครื่องหมายว่ายังไม่เสร็จ (<code>markDone(7, false)</code>) และ task ที่ไม่มีอยู่ ตรวจ <em>parameter</em> ของ query ด้วย: มันพา flag done และ id ไป</p>
+    </div>
+    <p class="where">Create the file <code>tests/markDone.test.js</code> (in the Explorer: unit &rsaquo; tests &rsaquo; markDone.test.js), then write your tests in it.</p>
+    <details>
+      <summary>Hint</summary>
+      <p>The stub for a found task is <code>db.query.mockResolvedValue([{ affectedRows: 1 }])</code>, for a missing one <code>[{ affectedRows: 0 }]</code>. The parameters are <code>db.query.mock.calls[0][1]</code>.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>tests/markDone.test.js</code> (create the file):</p>
+      <pre data-snippet data-file="tests/markDone.test.js" data-position="end"><code class="language-javascript">import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { db } from '../src/server/db.js';
+import { markDone, NotFoundError } from '../src/server/taskService.js';
+
+vi.mock('../src/server/db.js', () =&gt; ({ db: { query: vi.fn() } }));
+
+beforeEach(() =&gt; {
+  vi.clearAllMocks();
+});
+
+describe('markDone', () =&gt; {
+  it('marks a task as done', async () =&gt; {
+    db.query.mockResolvedValue([{ affectedRows: 1 }]);
+
+    const result = await markDone(7);
+
+    expect(result).toEqual({ id: 7, done: 1 });
+    expect(db.query.mock.calls[0][1]).toEqual([1, 1, 7]);
+  });
+
+  it('marks a task as not done again', async () =&gt; {
+    db.query.mockResolvedValue([{ affectedRows: 1 }]);
+
+    const result = await markDone(7, false);
+
+    expect(result).toEqual({ id: 7, done: 0 });
+    expect(db.query.mock.calls[0][1]).toEqual([0, 0, 7]);
+  });
+
+  it('throws NotFoundError when no task has that id', async () =&gt; {
+    db.query.mockResolvedValue([{ affectedRows: 0 }]);
+
+    await expect(markDone(99)).rejects.toThrow(NotFoundError);
+  });
+});</code></pre>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 4 (harder): TaskItem: toggling and the checked box</h3>
+    <div lang="en">
+      <p>Write tests for <code>TaskItem</code> in <code>src/client/components/TaskItem.jsx</code>: clicking the checkbox calls <code>onToggle</code> with the <em>id of the task</em>; an open task shows an empty box; a done task shows a checked box. Find the box by its role, as a user would.</p>
+    </div>
+    <div lang="th">
+      <p>เขียน test ให้ <code>TaskItem</code> ใน <code>src/client/components/TaskItem.jsx</code>: การคลิก checkbox เรียก <code>onToggle</code> พร้อม <em>id ของ task</em> task ที่ยังไม่เสร็จแสดงกล่องว่าง task ที่เสร็จแสดงกล่องที่ติ๊กแล้ว หากล่องด้วย role ของมัน เหมือนที่ผู้ใช้ทำ</p>
+    </div>
+    <p class="where">Create the file <code>tests/TaskItem.test.jsx</code> (in the Explorer: unit &rsaquo; tests &rsaquo; TaskItem.test.jsx), then write your tests in it.</p>
+    <details>
+      <summary>Hint</summary>
+      <p><code>getByRole('checkbox')</code>, then <code>toBeChecked()</code> or <code>not.toBeChecked()</code>. For the click use <code>userEvent</code> and a <code>vi.fn()</code> as <code>onToggle</code>.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>tests/TaskItem.test.jsx</code> (create the file):</p>
+      <pre data-snippet data-file="tests/TaskItem.test.jsx" data-position="end"><code class="language-javascript">import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, expect, it, vi } from 'vitest';
+import TaskItem from '../src/client/components/TaskItem.jsx';
+
+const open = { id: 5, title: 'Buy milk', done: 0 };
+const finished = { id: 6, title: 'Walk the dog', done: 1 };
+
+describe('TaskItem toggling', () =&gt; {
+  it('calls onToggle with the id of the task when the box is clicked', async () =&gt; {
+    const user = userEvent.setup();
+    const onToggle = vi.fn();
+    render(&lt;TaskItem task={open} onToggle={onToggle} onDelete={() =&gt; {}} /&gt;);
+
+    await user.click(screen.getByRole('checkbox'));
+
+    expect(onToggle).toHaveBeenCalledWith(5);
+  });
+
+  it('shows an open task with an empty box', () =&gt; {
+    render(&lt;TaskItem task={open} onToggle={() =&gt; {}} onDelete={() =&gt; {}} /&gt;);
+    expect(screen.getByRole('checkbox')).not.toBeChecked();
+  });
+
+  it('shows a done task with a checked box', () =&gt; {
+    render(&lt;TaskItem task={finished} onToggle={() =&gt; {}} onDelete={() =&gt; {}} /&gt;);
+    expect(screen.getByRole('checkbox')).toBeChecked();
+  });
+});</code></pre>
+    </details>
+  </div>
+</div>
+
+<div data-check="cp2-markdone"></div>
+<div data-check="cp2-taskitem"></div>

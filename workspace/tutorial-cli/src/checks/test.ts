@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import { PathError, resolveInside } from '../pathGuard.js';
 import type { CheckContext, CheckDef, CheckResult } from './types.js';
 
@@ -7,8 +8,12 @@ interface TestDef extends CheckDef {
   /** Folder to run it in, relative to the learner's module folder. */
   cwd?: string;
   timeoutMs?: number;
+  /** At least this many tests must exist (vitest-json and jest-json only). */
+  minTests?: number;
   /** How to read the result. vitest and jest print the same JSON report; exit-code only looks at the exit code. */
   format?: 'exit-code' | 'vitest-json' | 'jest-json';
+  /** For tools that write the JSON report to a file instead of stdout (Vitest 5): the file, relative to the module folder. */
+  reportFile?: string;
   hint?: string;
 }
 
@@ -16,6 +21,7 @@ interface JestLikeReport {
   numTotalTests?: number;
   numFailedTests?: number;
   numPassedTests?: number;
+  numFailedTestSuites?: number;
   testResults?: Array<{ assertionResults?: Array<{ fullName?: string; title?: string; status?: string; failureMessages?: string[] }> }>;
 }
 
@@ -35,9 +41,15 @@ export function parseReport(stdout: string): JestLikeReport | null {
 
 const lastLines = (text: string, count: number): string[] => text.trim().split('\n').filter(Boolean).slice(-count);
 
-export async function runTest(id: string, def: TestDef, ctx: CheckContext): Promise<CheckResult> {
-  const fail = (message: string, detail?: string[]): CheckResult => ({ id, passed: false, message: def.hint ? `${message} ${def.hint}` : message, ...(detail ? { detail } : {}) });
-  if (!def.command || def.command.length === 0) return { id, passed: false, message: 'This check is not set up correctly (it has no command). Tell the course author.' };
+export async function runTest(id: string, def: TestDef, ctx: CheckContext): Promise<CheckResult & { meta?: { ran: number; failed: number } }> {
+  const fail = (message: string, detail?: string[]): CheckResult => ({
+    id,
+    passed: false,
+    message: def.hint ? `${message} ${def.hint}` : message,
+    ...(detail ? { detail } : {}),
+  });
+  if (!def.command || def.command.length === 0)
+    return { id, passed: false, message: 'This check is not set up correctly (it has no command). Tell the course author.' };
 
   let cwd: string;
   try {
@@ -46,8 +58,19 @@ export async function runTest(id: string, def: TestDef, ctx: CheckContext): Prom
     return { id, passed: false, message: err instanceof PathError ? `This check points outside your project: ${def.cwd}` : String(err) };
   }
 
+  let reportPath: string | null = null;
+  if (def.reportFile) {
+    try {
+      reportPath = resolveInside(ctx.moduleDir, def.reportFile);
+    } catch (err) {
+      return { id, passed: false, message: err instanceof PathError ? `This check points outside your project: ${def.reportFile}` : String(err) };
+    }
+    fs.rmSync(reportPath, { force: true });
+  }
+
   const timeoutMs = def.timeoutMs ?? 60000;
   const run = await ctx.io.run(def.command, { cwd, timeoutMs });
+  if (reportPath && fs.existsSync(reportPath)) run.stdout = fs.readFileSync(reportPath, 'utf8');
   if (run.timedOut) return fail(`The tests took longer than ${Math.round(timeoutMs / 1000)} seconds and were stopped. Is something stuck in an endless loop?`);
   if (run.code === null) return fail('The test command could not start.', lastLines(run.stderr, 5));
 
@@ -63,12 +86,20 @@ export async function runTest(id: string, def: TestDef, ctx: CheckContext): Prom
 
   const total = report.numTotalTests ?? 0;
   const failed = report.numFailedTests ?? 0;
-  if (total === 0) return fail('No tests were found. Check the file names and where you saved them.');
-  if (failed === 0 && run.code === 0) return { id, passed: true, message: def.title ?? `All ${total} tests passed.` };
+  const meta = { ran: total, failed };
+  if (total === 0 && (report.numFailedTestSuites ?? 0) > 0) {
+    const reason = (report.testResults ?? []).map((f) => (f as { message?: string }).message ?? '').find(Boolean) ?? '';
+    return { ...fail('A test file could not run (a typo, or a name that does not exist?).', lastLines(reason, 6)), meta: { ran: 1, failed: 1 } };
+  }
+  if (total === 0) return { ...fail('No tests were found. Check the file names and where you saved them.'), meta };
+  if (def.minTests !== undefined && total < def.minTests && failed === 0 && run.code === 0) {
+    return { ...fail(`Found ${total} test${total === 1 ? '' : 's'}, but ${def.minTests} are needed. Add the missing ones from the lesson.`), meta };
+  }
+  if (failed === 0 && run.code === 0) return { id, passed: true, message: def.title ?? `All ${total} tests passed.`, meta };
 
   const details = (report.testResults ?? [])
     .flatMap((file) => file.assertionResults ?? [])
     .filter((a) => a.status === 'failed')
     .map((a) => `${a.fullName ?? a.title ?? 'a test'}: ${(a.failureMessages?.[0] ?? 'failed').split('\n')[0]}`);
-  return fail(`${failed || 'Some'} of ${total} tests failed.`, details.slice(0, 10));
+  return { ...fail(`${failed || 'Some'} of ${total} tests failed.`, details.slice(0, 10)), meta };
 }

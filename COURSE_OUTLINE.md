@@ -2,7 +2,7 @@
 
 15 hours, 4 modules, one Task Manager app (groups, sorting, history of completed tasks). Everything is a proposal until taught once; times are estimates.
 
-Step types: **R** read, **D** do, **P** practice, **C** check. Headings, hints, solutions, exercises, checkpoints, check messages and UI are English. Step prose also has a Thai version (En | Th toggle).
+Step types: **R** read, **D** do, **P** practice, **C** check. Headings, hints, solutions, check messages and UI are English. Step prose and the statement of each checkpoint exercise also have a Thai version (En | Th toggle).
 
 | Order | Module id | Title | Time | Container |
 |---|---|---|---|---|
@@ -48,6 +48,8 @@ API: `/api/health`, `/api/groups`, `/api/tasks?group_id=&done=&sort=&order=`, `/
 - 0.6 D Wipe the code: run `tutorial wipe` in the terminal; files stay, DB stays, learn the `@tutorial` markers
 - 0.7 C Markers are empty, DB still has data
 
+> **Module `build` is written in full** (56 steps). What changed from the plan below: Story 2 validates with a plain function (no zod); Story 4 mounts the router first, and the group buttons only filter after Story 5; Story 5 has one big step for filter and sort plus a reading step on the whitelist; Story 6 has no React Router or undo; checkpoint exercises are checked with http, flow and file checks, not vitest, because the page components cannot be rendered by a check (the `unit` module covers component tests). Step numbers: Checkpoint 2 is 3.6, Checkpoint 3 is 5.6, Checkpoint 4 is 7.8, wrap-up is 8.1 and 8.2.
+>
 > Release 1 as built: Part 0 has 0.1 read, 0.2 use the app, 0.3 tour, 0.4 Swagger, 0.5 change one line, 0.6 wipe, 0.7 check (the 0.5 tour of HMR and the 0.3 tour were merged as listed in `lesson.yaml`). Story 1 steps are 1.1 to 1.9 and Checkpoint 1 is step 1.10. The `/api/stats` exercise and the SQL exercise are checked by flow/file checks, not hidden unit tests (vitest is added with module `unit`).
 
 ### Story 1: View my tasks (~50 min)
@@ -133,6 +135,8 @@ API: `/api/health`, `/api/groups`, `/api/tasks?group_id=&done=&sort=&order=`, `/
 
 ## Module `style`: Tailwind CSS (3 h)
 
+> **Written in full** (24 steps, ids 1.1 to 6.2; the part number is the first number). Differences from the plan below: the page starts *unstyled* (not as a plain-CSS client) and Tailwind is installed but not wired; every element's class list is built with `cx(...)` and each step fills its own zones inside it (`s2-2-row-flex` belongs to step 2.2), so snapshots and `tutorial goto` work as in `build`; the page has no Tailwind classes outside zones. Checkpoint 1 is step 3.6 and Checkpoint 2 is step 5.4. The checks read the learner's classes (and `vite build` at 1.4 and 6.2); how the page *looks* cannot be checked and the final step says so. Part E uses `max-md:` once, to override the desktop grid; the lesson explains why. Dark mode is seen with the browser's `prefers-color-scheme` emulation.
+
 Starts from a plain-CSS reference client. Tailwind is pre-installed; the learner wires it. Uses its own API instance and database (`taskapp_style`).
 
 ### Part A: Wire it up (~30 min)
@@ -183,6 +187,8 @@ Visual quality cannot be checked automatically.
 
 ## Module `unit`: Unit testing (3 h)
 
+> **Written in full** (20 steps, ids A.1 to D.2). Differences from the plan below: step ids are letters (Part A A.1-A.3, Part B B.1-B.5, Checkpoint 1 is B.6, Part C C.1-C.4, Checkpoint 2 is C.5, Part D D.1-D.2); the server code is plain functions (no zod) in ESM; there is no wipe, the project starts with an empty `tests/` folder and the lessons use `data-position="end"` snippets; `.test.js` files run in Node and `.test.jsx` files in jsdom (two Vitest projects); the finished tests are `course/solution/unit/tests` and the lessons take their snippets from the zones in them. Mutation checks put a bug into a COPY of the project (`mutants` with `file`, `find`, `replace`, optional `tests`) and run the learner's tests; the final check also needs a coverage threshold.
+
 Clean reference source under `src/`; the learner writes only tests.
 
 ### Part A: Foundations (~30 min)
@@ -220,6 +226,8 @@ Mutation check: the learner's tests pass on the real code and at least one fails
 ---
 
 ## Module `api`: API automation with Robot Framework (3 h)
+
+> **Written in full** (28 steps, ids A.1 to F.2). Differences from the plan below: Checkpoint 1 is step C.7 and Checkpoint 2 is step F.2 (both after their parts); E.4 is a guided "break a test and read the log" exercise without a check; the finished solution is `course/solution/api` (zones are `# @tutorial:begin <id>` comments, the lessons take their snippets from there); the final check runs all tests and then repeats them against three deliberate bugs (`empty-title-ok`, `done-no-timestamp`, `unsafe-sort`); the checkpoint exercises are each checked against their own bug (`groups-without-work`, `group-empty-name-ok`, `delete-missing-204`).
 
 Container `ws-robot` is created at setup but not started; start it before this module. The target is the reference API at `localhost:3001` (inside the container) with database `taskapp_test`. The learner writes only `.robot` and `.resource` files.
 

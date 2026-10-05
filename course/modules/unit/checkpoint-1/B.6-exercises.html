@@ -1,0 +1,89 @@
+<h2>Step B.6: Checkpoint 1: two exercises</h2>
+
+<div class="checkpoint">
+  <div lang="en">
+    <p>About 15 minutes. Both exercises are optional. Try first, then the hint, and only then the solution. The check puts bugs into the code and wants your tests to catch them.</p>
+  </div>
+  <div lang="th">
+    <p>ใช้เวลาประมาณ 15 นาที โจทย์ทั้งสองข้อเป็นทางเลือก ลองทำเองก่อน แล้วค่อยเปิด hint และเปิด solution เป็นลำดับสุดท้าย การตรวจจะใส่บั๊กลงในโค้ดและต้องการให้ test ของคุณจับได้</p>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 1 (easier): formatDueDate</h3>
+    <div lang="en">
+      <p>Write tests for <code>formatDueDate(dueDate, now)</code> in <code>src/server/dates.js</code>. It turns a due date into text: "No due date", "Due today", "Overdue (date)" for a past day and "Due date" for a future day. The second argument <code>now</code> lets you fix "today", so the tests give the same result on every day: <code>new Date('2026-06-15T10:00:00Z')</code>. Cover <strong>no date, today, and a past date</strong> (a future date too, if you like).</p>
+    </div>
+    <div lang="th">
+      <p>เขียน test ให้ <code>formatDueDate(dueDate, now)</code> ใน <code>src/server/dates.js</code> มันแปลงวันครบกำหนดเป็นข้อความ: "No due date", "Due today", "Overdue (วันที่)" สำหรับวันในอดีต และ "Due วันที่" สำหรับวันในอนาคต อาร์กิวเมนต์ที่สอง <code>now</code> ให้คุณกำหนด "วันนี้" ตายตัว test จึงให้ผลเหมือนเดิมทุกวัน: <code>new Date('2026-06-15T10:00:00Z')</code> ครอบคลุม <strong>ไม่มีวันที่ วันนี้ และวันในอดีต</strong> (ถ้าชอบจะเพิ่มวันในอนาคตด้วยก็ได้)</p>
+    </div>
+    <p class="where">Create the file <code>tests/formatDueDate.test.js</code> (in the Explorer: unit &rsaquo; tests &rsaquo; formatDueDate.test.js), then write your tests in it.</p>
+    <details>
+      <summary>Hint</summary>
+      <p>Make a constant <code>now</code> at the top and pass it to every call. Dates are given as text like <code>'2026-06-10'</code>. Look at the function to see the exact words it returns.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>tests/formatDueDate.test.js</code> (create the file):</p>
+      <pre data-snippet data-file="tests/formatDueDate.test.js" data-position="end"><code class="language-javascript">import { describe, expect, it } from 'vitest';
+import { formatDueDate } from '../src/server/dates.js';
+
+// A fixed "now", so the tests give the same result on every day.
+const now = new Date('2026-06-15T10:00:00Z');
+
+describe('formatDueDate', () =&gt; {
+  it('says there is no due date', () =&gt; {
+    expect(formatDueDate(null, now)).toBe('No due date');
+  });
+
+  it('says "Due today" for today', () =&gt; {
+    expect(formatDueDate('2026-06-15', now)).toBe('Due today');
+  });
+
+  it('says "Overdue" and the date for a day in the past', () =&gt; {
+    expect(formatDueDate('2026-06-10', now)).toBe('Overdue (2026-06-10)');
+  });
+
+  it('says "Due" and the date for a day in the future', () =&gt; {
+    expect(formatDueDate('2026-06-20', now)).toBe('Due 2026-06-20');
+  });
+});</code></pre>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 2 (harder): isOverdue with it.each</h3>
+    <div lang="en">
+      <p>Write tests for <code>isOverdue(task, now)</code> in <code>src/server/dates.js</code> with <strong><code>it.each</code> and four cases</strong>: no due date, due yesterday and still open, due yesterday but done, and due today. Only the second one is overdue. Each row of your table holds a name, a task and the expected answer.</p>
+    </div>
+    <div lang="th">
+      <p>เขียน test ให้ <code>isOverdue(task, now)</code> ใน <code>src/server/dates.js</code> ด้วย <strong><code>it.each</code> และสี่กรณี</strong>: ไม่มีวันครบกำหนด ครบกำหนดเมื่อวานและยังไม่เสร็จ ครบกำหนดเมื่อวานแต่เสร็จแล้ว และครบกำหนดวันนี้ มีเฉพาะกรณีที่สองที่เกินกำหนด แต่ละแถวในตารางมีชื่อ task และคำตอบที่คาด</p>
+    </div>
+    <p class="where">Create the file <code>tests/isOverdue.test.js</code> (in the Explorer: unit &rsaquo; tests &rsaquo; isOverdue.test.js), then write your tests in it.</p>
+    <details>
+      <summary>Hint</summary>
+      <p>A task is an object like <code>{ due_date: '2026-06-14', done: 0 }</code>. A row looks like <code>['name', task, expected]</code> and the test function gets the three values as parameters.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>tests/isOverdue.test.js</code> (create the file):</p>
+      <pre data-snippet data-file="tests/isOverdue.test.js" data-position="end"><code class="language-javascript">import { describe, expect, it } from 'vitest';
+import { isOverdue } from '../src/server/dates.js';
+
+const now = new Date('2026-06-15T10:00:00Z');
+
+describe('isOverdue', () =&gt; {
+  it.each([
+    ['has no due date', { due_date: null, done: 0 }, false],
+    ['was due yesterday and is still open', { due_date: '2026-06-14', done: 0 }, true],
+    ['was due yesterday but is done', { due_date: '2026-06-14', done: 1 }, false],
+    ['is due today', { due_date: '2026-06-15', done: 0 }, false],
+  ])('a task that %s', (_name, task, expected) =&gt; {
+    expect(isOverdue(task, now)).toBe(expected);
+  });
+});</code></pre>
+    </details>
+  </div>
+</div>
+
+<div data-check="cp1-format"></div>
+<div data-check="cp1-overdue"></div>

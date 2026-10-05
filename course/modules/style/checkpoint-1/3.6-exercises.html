@@ -1,0 +1,54 @@
+<h2>Step 3.6: Checkpoint 1: two exercises</h2>
+
+<div class="checkpoint">
+  <div lang="en">
+    <p>About 15 minutes. Both exercises are optional. Try first, then the hint, and only then the solution. The check only reads your classes: look at <strong>Preview</strong> to see whether you like the result.</p>
+  </div>
+  <div lang="th">
+    <p>ใช้เวลาประมาณ 15 นาที โจทย์ทั้งสองข้อเป็นทางเลือก ลองทำเองก่อน แล้วค่อยเปิด hint และเปิด solution เป็นลำดับสุดท้าย การตรวจอ่านแค่ class ของคุณ ดูที่ <strong>Preview</strong> เองว่าพอใจกับผลลัพธ์หรือไม่</p>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 1 (easier): the Add button</h3>
+    <div lang="en">
+      <p>Give the <em>Add</em> button of the form a primary look: a colored background (use your brand color), white text, rounded corners and some padding. The classes of step 4.2 for the disabled state come later and are already written.</p>
+    </div>
+    <div lang="th">
+      <p>ทำให้ปุ่ม <em>Add</em> ของฟอร์มดูเป็นปุ่มหลัก: พื้นหลังมีสี (ใช้สี brand ของคุณ) ตัวอักษรขาว มุมมน และมี padding class สำหรับสถานะ disabled ของ step 4.2 อยู่ต่อจากนี้และเขียนไว้แล้ว</p>
+    </div>
+    <p class="where">Edit <code>client/src/components/TaskForm.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskForm.jsx). Write the code between the comments <code>@tutorial:begin exercise-1-add-button</code> and <code>@tutorial:end exercise-1-add-button</code>, in the class list of the Add <code>button</code>.</p>
+    <details>
+      <summary>Hint</summary>
+      <p>Four ideas: <code>bg-brand-600</code>, <code>text-white</code>, <code>rounded</code>, <code>px-4 py-1.5</code>.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>client/src/components/TaskForm.jsx</code>, between the comments of <code>exercise-1-add-button</code>:</p>
+      <pre data-snippet data-file="client/src/components/TaskForm.jsx" data-zone="exercise-1-add-button"><code class="language-javascript">'rounded bg-brand-600 px-4 py-1.5 font-medium text-white',</code></pre>
+    </details>
+  </div>
+
+  <div class="exercise">
+    <h3>Exercise 2 (harder): priority colors</h3>
+    <div lang="en">
+      <p>Color the priority badge by priority: <strong>high</strong> red, <strong>medium</strong> yellow, <strong>low</strong> green (a light background and a dark text of the same color, like the group badge). Each color is a condition with <code>&amp;&amp;</code>: <code>task.priority === 3 &amp;&amp; '...'</code>.</p>
+    </div>
+    <div lang="th">
+      <p>ใส่สีให้ badge ของ priority ตามระดับ: <strong>high</strong> สีแดง <strong>medium</strong> สีเหลือง <strong>low</strong> สีเขียว (พื้นอ่อนและตัวอักษรเข้มสีเดียวกัน เหมือน badge ของ group) แต่ละสีเป็นเงื่อนไขด้วย <code>&amp;&amp;</code>: <code>task.priority === 3 &amp;&amp; '...'</code></p>
+    </div>
+    <p class="where">Edit <code>client/src/components/TaskItem.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskItem.jsx). Write the code between the comments <code>@tutorial:begin exercise-2-priority-colors</code> and <code>@tutorial:end exercise-2-priority-colors</code>, in the class list of the priority <code>span</code>, below your classes of step 3.5.</p>
+    <details>
+      <summary>Hint</summary>
+      <p><code>cx</code> ignores <code>false</code>, so one list can hold three conditions: only the one that is true adds its classes. Priority 3 is high, 2 medium, 1 low.</p>
+    </details>
+    <details>
+      <summary>Solution</summary>
+      <p class="where">In <code>client/src/components/TaskItem.jsx</code>, between the comments of <code>exercise-2-priority-colors</code>:</p>
+      <pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="exercise-2-priority-colors"><code class="language-javascript">task.priority === 3 &amp;&amp; 'bg-red-100 text-red-800',
+task.priority === 2 &amp;&amp; 'bg-yellow-100 text-yellow-800',
+task.priority === 1 &amp;&amp; 'bg-green-100 text-green-800',</code></pre>
+    </details>
+  </div>
+</div>
+
+<div data-check="exercise-1-add-button"></div>

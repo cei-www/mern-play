@@ -1,0 +1,70 @@
+<h2>Step A.3: Watch mode and reading a failure</h2>
+
+<div lang="en">
+<p>Start Vitest in <strong>watch mode</strong>. It keeps running and runs the tests again each time you save, so you get an answer in a second:</p>
+</div>
+<div lang="th">
+<p>เริ่ม Vitest ใน <strong>watch mode</strong> มันทำงานค้างไว้และรัน test ใหม่ทุกครั้งที่คุณบันทึก จึงได้คำตอบภายในหนึ่งวินาที:</p>
+</div>
+
+<pre data-command><code>npm run test:watch</code></pre>
+
+<div lang="en">
+<p>Leave it running (use <kbd>q</kbd> to quit when you are done). Now <strong>make a test fail on purpose</strong>: in <code>tests/orderBy.test.js</code> change <code>'ORDER BY t.created_at ASC'</code> to <code>'ORDER BY t.created_at DESC'</code> and save. Read the failure:</p>
+<ul>
+  <li>the line <code>FAIL</code> and the test name tell you <em>which</em> test;</li>
+  <li><code>Expected</code> is what your test wanted, <code>Received</code> is what the code returned: here you see the difference with <code>ASC</code> and <code>DESC</code>;</li>
+  <li>the arrow <code>&gt;</code> in the code excerpt shows the line of the failing <code>expect</code>.</li>
+</ul>
+<p>When a test fails there are two possible reasons: the code is wrong, or the test is wrong. Here the test is wrong, so put <code>ASC</code> back and save. It turns green by itself.</p>
+<p>Now add two more tests, with different input. They go in a second <code>describe</code> block at the end of the file:</p>
+</div>
+<div lang="th">
+<p>ปล่อยให้มันทำงานค้างไว้ (กด <kbd>q</kbd> เพื่อออกเมื่อเสร็จ) จากนั้น <strong>ทำให้ test ล้มโดยตั้งใจ</strong>: ใน <code>tests/orderBy.test.js</code> เปลี่ยน <code>'ORDER BY t.created_at ASC'</code> เป็น <code>'ORDER BY t.created_at DESC'</code> แล้วบันทึก อ่านความล้มเหลว:</p>
+<ul>
+  <li>บรรทัด <code>FAIL</code> และชื่อ test บอกว่า <em>test ไหน</em></li>
+  <li><code>Expected</code> คือที่ test ของคุณต้องการ <code>Received</code> คือที่โค้ดคืนมา: ตรงนี้เห็นความต่างระหว่าง <code>ASC</code> กับ <code>DESC</code></li>
+  <li>ลูกศร <code>&gt;</code> ในโค้ดตัวอย่างชี้บรรทัด <code>expect</code> ที่ล้ม</li>
+</ul>
+<p>เมื่อ test ล้ม มีสองสาเหตุที่เป็นไปได้: โค้ดผิด หรือ test ผิด ตรงนี้ test ผิด จึงใส่ <code>ASC</code> กลับแล้วบันทึก มันจะกลับเป็นสีเขียวเอง</p>
+<p>ตอนนี้เพิ่มอีกสอง test ด้วยข้อมูลต่างออกไป ใส่ใน <code>describe</code> บล็อกที่สองท้ายไฟล์:</p>
+</div>
+
+<p class="where">Edit <code>tests/orderBy.test.js</code> (in the Explorer: unit &rsaquo; tests &rsaquo; orderBy.test.js). Add the code at the end of the file.</p>
+<pre data-snippet data-file="tests/orderBy.test.js" data-position="end"><code class="language-javascript">describe('buildOrderBy with a choice', () =&gt; {
+  it('sorts by priority, highest first', () =&gt; {
+    expect(buildOrderBy('priority', 'desc')).toBe('ORDER BY t.priority DESC');
+  });
+
+  it('sorts by title, A to Z', () =&gt; {
+    expect(buildOrderBy('title', 'asc')).toBe('ORDER BY t.title ASC');
+  });
+});</code></pre>
+
+<div lang="en">
+<p>Both new tests pass. Check the whole file with the button below, or type <code>tutorial check A.3</code>.</p>
+</div>
+<div lang="th">
+<p>ทั้งสอง test ใหม่ผ่าน ตรวจทั้งไฟล์ด้วยปุ่มด้านล่าง หรือพิมพ์ <code>tutorial check A.3</code></p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>If the new tests are not found, check that the new <code>describe</code> is outside the closing <code>});</code> of the first one, at the end of the file.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/orderBy.test.js</code> (at the end of the file):</p>
+  <pre data-snippet data-file="tests/orderBy.test.js" data-position="end"><code class="language-javascript">describe('buildOrderBy with a choice', () =&gt; {
+  it('sorts by priority, highest first', () =&gt; {
+    expect(buildOrderBy('priority', 'desc')).toBe('ORDER BY t.priority DESC');
+  });
+
+  it('sorts by title, A to Z', () =&gt; {
+    expect(buildOrderBy('title', 'asc')).toBe('ORDER BY t.title ASC');
+  });
+});</code></pre>
+</details>
+
+<div data-check="orderby-three"></div>

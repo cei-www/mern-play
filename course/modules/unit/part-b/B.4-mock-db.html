@@ -1,0 +1,84 @@
+<h2>Step B.4: Mock db.query to test a service</h2>
+
+<div lang="en">
+<p><code>createTask(input)</code> in <code>src/server/taskService.js</code> validates the input, then runs an <code>INSERT</code> through <code>db.query</code>, and returns the new task. Test it without a database. Look at the three moves in the code:</p>
+<ol>
+  <li><code>vi.mock(...)</code> replaces <code>db.js</code>. Vitest moves it to the top of the file by itself, before the imports.</li>
+  <li><code>mockResolvedValue([{ insertId: 42 }])</code> is the stub: MySQL answers with an array and the first item has the new id.</li>
+  <li>The spy checks that the SQL has <code>INSERT INTO tasks</code> and that the <em>values</em> go in separately as parameters (never glued into the text) and in the right order.</li>
+</ol>
+<p><code>beforeEach</code> runs before every test; <code>vi.clearAllMocks()</code> forgets the calls of the last test, so tests do not affect each other.</p>
+</div>
+<div lang="th">
+<p><code>createTask(input)</code> ใน <code>src/server/taskService.js</code> ตรวจข้อมูล แล้วรัน <code>INSERT</code> ผ่าน <code>db.query</code> และคืน task ใหม่ ทดสอบมันโดยไม่ใช้ฐานข้อมูล ดูสามการเคลื่อนไหวในโค้ด:</p>
+<ol>
+  <li><code>vi.mock(...)</code> แทน <code>db.js</code> Vitest ย้ายมันไปไว้บนสุดของไฟล์เอง ก่อน import</li>
+  <li><code>mockResolvedValue([{ insertId: 42 }])</code> คือ stub: MySQL ตอบเป็น array และตัวแรกมี id ใหม่</li>
+  <li>spy ตรวจว่า SQL มี <code>INSERT INTO tasks</code> และ <em>ค่า</em> ถูกส่งแยกเป็น parameter (ไม่ต่อลงในข้อความ) และเรียงถูกลำดับ</li>
+</ol>
+<p><code>beforeEach</code> รันก่อนทุก test และ <code>vi.clearAllMocks()</code> ลืมการเรียกของ test ก่อนหน้า เพื่อให้ test ไม่กระทบกัน</p>
+</div>
+
+<p class="where">Create the file <code>tests/taskService.test.js</code> (in the Explorer: unit &rsaquo; tests &rsaquo; taskService.test.js; right-click the folder, then <em>New File</em>). Paste the code into it and save.</p>
+<pre data-snippet data-file="tests/taskService.test.js" data-position="end"><code class="language-javascript">import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { db } from '../src/server/db.js';
+import { createTask, ValidationError } from '../src/server/taskService.js';
+
+// Replace the real database file with a fake that only has a query function we control.
+vi.mock('../src/server/db.js', () =&gt; ({ db: { query: vi.fn() } }));
+
+beforeEach(() =&gt; {
+  vi.clearAllMocks();
+});
+
+describe('createTask', () =&gt; {
+  it('inserts the task with placeholders and returns it with its new id', async () =&gt; {
+    db.query.mockResolvedValue([{ insertId: 42 }]);
+
+    const task = await createTask({ title: '  Buy milk ', priority: 3 });
+
+    expect(db.query).toHaveBeenCalledTimes(1);
+    const [sql, params] = db.query.mock.calls[0];
+    expect(sql).toMatch(/INSERT INTO tasks/);
+    expect(params).toEqual(['Buy milk', 3]);
+    expect(task).toEqual({ id: 42, title: 'Buy milk', priority: 3, done: 0 });
+  });
+});</code></pre>
+
+<pre data-command><code>npx vitest run tests/taskService.test.js</code></pre>
+
+<details>
+  <summary>Hint</summary>
+  <p>"db.query was called for real" means the mock did not take over. Check that the path in <code>vi.mock(...)</code> is the same file that <code>taskService.js</code> imports (<code>src/server/db.js</code>).</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/taskService.test.js</code> (create the file):</p>
+  <pre data-snippet data-file="tests/taskService.test.js" data-position="end"><code class="language-javascript">import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { db } from '../src/server/db.js';
+import { createTask, ValidationError } from '../src/server/taskService.js';
+
+// Replace the real database file with a fake that only has a query function we control.
+vi.mock('../src/server/db.js', () =&gt; ({ db: { query: vi.fn() } }));
+
+beforeEach(() =&gt; {
+  vi.clearAllMocks();
+});
+
+describe('createTask', () =&gt; {
+  it('inserts the task with placeholders and returns it with its new id', async () =&gt; {
+    db.query.mockResolvedValue([{ insertId: 42 }]);
+
+    const task = await createTask({ title: '  Buy milk ', priority: 3 });
+
+    expect(db.query).toHaveBeenCalledTimes(1);
+    const [sql, params] = db.query.mock.calls[0];
+    expect(sql).toMatch(/INSERT INTO tasks/);
+    expect(params).toEqual(['Buy milk', 3]);
+    expect(task).toEqual({ id: 42, title: 'Buy milk', priority: 3, done: 0 });
+  });
+});</code></pre>
+</details>
+
+<div data-check="service-create"></div>

@@ -1,0 +1,34 @@
+<h2>Step 2.2: Insert a row with SQL</h2>
+
+<div lang="en">
+<p><code>INSERT</code> adds a row. Open the <strong>Database</strong> tab, press <em>Login</em>, choose <em>SQL command</em> and run:</p>
+</div>
+<div lang="th">
+<p><code>INSERT</code> เพิ่มแถวใหม่ เปิด tab <strong>Database</strong> กด <em>Login</em> เลือก <em>SQL command</em> แล้วรัน:</p>
+</div>
+
+<pre class="code-block"><code class="language-sql">INSERT INTO tasks (user_id, group_id, title, priority, due_date)
+VALUES (1, NULL, 'Try INSERT', 2, '2030-01-31');
+
+SELECT * FROM tasks ORDER BY id DESC LIMIT 1;</code></pre>
+
+<div lang="en">
+<p>You did not give an <code>id</code>, <code>done</code> or <code>created_at</code>. The table fills them in: <code>id</code> is <code>AUTO_INCREMENT</code> (the next number), <code>done</code> starts at 0 and <code>created_at</code> is the current time.</p>
+<p>In the route you will not paste the title into the SQL text. You write a <code>?</code> and give the value separately. This is a <strong>placeholder</strong>, and it is what stops <em>SQL injection</em>: the value can never turn into SQL.</p>
+</div>
+<div lang="th">
+<p>คุณไม่ได้ใส่ <code>id</code>, <code>done</code> หรือ <code>created_at</code> ตารางเติมให้เอง: <code>id</code> เป็น <code>AUTO_INCREMENT</code> (เลขถัดไป) <code>done</code> เริ่มที่ 0 และ <code>created_at</code> เป็นเวลาปัจจุบัน</p>
+<p>ใน route คุณจะไม่นำ title ไปต่อเป็นข้อความ SQL แต่เขียน <code>?</code> แล้วส่งค่าแยกต่างหาก นี่คือ <strong>placeholder</strong> ซึ่งป้องกัน <em>SQL injection</em>: ค่าที่ส่งมาจะไม่มีทางกลายเป็นคำสั่ง SQL</p>
+</div>
+
+<div lang="en">
+<p>This test row stays in your table. It is harmless, and <code>reset-db</code> removes it.</p>
+</div>
+<div lang="th">
+<p>แถวทดสอบนี้จะอยู่ในตาราง ไม่เป็นอันตราย และ <code>reset-db</code> จะลบออก</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>If MySQL says the column count does not match, count the names after <code>INSERT INTO tasks</code> and the values after <code>VALUES</code>: there must be the same number.</p>
+</details>

@@ -1,0 +1,60 @@
+<h2>Step A.1: What a unit test is</h2>
+
+<div lang="en">
+<p>A <strong>unit test</strong> is a small program that runs one piece of your code (a <em>unit</em>: usually one function or one component) with chosen input and checks that the result is what you expect. It runs in milliseconds, needs no database and no browser, and tells you <em>which</em> function is wrong when something breaks.</p>
+<p>Tests come in sizes. Think of a <strong>pyramid</strong>:</p>
+<ul>
+  <li><strong>Many unit tests</strong> at the bottom: fast, small, easy to read when they fail. This module.</li>
+  <li><strong>Some integration tests</strong> in the middle: several parts together, for example the route and the database. You did these with <code>tutorial check</code> in module <code>build</code>.</li>
+  <li><strong>A few end-to-end tests</strong> at the top: a whole system from the outside, slow. The Robot Framework tests of module <code>api</code> are of this kind.</li>
+</ul>
+<p>Every good test has three parts, <strong>Arrange, Act, Assert</strong>:</p>
+</div>
+<div lang="th">
+<p><strong>unit test</strong> คือโปรแกรมเล็ก ๆ ที่รันโค้ดชิ้นเดียวของคุณ (หนึ่ง <em>unit</em>: มักเป็นหนึ่งฟังก์ชันหรือหนึ่ง component) ด้วยข้อมูลที่เลือกไว้ แล้วตรวจว่าผลลัพธ์ตรงกับที่คาด รันเสร็จในไม่กี่มิลลิวินาที ไม่ต้องใช้ฐานข้อมูลหรือเบราว์เซอร์ และเมื่อมีอะไรพัง จะบอกได้ว่า <em>ฟังก์ชันไหน</em> ผิด</p>
+<p>test มีหลายขนาด ลองนึกเป็น <strong>พีระมิด</strong>:</p>
+<ul>
+  <li><strong>unit test จำนวนมาก</strong> ที่ฐาน: เร็ว เล็ก อ่านง่ายเมื่อล้ม คือ module นี้</li>
+  <li><strong>integration test บางส่วน</strong> ตรงกลาง: หลายส่วนทำงานด้วยกัน เช่น route กับฐานข้อมูล คุณทำแบบนี้ด้วย <code>tutorial check</code> ใน module <code>build</code></li>
+  <li><strong>end-to-end test ไม่กี่ตัว</strong> ที่ยอด: ทดสอบทั้งระบบจากภายนอก ช้า test ของ Robot Framework ใน module <code>api</code> เป็นแบบนี้</li>
+</ul>
+<p>test ที่ดีมีสามส่วน คือ <strong>Arrange, Act, Assert</strong>:</p>
+</div>
+
+<pre class="code-block"><code class="language-javascript">it('adds two numbers', () =&gt; {
+  // Arrange: get everything ready (input, fakes)
+  const a = 2;
+  const b = 3;
+  // Act: run the one thing you test
+  const result = add(a, b);
+  // Assert: say what must be true
+  expect(result).toBe(5);
+});</code></pre>
+
+<div lang="en">
+<p><strong>The project.</strong> Open the <em>Editor</em> tab. The folder <code>unit</code> has two parts:</p>
+<ul>
+  <li><code>src</code>: the code under test. A cleaned-up piece of the Task Manager: server logic in <code>src/server</code> and React components in <code>src/client</code>. <strong>You do not change it.</strong> (The checks tell you if you did.)</li>
+  <li><code>tests</code>: empty. <strong>Everything you write goes here.</strong> The tool is <a href="https://vitest.dev" target="_blank" rel="noopener">Vitest</a>; for components, Testing Library.</li>
+</ul>
+<p>Take two minutes to open <code>src/server/orderBy.js</code> and <code>src/server/validateTask.js</code> (Explorer: unit &rsaquo; src &rsaquo; server). They are short. In the next steps you test them.</p>
+<p>Two rules of the project: a file ending in <code>.test.js</code> runs in plain Node (for server code); a file ending in <code>.test.jsx</code> runs in a simulated browser (for components). Open the terminal of the Editor tab (it starts in the project folder). These commands exist:</p>
+</div>
+<div lang="th">
+<p><strong>โปรเจกต์</strong> เปิด tab <em>Editor</em> โฟลเดอร์ <code>unit</code> มีสองส่วน:</p>
+<ul>
+  <li><code>src</code>: โค้ดที่จะถูกทดสอบ เป็นส่วนของ Task Manager ที่จัดให้สะอาด: logic ฝั่ง server ใน <code>src/server</code> และ React component ใน <code>src/client</code> <strong>คุณไม่ต้องแก้</strong> (ถ้าแก้ การตรวจจะบอก)</li>
+  <li><code>tests</code>: ว่างอยู่ <strong>ทุกอย่างที่คุณเขียนอยู่ที่นี่</strong> เครื่องมือคือ <a href="https://vitest.dev" target="_blank" rel="noopener">Vitest</a> และ Testing Library สำหรับ component</li>
+</ul>
+<p>ใช้เวลาสองนาทีเปิด <code>src/server/orderBy.js</code> และ <code>src/server/validateTask.js</code> (Explorer: unit &rsaquo; src &rsaquo; server) ไฟล์สั้นมาก step ถัดไปคุณจะทดสอบมัน</p>
+<p>กฎสองข้อของโปรเจกต์: ไฟล์ที่ลงท้าย <code>.test.js</code> รันใน Node ธรรมดา (สำหรับโค้ดฝั่ง server) ไฟล์ที่ลงท้าย <code>.test.jsx</code> รันในเบราว์เซอร์จำลอง (สำหรับ component) เปิด terminal ของ tab Editor (เริ่มที่โฟลเดอร์โปรเจกต์) มีคำสั่งเหล่านี้:</p>
+</div>
+
+<pre data-command><code>npm test              # run every test once
+npm run test:watch    # run again every time you save (press q to quit)
+npm run coverage      # run every test and show which lines they touched</code></pre>
+
+<details>
+  <summary>Hint</summary>
+  <p>Nothing to do here but read. If a command is not found, check that the terminal is in the folder <code>unit</code> (the prompt shows it).</p>
+</details>

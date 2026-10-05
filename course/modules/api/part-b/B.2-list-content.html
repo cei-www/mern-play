@@ -1,0 +1,51 @@
+<h2>Step B.2: Read the JSON: count and fields</h2>
+
+<div lang="en">
+<p><code>${response.json()}</code> turns the answer into Python data: a list of dictionaries. <code>Get Length</code> counts the items. <code>Dictionary Should Contain Key</code> comes from the library <code>Collections</code> (you added it at the top of the file in step B.1).</p>
+<p>Prefer checks that stay true when the data changes. "At least ten tasks" is better than "exactly fourteen".</p>
+</div>
+<div lang="th">
+<p><code>${response.json()}</code> แปลงคำตอบเป็นข้อมูล Python: list ของ dictionary <code>Get Length</code> นับจำนวนรายการ <code>Dictionary Should Contain Key</code> มาจาก library <code>Collections</code> (ใส่ไว้ที่ต้นไฟล์แล้วในโค้ดของบทเรียนนี้)</p>
+<p>ควรเลือกการตรวจที่ยังจริงอยู่แม้ข้อมูลเปลี่ยน "อย่างน้อยสิบ task" ดีกว่า "สิบสี่ task พอดี"</p>
+</div>
+
+<p class="where">Edit <code>tests/02_tasks_read.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 02_tasks_read.robot).</p>
+
+<pre data-snippet data-file="tests/02_tasks_read.robot" data-position="end"><code class="language-plaintext">List Has At Least Ten Tasks
+    ${response}=    GET    ${BASE_URL}/api/tasks
+    ${tasks}=    Set Variable    ${response.json()}
+    ${count}=    Get Length    ${tasks}
+    Should Be True    ${count} &gt;= 10
+
+First Task Has The Expected Fields
+    ${response}=    GET    ${BASE_URL}/api/tasks
+    ${first}=    Set Variable    ${response.json()}[0]
+    Dictionary Should Contain Key    ${first}    id
+    Dictionary Should Contain Key    ${first}    title
+    Dictionary Should Contain Key    ${first}    priority
+    Dictionary Should Contain Key    ${first}    done</code></pre>
+
+<details>
+  <summary>Hint</summary>
+  <p>Put <code>${response.json()}[0]</code> into a variable with <code>Set Variable</code> to read the first task. Then check four keys: <code>id</code>, <code>title</code>, <code>priority</code>, <code>done</code>.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/02_tasks_read.robot</code>:</p>
+  <pre data-snippet data-file="tests/02_tasks_read.robot" data-position="end"><code class="language-plaintext">List Has At Least Ten Tasks
+    ${response}=    GET    ${BASE_URL}/api/tasks
+    ${tasks}=    Set Variable    ${response.json()}
+    ${count}=    Get Length    ${tasks}
+    Should Be True    ${count} &gt;= 10
+
+First Task Has The Expected Fields
+    ${response}=    GET    ${BASE_URL}/api/tasks
+    ${first}=    Set Variable    ${response.json()}[0]
+    Dictionary Should Contain Key    ${first}    id
+    Dictionary Should Contain Key    ${first}    title
+    Dictionary Should Contain Key    ${first}    priority
+    Dictionary Should Contain Key    ${first}    done</code></pre>
+</details>
+
+<div data-check="read-tests-2"></div>

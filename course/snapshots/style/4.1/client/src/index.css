@@ -1,0 +1,10 @@
+/* @tutorial:begin s1-3-css-import */
+@import 'tailwindcss';
+/* @tutorial:end s1-3-css-import */
+
+/* @tutorial:begin s3-4-theme */
+@theme {
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+}
+/* @tutorial:end s3-4-theme */

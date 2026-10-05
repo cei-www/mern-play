@@ -1,0 +1,56 @@
+<h2>Step 7.4: DELETE /api/tasks/:id</h2>
+
+<div lang="en">
+<p>DELETE removes a task and answers <strong>204</strong> with no body. Here <code>result.affectedRows</code> tells you whether a row was deleted: 0 means there was no such task, so the answer is 404. Deleting the same task twice therefore gives 204 and then 404.</p>
+</div>
+<div lang="th">
+<p>DELETE ลบ task และตอบ <strong>204</strong> โดยไม่มี body ตรงนี้ <code>result.affectedRows</code> บอกว่ามีแถวถูกลบหรือไม่: 0 หมายถึงไม่มี task นั้น จึงตอบ 404 การลบ task เดียวกันสองครั้งจึงได้ 204 แล้วตามด้วย 404</p>
+</div>
+
+<p class="where">Edit <code>server/routes/tasks.js</code> (in the Explorer: build &rsaquo; server &rsaquo; routes &rsaquo; tasks.js). Write the code between the comments <code>@tutorial:begin s7-4-delete-task</code> and <code>@tutorial:end s7-4-delete-task</code>.</p>
+
+<pre data-snippet data-file="server/routes/tasks.js" data-zone="s7-4-delete-task"><code class="language-javascript">router.delete('/:id', async (req, res, next) =&gt; {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'id must be a whole number' });
+  try {
+    const [result] = await db.query('DELETE FROM tasks WHERE id = ?', [id]);
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Task not found' });
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+
+<p>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="deleteTask" data-server="app">Try it in Swagger: deleteTask</button>
+</p>
+
+<div lang="en">
+<p>Create a task in Swagger first (<code>createTask</code>), note its <code>id</code>, delete it, then delete it again.</p>
+</div>
+<div lang="th">
+<p>สร้าง task ใน Swagger ก่อน (<code>createTask</code>) จด <code>id</code> ลบมัน แล้วลบอีกครั้ง</p>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p><code>res.status(204).end()</code> sends the answer with no body. Do not use <code>res.json</code> for 204.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>server/routes/tasks.js</code>, between the comments of <code>s7-4-delete-task</code>:</p>
+  <pre data-snippet data-file="server/routes/tasks.js" data-zone="s7-4-delete-task"><code class="language-javascript">router.delete('/:id', async (req, res, next) =&gt; {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'id must be a whole number' });
+  try {
+    const [result] = await db.query('DELETE FROM tasks WHERE id = ?', [id]);
+    if (result.affectedRows === 0) return res.status(404).json({ error: 'Task not found' });
+    res.status(204).end();
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+</details>
+
+<div data-check="delete-task"></div>

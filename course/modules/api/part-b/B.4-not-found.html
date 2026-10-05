@@ -1,0 +1,31 @@
+<h2>Step B.4: Not found must be 404</h2>
+
+<div lang="en">
+<p>A test for the failure case is as important as one for success. Ask for a task that does not exist and expect <strong>404</strong>.</p>
+<p><strong>Important:</strong> <code>RequestsLibrary</code> treats every 4xx and 5xx answer as a <em>failure</em> of the keyword by default, so the test would stop at the <code>GET</code> line. When you <em>expect</em> such a status, say so with <code>expected_status=404</code>.</p>
+</div>
+<div lang="th">
+<p>เทสต์กรณีล้มเหลวสำคัญเท่ากับเทสต์กรณีสำเร็จ ขอ task ที่ไม่มีอยู่และคาดหวัง <strong>404</strong></p>
+<p><strong>สำคัญ:</strong> โดยปริยาย <code>RequestsLibrary</code> ถือว่าคำตอบ 4xx และ 5xx ทุกตัวเป็น <em>ความล้มเหลว</em> ของ keyword เทสต์จึงหยุดที่บรรทัด <code>GET</code> เมื่อคุณ <em>คาดหวัง</em> status แบบนั้น ให้บอกด้วย <code>expected_status=404</code></p>
+</div>
+
+<p class="where">Edit <code>tests/02_tasks_read.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 02_tasks_read.robot).</p>
+
+<pre data-snippet data-file="tests/02_tasks_read.robot" data-position="end"><code class="language-plaintext">Unknown Task Returns 404
+    ${response}=    GET    ${BASE_URL}/api/tasks/999999    expected_status=404
+    Should Be Equal    ${response.json()}[error]    Task not found</code></pre>
+
+<details>
+  <summary>Hint</summary>
+  <p>Without <code>expected_status=404</code> the test fails with "HTTPError: 404 Client Error". The error body is <code>{"error": "Task not found"}</code>.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/02_tasks_read.robot</code>:</p>
+  <pre data-snippet data-file="tests/02_tasks_read.robot" data-position="end"><code class="language-plaintext">Unknown Task Returns 404
+    ${response}=    GET    ${BASE_URL}/api/tasks/999999    expected_status=404
+    Should Be Equal    ${response.json()}[error]    Task not found</code></pre>
+</details>
+
+<div data-check="read-tests-4"></div>

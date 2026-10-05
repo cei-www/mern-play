@@ -1,0 +1,20 @@
+<h2>Step D.1: The duplication problem</h2>
+
+<div lang="en">
+<p>Look at your tests so far. The same pieces repeat: the base URL, the database connection, the lines that create a task, the lines that look it up in SQL. Copy and paste works until something changes. When the URL, the database name or the way to create a task changes, you must edit every file, and you will forget one.</p>
+<p>Robot offers two tools against this:</p>
+<ul>
+  <li>a <strong>resource file</strong> (<code>.resource</code>): one place for the variables, the libraries and the keywords that many test files share;</li>
+  <li>your own <strong>keywords</strong>: a named group of steps that you can call like <code>Create Task</code>.</li>
+</ul>
+<p>The goal of Part D: tests that read like sentences, and a change made in one place.</p>
+</div>
+<div lang="th">
+<p>ดูเทสต์ที่คุณเขียนมาทั้งหมด จะเห็นส่วนเดิมซ้ำ ๆ: base URL, การเชื่อมต่อฐานข้อมูล, บรรทัดที่สร้าง task, บรรทัดที่ค้นหาใน SQL การ copy and paste ใช้ได้จนกว่าจะมีอะไรเปลี่ยน เมื่อ URL ชื่อฐานข้อมูล หรือวิธีสร้าง task เปลี่ยน คุณต้องแก้ทุกไฟล์ และจะลืมไปหนึ่งไฟล์</p>
+<p>Robot มีเครื่องมือสองอย่างแก้ปัญหานี้:</p>
+<ul>
+  <li><strong>resource file</strong> (<code>.resource</code>): ที่เดียวสำหรับตัวแปร library และ keyword ที่หลายไฟล์ใช้ร่วมกัน</li>
+  <li><strong>keyword</strong> ของคุณเอง: กลุ่มขั้นตอนที่ตั้งชื่อ แล้วเรียกใช้ได้ เช่น <code>Create Task</code></li>
+</ul>
+<p>เป้าหมายของ Part D: เทสต์ที่อ่านเหมือนประโยค และแก้ที่เดียวพอ</p>
+</div>

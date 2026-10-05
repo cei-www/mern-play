@@ -22,7 +22,12 @@ interface FileDef extends CheckDef {
 const list = (v: string | string[] | undefined): string[] => (v === undefined ? [] : Array.isArray(v) ? v : [v]);
 
 export function runFile(id: string, def: FileDef, ctx: CheckContext): CheckResult {
-  const fail = (message: string, detail?: string[]): CheckResult => ({ id, passed: false, message: def.hint ? `${message} ${def.hint}` : message, ...(detail ? { detail } : {}) });
+  const fail = (message: string, detail?: string[]): CheckResult => ({
+    id,
+    passed: false,
+    message: def.hint ? `${message} ${def.hint}` : message,
+    ...(detail ? { detail } : {}),
+  });
   if (!def.path) return { id, passed: false, message: 'This check is not set up correctly (it has no file path). Tell the course author.' };
 
   let file: string;
@@ -51,7 +56,8 @@ export function runFile(id: string, def: FileDef, ctx: CheckContext): CheckResul
     try {
       zones = findZones(text.split('\n'));
     } catch (err) {
-      if (err instanceof ZoneError) return fail(`${def.path}: the tutorial comments are damaged (${err.message}). Do not edit the lines that contain "@tutorial".`);
+      if (err instanceof ZoneError)
+        return fail(`${def.path}: the tutorial comments are damaged (${err.message}). Do not edit the lines that contain "@tutorial".`);
       throw err;
     }
     const lines = text.split('\n');

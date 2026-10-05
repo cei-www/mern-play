@@ -49,6 +49,16 @@ describe('decorateLesson', () => {
     expect(block.querySelector('details').textContent).toContain('PASS  all good');
   });
 
+  it('tells the learner which tab has the terminal for the check', () => {
+    const el = lesson('<div data-check="x"></div>');
+    decorateLesson(el, { stepId: 'A.3', tabName: 'Robot' });
+    expect(el.textContent).toContain('Terminal of the Robot tab');
+    expect(el.textContent).toContain('tutorial check A.3');
+    const other = lesson('<div data-check="x"></div>');
+    decorateLesson(other, { stepId: '1.1' });
+    expect(other.textContent).toContain('Terminal of the Editor tab');
+  });
+
   it('marks translated English blocks', () => {
     const el = lesson('<code>server/app.js</code><div lang="en">A</div><div lang="th">ก</div>');
     decorateLesson(el, { stepId: '1.1' });

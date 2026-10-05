@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 // Form that adds a task. A new task goes into the group that is selected (or none).
 export default function TaskForm({ groupId = null, onCreated }) {
-  // @tutorial:begin s2-4-task-form
+  // @tutorial:begin s2-5-task-form
   const [title, setTitle] = useState('');
   const [priority, setPriority] = useState(2);
   const [dueDate, setDueDate] = useState('');
@@ -38,5 +38,5 @@ export default function TaskForm({ groupId = null, onCreated }) {
       {error && <p role="alert">{error}</p>}
     </form>
   );
-  // @tutorial:end s2-4-task-form
+  // @tutorial:end s2-5-task-form
 }

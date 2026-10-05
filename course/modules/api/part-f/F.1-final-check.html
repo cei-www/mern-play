@@ -1,0 +1,35 @@
+<h2>Step F.1: Final check</h2>
+
+<div lang="en">
+<p>The final check does two things.</p>
+<ol>
+  <li>It runs <strong>all your tests</strong>. They must all pass (at least 20 of them).</li>
+  <li>It runs them <strong>again against a broken API</strong>. The reference API has secret switches that make it misbehave in a specific way (a "mutant"): it accepts an empty title, or forgets <code>completed_at</code>, or accepts a dangerous <code>sort</code>. For each bug at least one of your tests must <em>fail</em>. If every test still passes, your tests would not have noticed the bug in real life.</p>
+</ol>
+<p>This is called a <strong>mutation check</strong>. The switches are controlled by the check only; you cannot use them from the page.</p>
+</div>
+<div lang="th">
+<p>การตรวจสุดท้ายทำสองอย่าง</p>
+<ol>
+  <li>รัน<strong>เทสต์ทั้งหมดของคุณ</strong> ทุกตัวต้องผ่าน (อย่างน้อย 20 ตัว)</li>
+  <li>รันอีกครั้ง<strong>กับ API ที่ถูกทำให้พัง</strong> reference API มีสวิตช์ลับที่ทำให้มันผิดพลาดแบบเฉพาะเจาะจง ("mutant"): ยอมรับ title ว่าง หรือลืม <code>completed_at</code> หรือยอมรับ <code>sort</code> ที่อันตราย สำหรับบั๊กแต่ละตัว เทสต์ของคุณอย่างน้อยหนึ่งตัวต้อง <em>ล้ม</em> ถ้าทุกเทสต์ยังผ่านอยู่ เทสต์ของคุณก็จะไม่สังเกตเห็นบั๊กนี้ในชีวิตจริง</li>
+</ol>
+<p>เรียกว่า <strong>mutation check</strong> สวิตช์ควบคุมโดยการตรวจเท่านั้น คุณใช้จากหน้าเว็บไม่ได้</p>
+</div>
+
+<div lang="en">
+<p>Run it from the terminal of the Robot tab. It takes about 20 seconds because it runs your tests four times:</p>
+</div>
+<div lang="th">
+<p>รันจาก terminal ของ tab Robot ใช้เวลาประมาณ 20 วินาที เพราะรันเทสต์ของคุณสี่ครั้ง:</p>
+</div>
+
+<div data-check="final-robot">
+  <pre><code>  PASS  All your Robot tests pass
+  PASS  Your tests catch deliberate bugs</code></pre>
+</div>
+
+<details>
+  <summary>Hint</summary>
+  <p>"Not caught" lines tell you which kind of test is missing, for example "no test sends an empty title and expects 400". Add that test and run the check again. If your own tests fail first, fix them (read <code>results/log.html</code>).</p>
+</details>

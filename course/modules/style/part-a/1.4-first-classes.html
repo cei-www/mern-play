@@ -1,0 +1,35 @@
+<h2>Step 1.4: Your first classes</h2>
+
+<div lang="en">
+<p>Time for the quick win. The title <code>Task Manager</code> is an <code>&lt;h1&gt;</code>. Its class list is built in <code>App.jsx</code>. Add two classes: <code>text-2xl</code> (a larger text size) and <code>font-bold</code> (bold weight).</p>
+</div>
+<div lang="th">
+<p>ถึงเวลาเห็นผลเร็ว ๆ ชื่อ <code>Task Manager</code> คือ <code>&lt;h1&gt;</code> รายการ class ของมันสร้างอยู่ใน <code>App.jsx</code> เพิ่มสอง class: <code>text-2xl</code> (ขนาดตัวอักษรใหญ่ขึ้น) และ <code>font-bold</code> (ตัวหนา)</p>
+</div>
+
+<p class="where">Edit <code>client/src/App.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; App.jsx). Write the code between the comments <code>@tutorial:begin s1-4-title</code> and <code>@tutorial:end s1-4-title</code>, in the class list of the <code>h1</code>.</p>
+<pre data-snippet data-file="client/src/App.jsx" data-zone="s1-4-title"><code class="language-javascript">'text-2xl font-bold',</code></pre>
+
+<div lang="en">
+<p>Save. The heading changes at once, <em>without reloading the page</em> (Vite calls this hot module replacement). Try other sizes for fun: <code>text-4xl</code>, <code>text-sm</code>. Put <code>text-2xl</code> back afterwards, because the check looks for it.</p>
+</div>
+<div lang="th">
+<p>บันทึก หัวข้อเปลี่ยนทันที <em>โดยไม่ต้อง reload หน้า</em> (Vite เรียกว่า hot module replacement) ลองขนาดอื่นเล่น ๆ ได้ เช่น <code>text-4xl</code>, <code>text-sm</code> แล้วใส่ <code>text-2xl</code> กลับ เพราะการตรวจมองหามัน</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>Write the classes as one string with a space between them, in quotes, followed by a comma: <code>'text-2xl font-bold',</code>.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/App.jsx</code>, between the comments of <code>s1-4-title</code>:</p>
+  <pre data-snippet data-file="client/src/App.jsx" data-zone="s1-4-title"><code class="language-javascript">'text-2xl font-bold',</code></pre>
+</details>
+
+<div data-check="title-classes"></div>

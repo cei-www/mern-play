@@ -1,0 +1,32 @@
+<h2>Step 7.1: HTTP status codes</h2>
+
+<div lang="en">
+<blockquote class="blockquote"><p>As a user, I want to fix a mistake in a task or delete it, and I want clear messages when something goes wrong.</p></blockquote>
+<p>The status code is the first thing a client reads. You have used these already:</p>
+<table class="table table-sm">
+  <thead><tr><th>Code</th><th>Meaning</th><th>Where you used it</th></tr></thead>
+  <tbody>
+    <tr><td>200</td><td>OK</td><td>reading and updating</td></tr>
+    <tr><td>201</td><td>Created</td><td>POST a task or a group</td></tr>
+    <tr><td>204</td><td>No Content: done, nothing to send back</td><td>DELETE (this story)</td></tr>
+    <tr><td>400</td><td>The request is wrong (the caller can fix it)</td><td>validation</td></tr>
+    <tr><td>404</td><td>There is no such thing</td><td>an id or a path that does not exist</td></tr>
+    <tr><td>500</td><td>The server failed (the caller cannot fix it)</td><td>an error in the database or the code</td></tr>
+  </tbody>
+</table>
+<p>This story also gives every error the <strong>same shape</strong>, <code>{ "error": "text" }</code>, so the page can always show <code>data.error</code>.</p>
+</div>
+<div lang="th">
+<blockquote class="blockquote"><p>As a user, I want to fix a mistake in a task or delete it, and I want clear messages when something goes wrong.</p></blockquote>
+<p>status code คือสิ่งแรกที่ client อ่าน คุณใช้ไปหลายตัวแล้ว: 200 สำเร็จ, 201 สร้างแล้ว, 204 สำเร็จแต่ไม่มีอะไรส่งกลับ (ใช้กับ DELETE ใน story นี้), 400 request ผิด (ผู้เรียกแก้ได้), 404 ไม่มีสิ่งนั้น, 500 server ล้มเหลว (ผู้เรียกแก้ไม่ได้)</p>
+<p>story นี้ยังทำให้ทุก error มี <strong>รูปแบบเดียวกัน</strong> คือ <code>{ "error": "ข้อความ" }</code> หน้าเว็บจึงแสดง <code>data.error</code> ได้เสมอ</p>
+</div>
+
+<div lang="en">
+<p>To start this story from a clean state, type:</p>
+</div>
+<div lang="th">
+<p>ถ้าอยากเริ่ม story นี้จากสถานะที่สะอาด ให้พิมพ์:</p>
+</div>
+
+<pre data-command><code>tutorial goto 7.1</code></pre>

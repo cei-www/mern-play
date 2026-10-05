@@ -1,0 +1,69 @@
+<h2>Step 7.3: PUT /api/tasks/:id</h2>
+
+<div lang="en">
+<p>PUT replaces the editable fields (title, priority, due date, group). The body has the same shape as for creating a task, so you can <strong>reuse <code>validateTask</code></strong> from Story 2. That is the point of a function: one set of rules for two routes.</p>
+</div>
+<div lang="th">
+<p>PUT แทนที่ฟิลด์ที่แก้ได้ (title, priority, due date, group) body มีรูปแบบเดียวกับตอนสร้าง task คุณจึง <strong>ใช้ <code>validateTask</code> ซ้ำ</strong> จาก Story 2 ได้ นี่คือประโยชน์ของฟังก์ชัน: กติกาชุดเดียวใช้กับสอง route</p>
+</div>
+
+<p class="where">Edit <code>server/routes/tasks.js</code> (in the Explorer: build &rsaquo; server &rsaquo; routes &rsaquo; tasks.js). Write the code between the comments <code>@tutorial:begin s7-3-update-task</code> and <code>@tutorial:end s7-3-update-task</code>.</p>
+
+<pre data-snippet data-file="server/routes/tasks.js" data-zone="s7-3-update-task"><code class="language-javascript">router.put('/:id', async (req, res, next) =&gt; {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'id must be a whole number' });
+  const { error, value } = validateTask(req.body);
+  if (error) return res.status(400).json({ error });
+  try {
+    await db.query('UPDATE tasks SET title = ?, priority = ?, due_date = ?, group_id = ? WHERE id = ?', [
+      value.title,
+      value.priority,
+      value.dueDate,
+      value.groupId,
+      id,
+    ]);
+    const task = await findTask(id);
+    if (!task) return res.status(404).json({ error: 'Task not found' });
+    res.json(task);
+  } catch (err) {
+    if (err.code === 'ER_NO_REFERENCED_ROW_2') return res.status(400).json({ error: 'group_id does not exist' });
+    next(err);
+  }
+});</code></pre>
+
+<p>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="updateTask" data-server="app">Try it in Swagger: updateTask</button>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>Validate first (answer 400), then <code>UPDATE ... WHERE id = ?</code>, then read the task again with <code>findTask</code> and answer 404 when it is missing. This is the same shape as the PATCH route in step 3.3.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>server/routes/tasks.js</code>, between the comments of <code>s7-3-update-task</code>:</p>
+  <pre data-snippet data-file="server/routes/tasks.js" data-zone="s7-3-update-task"><code class="language-javascript">router.put('/:id', async (req, res, next) =&gt; {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'id must be a whole number' });
+  const { error, value } = validateTask(req.body);
+  if (error) return res.status(400).json({ error });
+  try {
+    await db.query('UPDATE tasks SET title = ?, priority = ?, due_date = ?, group_id = ? WHERE id = ?', [
+      value.title,
+      value.priority,
+      value.dueDate,
+      value.groupId,
+      id,
+    ]);
+    const task = await findTask(id);
+    if (!task) return res.status(404).json({ error: 'Task not found' });
+    res.json(task);
+  } catch (err) {
+    if (err.code === 'ER_NO_REFERENCED_ROW_2') return res.status(400).json({ error: 'group_id does not exist' });
+    next(err);
+  }
+});</code></pre>
+</details>
+
+<div data-check="update-task"></div>

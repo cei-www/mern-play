@@ -1,0 +1,21 @@
+<h2>Step 4.1: Groups and tasks</h2>
+
+<div lang="en">
+<blockquote class="blockquote"><p>As a user, I want to put my tasks into groups such as Work and Home, so that I can find them quickly.</p></blockquote>
+<p>A group is a row in the table <code>task_groups</code>. A task points to its group with the number <code>group_id</code>. This is a <strong>foreign key</strong>: MySQL refuses a <code>group_id</code> that does not exist. The column can be <code>NULL</code>, so a task may have no group.</p>
+<p>One group has many tasks (a <em>one-to-many</em> relationship). You already used the join in Story 1 to get <code>group_name</code>. This story adds the groups themselves: list them with the number of tasks in each, create new ones, and choose one in the page.</p>
+</div>
+<div lang="th">
+<blockquote class="blockquote"><p>As a user, I want to put my tasks into groups such as Work and Home, so that I can find them quickly.</p></blockquote>
+<p>group คือหนึ่งแถวในตาราง <code>task_groups</code> และ task ชี้ไปหา group ของมันด้วยตัวเลข <code>group_id</code> นี่คือ <strong>foreign key</strong>: MySQL จะปฏิเสธ <code>group_id</code> ที่ไม่มีอยู่จริง คอลัมน์นี้เป็น <code>NULL</code> ได้ ดังนั้น task จึงไม่มี group ก็ได้</p>
+<p>หนึ่ง group มีหลาย task (ความสัมพันธ์แบบ <em>one-to-many</em>) คุณใช้ join ใน Story 1 เพื่อเอา <code>group_name</code> มาแล้ว story นี้เพิ่มตัว group เอง: แสดงรายการพร้อมจำนวน task ในแต่ละ group สร้าง group ใหม่ และเลือก group ในหน้าเว็บ</p>
+</div>
+
+<div lang="en">
+<p>To start this story from a clean state, type:</p>
+</div>
+<div lang="th">
+<p>ถ้าอยากเริ่ม story นี้จากสถานะที่สะอาด ให้พิมพ์:</p>
+</div>
+
+<pre data-command><code>tutorial goto 4.1</code></pre>

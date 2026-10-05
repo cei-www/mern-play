@@ -1,0 +1,79 @@
+<h2>Step E.2: Tags and --include</h2>
+
+<div lang="en">
+<p>A <strong>tag</strong> is a label on a test. <code>Test Tags    regression</code> in the Settings gives every test in the file that tag, and <code>[Tags]    smoke</code> adds a label to one test. You choose which tests to run by tag:</p>
+</div>
+<div lang="th">
+<p><strong>tag</strong> คือป้ายที่ติดบนเทสต์ <code>Test Tags    regression</code> ใน Settings ให้ tag นั้นกับทุกเทสต์ในไฟล์ และ <code>[Tags]    smoke</code> ติดป้ายให้เทสต์หนึ่งตัว คุณเลือกรันเทสต์ตาม tag ได้:</p>
+</div>
+
+<pre data-command><code>robot --outputdir results --include smoke tests</code></pre>
+
+<div lang="en">
+<p>A <em>smoke test</em> is a very small test that answers "is it alive at all?". It is the first thing you run after every start.</p>
+</div>
+<div lang="th">
+<p><em>smoke test</em> คือเทสต์เล็กมากที่ตอบว่า "มันยังมีชีวิตอยู่ไหม?" เป็นสิ่งแรกที่รันหลังเริ่มระบบทุกครั้ง</p>
+</div>
+
+<p class="where">Create the file <code>tests/07_smoke_and_security.robot</code> (in the Explorer: api &rsaquo; tests &rsaquo; 07_smoke_and_security.robot) (right-click the folder in the Explorer, then <em>New File</em>).</p>
+
+<pre data-snippet data-file="tests/07_smoke_and_security.robot" data-position="end"><code class="language-plaintext">*** Settings ***
+Resource    ../resources/api.resource
+Test Tags    regression
+
+*** Test Cases ***
+Health Is Up
+    [Tags]    smoke
+    ${response}=    GET    ${BASE_URL}/api/health
+    Should Be Equal As Integers    ${response.status_code}    200
+
+Task List Is Not Empty
+    [Tags]    smoke
+    ${response}=    GET    ${BASE_URL}/api/tasks
+    Should Not Be Empty    ${response.json()}
+
+Open Tasks Filter Works
+    ${response}=    GET    ${BASE_URL}/api/tasks    params=done=0
+    Should Be Equal As Integers    ${response.status_code}    200</code></pre>
+
+<div lang="en">
+<p>Run only the smoke tests, then everything. Open the report and look at the <em>Statistics by Tag</em> table.</p>
+</div>
+<div lang="th">
+<p>รันเฉพาะ smoke แล้วรันทั้งหมด เปิดรายงานแล้วดูตาราง <em>Statistics by Tag</em></p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-outline-primary" data-action="preview" data-port="9323" data-path="/report.html">Open report.html</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>A test can have several tags. <code>--exclude smoke</code> does the opposite of <code>--include smoke</code>.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>tests/07_smoke_and_security.robot</code>:</p>
+  <pre data-snippet data-file="tests/07_smoke_and_security.robot" data-position="end"><code class="language-plaintext">*** Settings ***
+Resource    ../resources/api.resource
+Test Tags    regression
+
+*** Test Cases ***
+Health Is Up
+    [Tags]    smoke
+    ${response}=    GET    ${BASE_URL}/api/health
+    Should Be Equal As Integers    ${response.status_code}    200
+
+Task List Is Not Empty
+    [Tags]    smoke
+    ${response}=    GET    ${BASE_URL}/api/tasks
+    Should Not Be Empty    ${response.json()}
+
+Open Tasks Filter Works
+    ${response}=    GET    ${BASE_URL}/api/tasks    params=done=0
+    Should Be Equal As Integers    ${response.status_code}    200</code></pre>
+</details>
+
+<div data-check="tags-tests"></div>

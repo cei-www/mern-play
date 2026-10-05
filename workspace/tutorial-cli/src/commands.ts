@@ -115,9 +115,7 @@ export async function resetDb(config: CliConfig, database: string): Promise<void
   } catch (err) {
     if (err instanceof DbResetError) {
       throw new CliError(
-        err.code === 'NOT_ALLOWED'
-          ? `${err.message}. You can reset: ${config.db.allowed.join(', ')}`
-          : `Could not reset the database. ${err.message}`,
+        err.code === 'NOT_ALLOWED' ? `${err.message}. You can reset: ${config.db.allowed.join(', ')}` : `Could not reset the database. ${err.message}`,
       );
     }
     throw err;

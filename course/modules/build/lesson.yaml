@@ -1,6 +1,6 @@
 # Module "build": the learner builds the Task Manager.
-# Release 1 ships Part 0, Story 1 and Checkpoint 1. Stories 2-7 and the wrap-up are added later:
-# the finished app already has their code zones (s2-..., s3-..., and so on).
+# The whole module: Part 0, Stories 1 to 7, four checkpoints and the wrap-up.
+# Zone names follow the step that writes them (s2-4-create-task belongs to step 2.4).
 id: build
 title: Build the app
 order: 1
@@ -36,6 +36,76 @@ parts:
     steps:
       - { id: "1.10", title: "Checkpoint 1: two exercises", type: practice, file: checkpoint-1/1.10-exercises.html, checks: [exercise-1-sql, exercise-2-stats] }
 
+  - id: story-2
+    title: "Story 2: Add a task"
+    steps:
+      - { id: "2.1", title: The story and what done looks like, type: read, file: story-2/2.1-story.html }
+      - { id: "2.2", title: Insert a row with SQL, type: do, file: story-2/2.2-sql.html }
+      - { id: "2.3", title: Validate the input, type: do, file: story-2/2.3-validate.html, checks: [validate-code] }
+      - { id: "2.4", title: "POST /api/tasks", type: do, file: story-2/2.4-create-route.html, checks: [create-task] }
+      - { id: "2.5", title: The form in React, type: do, file: story-2/2.5-form.html, checks: [task-form-code] }
+      - { id: "2.6", title: Check Story 2, type: check, file: story-2/2.6-check.html, checks: [create-task, create-task-invalid, task-form-code] }
+  - id: story-3
+    title: "Story 3: Mark a task as done"
+    steps:
+      - { id: "3.1", title: PUT or PATCH, type: read, file: story-3/3.1-put-vs-patch.html }
+      - { id: "3.2", title: Update a row with SQL, type: do, file: story-3/3.2-sql-update.html }
+      - { id: "3.3", title: "PATCH /api/tasks/:id/done", type: do, file: story-3/3.3-patch-route.html, checks: [set-done, set-done-404] }
+      - { id: "3.4", title: The checkbox, type: do, file: story-3/3.4-checkbox.html, checks: [done-checkbox-code] }
+      - { id: "3.5", title: Check Story 3, type: check, file: story-3/3.5-check.html, checks: [set-done, set-done-404, done-checkbox-code] }
+  - id: checkpoint-2
+    title: "Checkpoint 2"
+    steps:
+      - { id: "3.6", title: "Checkpoint 2: two exercises", type: practice, file: checkpoint-2/3.6-exercises.html, checks: [exercise-3-summary, exercise-4-search] }
+  - id: story-4
+    title: "Story 4: Groups"
+    steps:
+      - { id: "4.1", title: Groups and tasks, type: read, file: story-4/4.1-relationship.html }
+      - { id: "4.2", title: Count with GROUP BY, type: do, file: story-4/4.2-sql-count.html }
+      - { id: "4.3", title: Mount the groups router, type: do, file: story-4/4.3-mount.html, checks: [groups-mounted] }
+      - { id: "4.4", title: "GET /api/groups", type: do, file: story-4/4.4-list-groups.html, checks: [list-groups] }
+      - { id: "4.5", title: "POST /api/groups", type: do, file: story-4/4.5-create-group.html, checks: [create-group, create-group-invalid] }
+      - { id: "4.6", title: Choose a group in the page, type: do, file: story-4/4.6-group-filter.html, checks: [group-filter-code] }
+      - { id: "4.7", title: Check Story 4, type: check, file: story-4/4.7-check.html, checks: [list-groups, create-group, create-group-invalid, group-filter-code] }
+  - id: story-5
+    title: "Story 5: Filter and sort"
+    steps:
+      - { id: "5.1", title: Query strings, type: read, file: story-5/5.1-query-strings.html }
+      - { id: "5.2", title: "Filter and sort GET /api/tasks", type: do, file: story-5/5.2-filter-sort.html, checks: [filter-open, filter-group, sort-title-desc] }
+      - { id: "5.3", title: Why ORDER BY needs a whitelist, type: read, file: story-5/5.3-whitelist.html, checks: [sort-unsafe] }
+      - { id: "5.4", title: Filter and sort controls, type: do, file: story-5/5.4-sort-bar.html, checks: [sort-bar-code] }
+      - { id: "5.5", title: Check Story 5, type: check, file: story-5/5.5-check.html, checks: [filter-open, filter-group, sort-title-desc, sort-unsafe, sort-bar-code] }
+  - id: checkpoint-3
+    title: "Checkpoint 3"
+    steps:
+      - { id: "5.6", title: "Checkpoint 3: two exercises", type: practice, file: checkpoint-3/5.6-exercises.html, checks: [exercise-5-high-priority, exercise-6-empty-state] }
+  - id: story-6
+    title: "Story 6: History"
+    steps:
+      - { id: "6.1", title: History is a query, type: read, file: story-6/6.1-history.html }
+      - { id: "6.2", title: "GET /api/tasks/history", type: do, file: story-6/6.2-history-route.html, checks: [history, history-bad] }
+      - { id: "6.3", title: The History tab, type: do, file: story-6/6.3-history-view.html, checks: [history-view-code] }
+      - { id: "6.4", title: Check Story 6, type: check, file: story-6/6.4-check.html, checks: [history, history-bad, history-view-code] }
+  - id: story-7
+    title: "Story 7: Edit, delete, errors"
+    steps:
+      - { id: "7.1", title: HTTP status codes, type: read, file: story-7/7.1-status-codes.html }
+      - { id: "7.2", title: "GET /api/tasks/:id", type: do, file: story-7/7.2-get-one.html, checks: [get-one, get-one-404] }
+      - { id: "7.3", title: "PUT /api/tasks/:id", type: do, file: story-7/7.3-update.html, checks: [update-task] }
+      - { id: "7.4", title: "DELETE /api/tasks/:id", type: do, file: story-7/7.4-delete.html, checks: [delete-task] }
+      - { id: "7.5", title: One error shape, type: do, file: story-7/7.5-not-found.html, checks: [not-found-json] }
+      - { id: "7.6", title: Edit and delete in the page, type: do, file: story-7/7.6-item-actions.html, checks: [item-actions-code] }
+      - { id: "7.7", title: Check Story 7, type: check, file: story-7/7.7-check.html, checks: [get-one, get-one-404, update-task, delete-task, not-found-json, item-actions-code] }
+  - id: checkpoint-4
+    title: "Checkpoint 4"
+    steps:
+      - { id: "7.8", title: "Checkpoint 4: two exercises", type: practice, file: checkpoint-4/7.8-exercises.html, checks: [exercise-7-group-stats, exercise-8-retry-button] }
+  - id: wrap-up
+    title: "Wrap-up"
+    steps:
+      - { id: "8.1", title: Compare with the reference, type: read, file: wrap-up/8.1-compare.html }
+      - { id: "8.2", title: Where to go next, type: read, file: wrap-up/8.2-next.html }
+
 checks:
   # ---- Part 0 ----
   first-task-added:
@@ -63,7 +133,7 @@ checks:
     title: The server code of the steps is replaced by TODO lines
     type: file
     path: server/routes/tasks.js
-    zones: { s1-6-list-tasks: empty, s2-2-create-task: empty }
+    zones: { s1-6-list-tasks: empty, s2-4-create-task: empty }
     hint: "Run the command: tutorial wipe"
   client-wiped:
     title: The React code of the steps is replaced by TODO lines
@@ -138,3 +208,321 @@ checks:
         expect: { status: 200, json: { total: { $var: total }, done: { $var: done } } }
         hints:
           404: "No route answers /api/stats. Fill exercise 2 in server/routes/stats.js and save the file."
+
+  # ---- Story 2 ----
+  validate-code:
+    title: validateTask is written
+    type: file
+    path: server/routes/tasks.js
+    zones: { s2-3-validate: filled }
+    contains: "function validateTask"
+    hint: "The code goes between the two @tutorial comments of step 2.3."
+  create-task:
+    title: POST /api/tasks stores a task and answers 201
+    type: flow
+    steps:
+      - type: sql
+        database: taskapp
+        query: "SELECT COUNT(*) AS n FROM tasks"
+        save: { before: "$.rows[0].n" }
+      - type: http
+        request: { method: POST, url: "http://localhost:3000/api/tasks", body: { title: "Created by the check", priority: 3 } }
+        expect: { status: 201, json: { id: { $type: number }, title: "Created by the check", priority: 3, done: 0 } }
+        hints:
+          404: "POST /api/tasks does not exist yet. Write the route in step 2.4 (and mount the router, step 1.5)."
+          400: "Your validation refused a valid task. Check validateTask in step 2.3."
+          500: "The server hit an error. On your computer run: docker compose logs --tail 30 ws-main"
+      - type: sql
+        database: taskapp
+        query: "SELECT COUNT(*) AS n FROM tasks"
+        expect: { first: { n: { $var: before, $plus: 1 } } }
+        hint: "The task was not stored. Look at the INSERT in step 2.4."
+  create-task-invalid:
+    title: POST /api/tasks with an empty title answers 400
+    type: http
+    request: { method: POST, url: "http://localhost:3000/api/tasks", body: { title: "" } }
+    expect: { status: 400, json: { error: { $type: string } } }
+    hints:
+      201: "The empty title was accepted. Check the rules in validateTask (step 2.3) and that the route uses them."
+  task-form-code:
+    title: TaskForm.jsx sends the form with fetch
+    type: file
+    path: client/src/components/TaskForm.jsx
+    zones: { s2-5-task-form: filled }
+    contains: ["fetch(", "/api/tasks", "POST"]
+    matches: ["useState\\(", "onSubmit"]
+    hint: "The code goes between the two @tutorial comments of step 2.5."
+
+  # ---- Story 3 ----
+  set-done:
+    title: PATCH sets and clears completed_at
+    type: flow
+    steps:
+      - type: http
+        request: { method: POST, url: "http://localhost:3000/api/tasks", body: { title: "Finish me (check)" } }
+        expect: { status: 201 }
+        save: { id: "$.id" }
+        hint: "Story 2 must work first (POST /api/tasks)."
+      - type: http
+        request: { method: PATCH, url: "http://localhost:3000/api/tasks/{{id}}/done", body: { done: true } }
+        expect: { status: 200, json: { done: 1, completed_at: { $type: string } } }
+        hints:
+          404: "PATCH /api/tasks/:id/done does not exist yet. Write the route in step 3.3."
+          400: "The route refused the body { done: true }. Check how you read req.body.done."
+      - type: sql
+        database: taskapp
+        query: "SELECT completed_at IS NOT NULL AS stamped FROM tasks WHERE id = {{id}}"
+        expect: { first: { stamped: 1 } }
+        hint: "completed_at was not set in the database."
+      - type: http
+        request: { method: PATCH, url: "http://localhost:3000/api/tasks/{{id}}/done", body: { done: false } }
+        expect: { status: 200, json: { done: 0, completed_at: { $type: "null" } } }
+        hint: "Unticking must set completed_at back to NULL."
+  set-done-404:
+    title: PATCH on an id that does not exist answers 404
+    type: http
+    request: { method: PATCH, url: "http://localhost:3000/api/tasks/999999/done", body: { done: true } }
+    expect: { status: 404, json: { error: { $type: string } } }
+    hints:
+      200: "The route answered 200 for a task that does not exist. Read the task after the UPDATE and answer 404 when it is missing."
+  done-checkbox-code:
+    title: TaskItem.jsx has a checkbox that calls the API
+    type: file
+    path: client/src/components/TaskItem.jsx
+    zones: { s3-4-done-checkbox: filled }
+    contains: ["checkbox", "/done", "PATCH"]
+    hint: "The code goes between the two @tutorial comments of step 3.4."
+
+  # ---- Story 4 ----
+  groups-mounted:
+    title: The groups router is mounted in app.js
+    type: file
+    path: server/app.js
+    zones: { s4-3-mount-groups: filled }
+    contains: "/api/groups"
+    hint: "The code goes between the two @tutorial comments of step 4.3 in server/app.js."
+  list-groups:
+    title: GET /api/groups lists the groups with their task counts
+    type: http
+    request: { method: GET, url: "http://localhost:3000/api/groups" }
+    expect:
+      status: 200
+      json:
+        $type: array
+        $minLength: 3
+        $each: { id: { $type: number }, name: { $type: string }, color: { $type: string }, task_count: { $type: number } }
+    hints:
+      404: "Mount the router (step 4.3) and write the route (step 4.4)."
+      500: "The server hit an error. On your computer run: docker compose logs --tail 30 ws-main"
+  create-group:
+    title: POST /api/groups creates a group
+    type: http
+    request: { method: POST, url: "http://localhost:3000/api/groups", body: { name: "Check group", color: "#112233" } }
+    expect: { status: 201, json: { id: { $type: number }, name: "Check group", color: "#112233", task_count: 0 } }
+    hints:
+      404: "Write the route in step 4.5."
+  create-group-invalid:
+    title: POST /api/groups with an empty name answers 400
+    type: http
+    request: { method: POST, url: "http://localhost:3000/api/groups", body: { name: "" } }
+    expect: { status: 400, json: { error: { $type: string } } }
+  group-filter-code:
+    title: GroupFilter.jsx loads and shows the groups
+    type: file
+    path: client/src/components/GroupFilter.jsx
+    zones: { s4-6-group-filter: filled }
+    contains: ["fetch(", "/api/groups"]
+    matches: ["groups\\.map\\("]
+    hint: "The code goes between the two @tutorial comments of step 4.6."
+
+  # ---- Story 5 ----
+  filter-open:
+    title: GET /api/tasks?done=0 returns only open tasks
+    type: http
+    request: { method: GET, url: "http://localhost:3000/api/tasks?done=0" }
+    expect: { status: 200, json: { $type: array, $minLength: 1, $each: { done: 0 } } }
+    hints:
+      200: "The filter is ignored. Write the route of step 5.2 above the plain route and make sure it reads req.query.done."
+  filter-group:
+    title: GET /api/tasks?group_id=1 returns only that group
+    type: http
+    request: { method: GET, url: "http://localhost:3000/api/tasks?group_id=1" }
+    expect: { status: 200, json: { $type: array, $minLength: 1, $each: { group_id: 1 } } }
+  sort-title-desc:
+    title: Sorting by title is correct
+    type: flow
+    steps:
+      - type: http
+        request: { method: GET, url: "http://localhost:3000/api/tasks?sort=title&order=desc" }
+        expect: { status: 200, json: { $type: array, $minLength: 2 } }
+        save: { first: "$[0].title" }
+      - type: sql
+        database: taskapp
+        query: "SELECT title FROM tasks ORDER BY title DESC, id ASC LIMIT 1"
+        expect: { first: { title: { $var: first } } }
+        hint: "The first task of your answer is not the last title in alphabetical order. Check the ORDER BY and the order word."
+  sort-unsafe:
+    title: An unsafe sort value answers 400
+    type: http
+    request: { method: GET, url: "http://localhost:3000/api/tasks?sort=title;drop" }
+    expect: { status: 400, json: { error: { $type: string } } }
+    hints:
+      200: "The unsafe value was accepted. Only the four words of SORT_COLUMNS may be used (step 5.3)."
+      500: "The value reached MySQL. Use the whitelist and answer 400 first."
+  sort-bar-code:
+    title: SortBar.jsx has the three controls
+    type: file
+    path: client/src/components/SortBar.jsx
+    zones: { s5-4-sort-bar: filled }
+    contains: ["onChange", "<select"]
+    matches: ["value\\.sort", "value\\.order", "value\\.done"]
+    hint: "The code goes between the two @tutorial comments of step 5.4."
+
+  # ---- Story 6 ----
+  history:
+    title: GET /api/tasks/history lists tasks completed in the last days
+    type: http
+    request: { method: GET, url: "http://localhost:3000/api/tasks/history?days=7" }
+    expect: { status: 200, json: { $type: array, $minLength: 1, $each: { done: 1, completed_at: { $type: string } } } }
+    hints:
+      404: "Write the route in step 6.2."
+      200: "The answer has no tasks. Run reset-db to get the sample data back."
+      500: "The server hit an error. On your computer run: docker compose logs --tail 30 ws-main"
+  history-bad:
+    title: GET /api/tasks/history?days=0 answers 400
+    type: http
+    request: { method: GET, url: "http://localhost:3000/api/tasks/history?days=0" }
+    expect: { status: 400, json: { error: { $type: string } } }
+  history-view-code:
+    title: HistoryView.jsx loads and shows the history
+    type: file
+    path: client/src/components/HistoryView.jsx
+    zones: { s6-3-history-view: filled }
+    contains: ["fetch(", "/api/tasks/history"]
+    matches: ["useEffect\\(", "tasks\\.map\\("]
+    hint: "The code goes between the two @tutorial comments of step 6.3."
+
+  # ---- Story 7 ----
+  get-one:
+    title: GET /api/tasks/:id returns one task
+    type: http
+    request: { method: GET, url: "http://localhost:3000/api/tasks/1" }
+    expect: { status: 200, json: { id: 1, title: { $type: string } } }
+    hints:
+      404: "GET /api/tasks/1 answered 404. Write the route in step 7.2 (task 1 exists in the sample data; run reset-db if it is gone)."
+  get-one-404:
+    title: GET /api/tasks/:id answers 404 for an unknown id
+    type: http
+    request: { method: GET, url: "http://localhost:3000/api/tasks/999999" }
+    expect: { status: 404, json: { error: "Task not found" } }
+    hints:
+      200: "Answer 404 when no task has that id."
+  update-task:
+    title: PUT /api/tasks/:id changes a task
+    type: flow
+    steps:
+      - type: http
+        request: { method: POST, url: "http://localhost:3000/api/tasks", body: { title: "Before (check)" } }
+        expect: { status: 201 }
+        save: { id: "$.id" }
+      - type: http
+        request: { method: PUT, url: "http://localhost:3000/api/tasks/{{id}}", body: { title: "After (check)", priority: 3 } }
+        expect: { status: 200, json: { title: "After (check)", priority: 3 } }
+        hints:
+          404: "Write the route in step 7.3."
+      - type: sql
+        database: taskapp
+        query: "SELECT title FROM tasks WHERE id = {{id}}"
+        expect: { first: { title: "After (check)" } }
+        hint: "The change was not stored. Look at the UPDATE."
+  delete-task:
+    title: DELETE /api/tasks/:id removes a task
+    type: flow
+    steps:
+      - type: http
+        request: { method: POST, url: "http://localhost:3000/api/tasks", body: { title: "Delete me (check)" } }
+        expect: { status: 201 }
+        save: { id: "$.id" }
+      - type: http
+        request: { method: DELETE, url: "http://localhost:3000/api/tasks/{{id}}" }
+        expect: { status: 204 }
+        hints:
+          404: "Write the route in step 7.4."
+      - type: http
+        request: { method: GET, url: "http://localhost:3000/api/tasks/{{id}}" }
+        expect: { status: 404 }
+        hint: "The task is still there after DELETE."
+  not-found-json:
+    title: An unknown path under /api answers a JSON 404
+    type: http
+    request: { method: GET, url: "http://localhost:3000/api/does-not-exist" }
+    expect: { status: 404, json: { error: { $type: string } } }
+    hints:
+      404: "The 404 is not JSON. Add the catch-all of step 7.5 below all routes."
+  item-actions-code:
+    title: TaskItem.jsx has Edit and Delete
+    type: file
+    path: client/src/components/TaskItem.jsx
+    zones: { s7-6-item-actions: filled }
+    contains: ["PUT", "DELETE"]
+    hint: "The code goes between the two @tutorial comments of step 7.6."
+
+  # ---- Checkpoints 2 to 4 (optional exercises) ----
+  exercise-3-summary:
+    title: Summary.jsx shows how many tasks are done
+    type: file
+    path: client/src/components/Summary.jsx
+    zones: { exercise-3-summary: filled }
+    contains: "tasks"
+    matches: ["filter\\(", "done"]
+    hint: "Write the component between the two @tutorial comments of exercise 3."
+  exercise-4-search:
+    title: GET /api/search finds tasks by title
+    type: flow
+    steps:
+      - type: http
+        request: { method: GET, url: "http://localhost:3000/api/search?q=milk" }
+        expect: { status: 200, json: { $type: array, $minLength: 1, $each: { title: { $regex: "[Mm]ilk" } } } }
+        hints:
+          404: "No route answers /api/search. Fill exercise 4 in server/routes/search.js."
+      - type: http
+        request: { method: GET, url: "http://localhost:3000/api/search" }
+        expect: { status: 400, json: { error: "q is required" } }
+        hint: "A missing q must answer 400 with { error: 'q is required' }."
+  exercise-5-high-priority:
+    title: GET /api/high-priority returns open priority 3 tasks
+    type: http
+    request: { method: GET, url: "http://localhost:3000/api/high-priority" }
+    expect: { status: 200, json: { $type: array, $minLength: 1, $each: { priority: 3, done: 0 } } }
+    hints:
+      404: "No route answers /api/high-priority. Fill exercise 5 in server/routes/highPriority.js."
+  exercise-6-empty-state:
+    title: EmptyState.jsx says "No tasks yet"
+    type: file
+    path: client/src/components/EmptyState.jsx
+    zones: { exercise-6-empty-state: filled }
+    contains: "No tasks yet"
+    hint: "Write the component between the two @tutorial comments of exercise 6."
+  exercise-7-group-stats:
+    title: GET /api/stats/group/:id returns the totals of a group
+    type: flow
+    steps:
+      - type: sql
+        database: taskapp
+        query: "SELECT g.name AS name, COUNT(t.id) AS total, CAST(COALESCE(SUM(t.done), 0) AS UNSIGNED) AS done FROM task_groups g LEFT JOIN tasks t ON t.group_id = g.id WHERE g.id = 1 GROUP BY g.id"
+        save: { name: "$.rows[0].name", total: "$.rows[0].total", done: "$.rows[0].done" }
+      - type: http
+        request: { method: GET, url: "http://localhost:3000/api/stats/group/1" }
+        expect: { status: 200, json: { name: { $var: name }, total: { $var: total }, done: { $var: done } } }
+        hints:
+          404: "No route answers /api/stats/group/1. Fill exercise 7 in server/routes/stats.js."
+      - type: http
+        request: { method: GET, url: "http://localhost:3000/api/stats/group/999999" }
+        expect: { status: 404, json: { error: "Group not found" } }
+  exercise-8-retry-button:
+    title: RetryButton.jsx has a Try again button
+    type: file
+    path: client/src/components/RetryButton.jsx
+    zones: { exercise-8-retry-button: filled }
+    contains: ["onRetry", "Try again", "<button"]
+    hint: "Write the component between the two @tutorial comments of exercise 8."

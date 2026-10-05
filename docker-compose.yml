@@ -21,7 +21,12 @@ services:
       PUBLIC_EDITOR_PORT: ${WS_MAIN_PORT:-8081}
       PUBLIC_EXPRESS_PORT: ${EXPRESS_PORT:-3000}
       PUBLIC_VITE_PORT: ${VITE_PORT:-5173}
+      PUBLIC_VITE_STYLE_PORT: ${VITE_STYLE_PORT:-5174}
       PUBLIC_DBADMIN_PORT: ${DBADMIN_PORT:-8085}
+      PUBLIC_ROBOT_PORT: ${WS_ROBOT_PORT:-8083}
+      PUBLIC_REFERENCE_API_PORT: ${REFERENCE_API_PORT:-3001}
+      PUBLIC_STYLE_API_PORT: ${STYLE_API_PORT:-3002}
+      PUBLIC_REPORT_PORT: ${ROBOT_REPORT_PORT:-9323}
     ports:
       - "127.0.0.1:${PLATFORM_PORT:-4000}:4000"
     volumes:
@@ -75,6 +80,7 @@ services:
     environment:
       # Settings for the `tutorial` command (kept separate from the learner's own .env)
       TUTORIAL_MODULES: build,style,unit
+      INIT_MODULES: build style unit
       TUTORIAL_DB_ALLOWED: taskapp,taskapp_style
       TUTORIAL_DB_HOST: db
       TUTORIAL_DB_USER: app
@@ -83,8 +89,12 @@ services:
       - "127.0.0.1:${WS_MAIN_PORT:-8081}:8080"   # code-server
       - "127.0.0.1:${EXPRESS_PORT:-3000}:3000"   # learner's Express (build module)
       - "127.0.0.1:${VITE_PORT:-5173}:5173"      # learner's Vite (build module)
+      - "127.0.0.1:${VITE_STYLE_PORT:-5174}:5174" # learner's Vite (style module)
+      - "127.0.0.1:${STYLE_API_PORT:-3002}:3002" # reference API for module style
     volumes:
       - ws-build:/workspace/build
+      - ws-style:/workspace/style
+      - ws-unit:/workspace/unit
       - ./course:/course:ro
     networks: [public, internal]
     depends_on:
@@ -99,6 +109,38 @@ services:
       retries: 30
       start_period: 15s
 
+  # Module api. Created by `docker compose --profile robot up --no-start`, started by hand when the learner
+  # reaches module api (Docker Desktop button or `docker compose start ws-robot`). It waits for MySQL itself.
+  ws-robot:
+    profiles: [robot]
+    restart: "no"
+    build:
+      context: ./workspace
+      target: robot
+    image: ce-webdev/ws-robot
+    environment:
+      TUTORIAL_MODULES: api
+      TUTORIAL_DB_ALLOWED: taskapp_test
+      TUTORIAL_DB_HOST: db
+      TUTORIAL_DB_USER: robot
+      TUTORIAL_DB_PASSWORD: robot_pw
+    ports:
+      - "127.0.0.1:${WS_ROBOT_PORT:-8083}:8080"       # code-server
+      - "127.0.0.1:${REFERENCE_API_PORT:-3001}:3001"  # reference API
+      - "127.0.0.1:${ROBOT_REPORT_PORT:-9323}:9323"   # Robot report
+    volumes:
+      - ws-api:/workspace/api
+      - ./course:/course:ro
+    networks: [public, internal]
+    cpus: 1
+    mem_limit: 1g
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/healthz && curl -fsS http://localhost:3001/api/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 20s
+
 networks:
   public: {}
   internal:
@@ -107,3 +149,6 @@ networks:
 volumes:
   db-data: {}
   ws-build: {}
+  ws-style: {}
+  ws-unit: {}
+  ws-api: {}

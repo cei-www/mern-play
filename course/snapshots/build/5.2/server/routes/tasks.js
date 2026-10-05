@@ -17,7 +17,7 @@ async function findTask(id) {
   return rows[0];
 }
 
-// @tutorial:begin s2-1-validate
+// @tutorial:begin s2-3-validate
 // Checks a task from the request body. Returns { error } or { value }.
 function validateTask(body) {
   const title = typeof body?.title === 'string' ? body.title.trim() : '';
@@ -34,7 +34,7 @@ function validateTask(body) {
 
   return { value: { title, priority, dueDate, groupId } };
 }
-// @tutorial:end s2-1-validate
+// @tutorial:end s2-3-validate
 
 // @tutorial:begin s5-2-filter-sort
 // TODO (s5-2-filter-sort): write your code here
@@ -65,7 +65,7 @@ router.get('/', async (req, res, next) => {
 
 // @tutorial:end s7-2-get-one
 
-// @tutorial:begin s2-2-create-task
+// @tutorial:begin s2-4-create-task
 router.post('/', async (req, res, next) => {
   const { error, value } = validateTask(req.body);
   if (error) return res.status(400).json({ error });
@@ -80,9 +80,9 @@ router.post('/', async (req, res, next) => {
     next(err);
   }
 });
-// @tutorial:end s2-2-create-task
+// @tutorial:end s2-4-create-task
 
-// @tutorial:begin s3-2-set-done
+// @tutorial:begin s3-3-set-done
 router.patch('/:id/done', async (req, res, next) => {
   const id = Number(req.params.id);
   if (!Number.isInteger(id)) return res.status(400).json({ error: 'id must be a whole number' });
@@ -100,7 +100,7 @@ router.patch('/:id/done', async (req, res, next) => {
     next(err);
   }
 });
-// @tutorial:end s3-2-set-done
+// @tutorial:end s3-3-set-done
 
 // @tutorial:begin s7-3-update-task
 // TODO (s7-3-update-task): write your code here

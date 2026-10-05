@@ -1,0 +1,59 @@
+<h2>Step 4.4: GET /api/groups</h2>
+
+<div lang="en">
+<p>The route runs the query of step 4.2 and sends the rows. The constant <code>USER_ID</code> at the top of the file is the one user of this app (there is no login).</p>
+</div>
+<div lang="th">
+<p>route รัน query จาก step 4.2 แล้วส่งแถวที่ได้กลับ ค่าคงที่ <code>USER_ID</code> ที่ต้นไฟล์คือผู้ใช้เพียงคนเดียวของแอปนี้ (ไม่มีการ login)</p>
+</div>
+
+<p class="where">Edit <code>server/routes/groups.js</code> (in the Explorer: build &rsaquo; server &rsaquo; routes &rsaquo; groups.js). Write the code between the comments <code>@tutorial:begin s4-4-list-groups</code> and <code>@tutorial:end s4-4-list-groups</code>.</p>
+
+<pre data-snippet data-file="server/routes/groups.js" data-zone="s4-4-list-groups"><code class="language-javascript">router.get('/', async (req, res, next) =&gt; {
+  try {
+    const [rows] = await db.query(
+      `SELECT g.id, g.name, g.color, COUNT(t.id) AS task_count
+       FROM task_groups g
+       LEFT JOIN tasks t ON t.group_id = g.id
+       WHERE g.user_id = ?
+       GROUP BY g.id
+       ORDER BY g.name`,
+      [USER_ID],
+    );
+    res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+
+<p>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="listGroups" data-server="app">Try it in Swagger: listGroups</button>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>It is the same pattern as step 1.6: <code>try</code>, <code>await db.query(sql, [values])</code>, <code>res.json(rows)</code>, <code>catch</code> with <code>next(err)</code>. The value for the <code>?</code> is <code>USER_ID</code> in an array.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>server/routes/groups.js</code>, between the comments of <code>s4-4-list-groups</code>:</p>
+  <pre data-snippet data-file="server/routes/groups.js" data-zone="s4-4-list-groups"><code class="language-javascript">router.get('/', async (req, res, next) =&gt; {
+  try {
+    const [rows] = await db.query(
+      `SELECT g.id, g.name, g.color, COUNT(t.id) AS task_count
+       FROM task_groups g
+       LEFT JOIN tasks t ON t.group_id = g.id
+       WHERE g.user_id = ?
+       GROUP BY g.id
+       ORDER BY g.name`,
+      [USER_ID],
+    );
+    res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+</details>
+
+<div data-check="list-groups"></div>

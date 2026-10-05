@@ -2,6 +2,7 @@
 # Workspace images. Built for amd64 and arm64 (TARGETARCH is set by BuildKit).
 #   base : Node, code-server, supervisor, MySQL client, pre-installed VS Code extensions
 #   main : base + the dependencies and project template for modules build/style/unit (ws-main)
+#   robot: base + Python, Robot Framework and the reference API's dependencies (ws-robot)
 # Everything is installed at build time so the running workspace needs no internet.
 
 FROM node:22-bookworm-slim AS cli-build
@@ -48,7 +49,7 @@ COPY --chmod=0755 bin/tutorial bin/reset-db /usr/local/bin/
 # ---------------------------------------------------------------------------
 FROM base AS main
 USER node
-RUN mkdir -p /opt/modules/build/server /opt/modules/build/client
+RUN mkdir -p /opt/modules/build/server /opt/modules/build/client /opt/modules/style/client /opt/modules/unit
 
 # Dependencies for the "build" module (installed once, linked into /workspace at start).
 COPY --chown=node:node project-template/build/server/package.json /opt/modules/build/server/package.json
@@ -56,10 +57,43 @@ COPY --chown=node:node project-template/build/client/package.json /opt/modules/b
 RUN cd /opt/modules/build/server && npm install --no-audit --no-fund \
  && cd /opt/modules/build/client && npm install --no-audit --no-fund
 
+# Dependencies for the "style" module (Tailwind is installed here; the learner wires it up).
+COPY --chown=node:node project-template/style/client/package.json /opt/modules/style/client/package.json
+RUN cd /opt/modules/style/client && npm install --no-audit --no-fund
+
+# Dependencies for the "unit" module (Vitest and Testing Library; the learner writes only tests).
+COPY --chown=node:node project-template/unit/package.json /opt/modules/unit/package.json
+RUN cd /opt/modules/unit && npm install --no-audit --no-fund
+
 COPY --chown=node:node project-template/build /opt/templates/build
+COPY --chown=node:node project-template/style /opt/templates/style
+COPY --chown=node:node project-template/unit /opt/templates/unit
 COPY --chown=root:root supervisord-main.conf /etc/supervisor/ce-main.conf
 
 WORKDIR /workspace
-EXPOSE 8080 3000 5173
+EXPOSE 8080 3000 5173 5174 3002
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD ["supervisord", "-n", "-c", "/etc/supervisor/ce-main.conf"]
+
+# ---------------------------------------------------------------------------
+FROM base AS robot
+USER root
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends python3 python3-venv \
+ && rm -rf /var/lib/apt/lists/*
+RUN python3 -m venv /opt/robot-venv \
+ && /opt/robot-venv/bin/pip install --no-cache-dir \
+      robotframework==7.5 robotframework-requests==0.9.7 robotframework-databaselibrary==2.5.0 PyMySQL==1.2.3 \
+ && mkdir -p /opt/reference /workspace/api \
+ && chown -R node:node /opt/reference /workspace/api
+USER node
+# The reference API (code comes from /course at run time) only needs these two packages.
+RUN cd /opt/reference && npm install --no-audit --no-fund express@5.2.1 mysql2@3.24.5
+ENV PATH=/opt/robot-venv/bin:$PATH NODE_PATH=/opt/reference/node_modules INIT_MODULES=api WAIT_FOR_DB=1
+COPY --chown=node:node project-template/api /opt/templates/api
+COPY --chown=root:root supervisord-robot.conf /etc/supervisor/ce-robot.conf
+
+WORKDIR /workspace
+EXPOSE 8080 3001 9323
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["supervisord", "-n", "-c", "/etc/supervisor/ce-robot.conf"]

@@ -1,0 +1,60 @@
+<h2>Step 3.2: Cards and surfaces</h2>
+
+<div lang="en">
+<p>A <em>surface</em> is a box with a background, a border and a shadow. Make each task a card:</p>
+<ul>
+  <li><code>bg-white</code> a white background</li>
+  <li><code>border border-slate-200</code> a thin soft border (<code>border</code> sets the width, the second class the color)</li>
+  <li><code>rounded-lg</code> rounded corners</li>
+  <li><code>shadow-sm</code> a small shadow</li>
+</ul>
+<p>Put a soft gray behind the whole page (<code>bg-slate-50</code> with <code>min-h-screen</code>, so it fills the window), and give the rows of the History tab a lighter version of the card.</p>
+</div>
+<div lang="th">
+<p><em>surface</em> คือกล่องที่มีพื้นหลัง เส้นขอบ และเงา ทำให้แต่ละ task เป็นการ์ด:</p>
+<ul>
+  <li><code>bg-white</code> พื้นหลังสีขาว</li>
+  <li><code>border border-slate-200</code> เส้นขอบบางสีอ่อน (<code>border</code> กำหนดความหนา class ที่สองกำหนดสี)</li>
+  <li><code>rounded-lg</code> มุมมน</li>
+  <li><code>shadow-sm</code> เงาเล็ก ๆ</li>
+</ul>
+<p>ใส่สีเทาอ่อนด้านหลังทั้งหน้า (<code>bg-slate-50</code> กับ <code>min-h-screen</code> เพื่อให้เต็มหน้าต่าง) และทำให้แถวของ tab History เป็นการ์ดแบบเบากว่า</p>
+</div>
+
+<p class="where">Edit <code>client/src/App.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; App.jsx). Write the code between the comments <code>@tutorial:begin s3-2-page-bg</code> and <code>@tutorial:end s3-2-page-bg</code>, in the class list of the outer <code>div</code>.</p>
+<pre data-snippet data-file="client/src/App.jsx" data-zone="s3-2-page-bg"><code class="language-javascript">'min-h-screen bg-slate-50',</code></pre>
+
+<p class="where">Edit <code>client/src/components/TaskItem.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskItem.jsx). Write the code between the comments <code>@tutorial:begin s3-2-row-card</code> and <code>@tutorial:end s3-2-row-card</code>, in the class list of the <code>li</code>.</p>
+<pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s3-2-row-card"><code class="language-javascript">'rounded-lg border border-slate-200 bg-white shadow-sm',</code></pre>
+
+<p class="where">Edit <code>client/src/components/HistoryView.jsx</code> (in the Explorer: style &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; HistoryView.jsx). Write the code between the comments <code>@tutorial:begin s3-2-history-row</code> and <code>@tutorial:end s3-2-history-row</code>, in the class list of the <code>li</code>.</p>
+<pre data-snippet data-file="client/src/components/HistoryView.jsx" data-zone="s3-2-history-row"><code class="language-javascript">'mb-2 rounded border border-slate-200 bg-white p-3',</code></pre>
+
+<div lang="en">
+<p>The app is in the <strong>Preview</strong> tab (port <em>App (for Tailwind)</em>). It reloads by itself when you save.</p>
+</div>
+<div lang="th">
+<p>แอปอยู่ใน tab <strong>Preview</strong> (พอร์ต <em>App (for Tailwind)</em>) และโหลดใหม่เองเมื่อคุณบันทึก</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5174" data-path="/">Open the app in Preview</a>
+  <a href="#" class="btn btn-sm btn-outline-primary" data-action="preview" data-port="5174" data-path="/">Then open the History tab in the app</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>Order inside a list does not matter for Tailwind. What matters is that a class is there and spelled right.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/App.jsx</code>, between the comments of <code>s3-2-page-bg</code>:</p>
+  <pre data-snippet data-file="client/src/App.jsx" data-zone="s3-2-page-bg"><code class="language-javascript">'min-h-screen bg-slate-50',</code></pre>
+  <p class="where">In <code>client/src/components/TaskItem.jsx</code>, between the comments of <code>s3-2-row-card</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskItem.jsx" data-zone="s3-2-row-card"><code class="language-javascript">'rounded-lg border border-slate-200 bg-white shadow-sm',</code></pre>
+  <p class="where">In <code>client/src/components/HistoryView.jsx</code>, between the comments of <code>s3-2-history-row</code>:</p>
+  <pre data-snippet data-file="client/src/components/HistoryView.jsx" data-zone="s3-2-history-row"><code class="language-javascript">'mb-2 rounded border border-slate-200 bg-white p-3',</code></pre>
+</details>
+
+<div data-check="surface-app"></div>

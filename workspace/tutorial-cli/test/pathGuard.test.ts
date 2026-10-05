@@ -37,12 +37,9 @@ describe('resolveInside', () => {
     expect(resolveInside(root, path.join(root, 'server', 'app.js'))).toBe(path.join(root, 'server', 'app.js'));
   });
 
-  it.each(['../outside/secret.txt', 'server/../../outside/secret.txt', '..', '../..', 'a/b/../../../x'])(
-    'rejects traversal: %s',
-    (p) => {
-      expect(() => resolveInside(root, p)).toThrow(PathError);
-    },
-  );
+  it.each(['../outside/secret.txt', 'server/../../outside/secret.txt', '..', '../..', 'a/b/../../../x'])('rejects traversal: %s', (p) => {
+    expect(() => resolveInside(root, p)).toThrow(PathError);
+  });
 
   it('rejects an absolute path outside the root', () => {
     expect(() => resolveInside(root, '/etc/passwd')).toThrow(PathError);

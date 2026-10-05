@@ -35,8 +35,7 @@ export function matchValue(actual: unknown, expected: unknown, at = '$', vars: V
 
 const isPlainObject = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null && !Array.isArray(v);
 
-const isMatcher = (v: unknown): v is Record<string, unknown> =>
-  isPlainObject(v) && Object.keys(v).length > 0 && Object.keys(v).every((k) => k.startsWith('$'));
+const isMatcher = (v: unknown): v is Record<string, unknown> => isPlainObject(v) && Object.keys(v).length > 0 && Object.keys(v).every((k) => k.startsWith('$'));
 
 function typeOf(v: unknown): string {
   if (v === null) return 'null';
@@ -48,7 +47,7 @@ const describe = (v: unknown): string => `${typeOf(v)}${v === undefined ? '' : `
 
 function show(v: unknown): string {
   if (v === undefined) return 'nothing';
-  const text = typeof v === 'string' ? JSON.stringify(v) : JSON.stringify(v) ?? String(v);
+  const text = typeof v === 'string' ? JSON.stringify(v) : (JSON.stringify(v) ?? String(v));
   return text.length > 60 ? `${text.slice(0, 57)}...` : text;
 }
 
@@ -76,7 +75,8 @@ function matchOperators(actual: unknown, ops: Record<string, unknown>, at: strin
         else actual.forEach((item, i) => problems.push(...matchValue(item, arg, `${at}[${i}]`, vars)));
         break;
       case '$regex':
-        if (typeof actual !== 'string' || !new RegExp(String(arg)).test(actual)) problems.push(`${at}: expected text matching /${String(arg)}/ but got ${show(actual)}`);
+        if (typeof actual !== 'string' || !new RegExp(String(arg)).test(actual))
+          problems.push(`${at}: expected text matching /${String(arg)}/ but got ${show(actual)}`);
         break;
       case '$oneOf':
         if (!Array.isArray(arg) || !arg.some((candidate) => matchValue(actual, candidate, at, vars).length === 0)) {

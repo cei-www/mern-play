@@ -4,7 +4,7 @@ const PRIORITY = { 1: 'low', 2: 'medium', 3: 'high' };
 export default function TaskItem({ task, onChanged }) {
   return (
     <li className={`task${task.done ? ' task-done' : ''}`}>
-      {/* @tutorial:begin s3-3-done-checkbox */}
+      {/* @tutorial:begin s3-4-done-checkbox */}
       <input
         type="checkbox"
         checked={task.done === 1}
@@ -17,12 +17,12 @@ export default function TaskItem({ task, onChanged }) {
           }).then(() => onChanged?.())
         }
       />
-      {/* @tutorial:end s3-3-done-checkbox */}
+      {/* @tutorial:end s3-4-done-checkbox */}
       <span className="task-title">{task.title}</span>
       {task.group_name && <span className="badge">{task.group_name}</span>}
       <span className={`priority priority-${task.priority}`}>{PRIORITY[task.priority]}</span>
       <span className="due">{task.due_date ? `due ${task.due_date}` : 'no due date'}</span>
-      {/* @tutorial:begin s7-5-item-actions */}
+      {/* @tutorial:begin s7-6-item-actions */}
       <button
         type="button"
         onClick={async () => {
@@ -49,7 +49,7 @@ export default function TaskItem({ task, onChanged }) {
       >
         Delete
       </button>
-      {/* @tutorial:end s7-5-item-actions */}
+      {/* @tutorial:end s7-6-item-actions */}
     </li>
   );
 }

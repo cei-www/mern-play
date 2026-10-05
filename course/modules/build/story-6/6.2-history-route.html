@@ -1,0 +1,78 @@
+<h2>Step 6.2: GET /api/tasks/history</h2>
+
+<div lang="en">
+<p>The route reads <code>days</code> (default 7, a whole number of at least 1) and an optional <code>group_id</code>. Placeholders hold both values, including the number of days.</p>
+<p><strong>Order matters.</strong> The route <code>GET /:id</code> would take the word <code>history</code> as an id. The history route is therefore written <em>before</em> any <code>/:id</code> route, and the zone for it is already in the right place in the file.</p>
+</div>
+<div lang="th">
+<p>route อ่าน <code>days</code> (ค่าเริ่มต้น 7 เป็นจำนวนเต็มตั้งแต่ 1) และ <code>group_id</code> ที่ใส่หรือไม่ก็ได้ ค่าทั้งสองใส่ด้วย placeholder รวมถึงจำนวนวัน</p>
+<p><strong>ลำดับสำคัญ</strong> route <code>GET /:id</code> จะอ่านคำว่า <code>history</code> เป็น id ดังนั้น route history ต้องเขียน <em>ก่อน</em> route <code>/:id</code> ใด ๆ และ zone ของมันอยู่ในตำแหน่งที่ถูกต้องในไฟล์แล้ว</p>
+</div>
+
+<p class="where">Edit <code>server/routes/tasks.js</code> (in the Explorer: build &rsaquo; server &rsaquo; routes &rsaquo; tasks.js). Write the code between the comments <code>@tutorial:begin s6-2-history</code> and <code>@tutorial:end s6-2-history</code>.</p>
+
+<pre data-snippet data-file="server/routes/tasks.js" data-zone="s6-2-history"><code class="language-javascript">// Must stay above GET /:id, otherwise "history" would be read as an id.
+router.get('/history', async (req, res, next) =&gt; {
+  const days = req.query.days === undefined ? 7 : Number(req.query.days);
+  if (!Number.isInteger(days) || days &lt; 1) return res.status(400).json({ error: 'days must be a whole number of at least 1' });
+  const params = [days];
+  let groupFilter = '';
+  if (req.query.group_id !== undefined) {
+    if (!/^\d+$/.test(req.query.group_id)) return res.status(400).json({ error: 'group_id must be a whole number' });
+    groupFilter = 'AND t.group_id = ?';
+    params.push(Number(req.query.group_id));
+  }
+  try {
+    const [rows] = await db.query(
+      `${SELECT_TASKS} WHERE t.done = 1 AND t.completed_at &gt;= NOW() - INTERVAL ? DAY ${groupFilter} ORDER BY t.completed_at DESC`,
+      params,
+    );
+    res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+
+<div lang="en">
+<p>Save and try <code>taskHistory</code> in Swagger with <code>days</code> 1, 7 and 0 (that one answers 400).</p>
+</div>
+<div lang="th">
+<p>บันทึกแล้วลอง <code>taskHistory</code> ใน Swagger ด้วย <code>days</code> เป็น 1, 7 และ 0 (ค่าสุดท้ายตอบ 400)</p>
+</div>
+
+<p>
+  <button type="button" class="btn btn-sm btn-primary" data-action="swagger" data-op="taskHistory" data-server="app">Try it in Swagger: taskHistory</button>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p><code>NOW() - INTERVAL ? DAY</code> works with a placeholder. Build the optional part of the SQL as a text that is either empty or <code>'AND t.group_id = ?'</code>, and add the value to the array only in the second case.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>server/routes/tasks.js</code>, between the comments of <code>s6-2-history</code>:</p>
+  <pre data-snippet data-file="server/routes/tasks.js" data-zone="s6-2-history"><code class="language-javascript">// Must stay above GET /:id, otherwise "history" would be read as an id.
+router.get('/history', async (req, res, next) =&gt; {
+  const days = req.query.days === undefined ? 7 : Number(req.query.days);
+  if (!Number.isInteger(days) || days &lt; 1) return res.status(400).json({ error: 'days must be a whole number of at least 1' });
+  const params = [days];
+  let groupFilter = '';
+  if (req.query.group_id !== undefined) {
+    if (!/^\d+$/.test(req.query.group_id)) return res.status(400).json({ error: 'group_id must be a whole number' });
+    groupFilter = 'AND t.group_id = ?';
+    params.push(Number(req.query.group_id));
+  }
+  try {
+    const [rows] = await db.query(
+      `${SELECT_TASKS} WHERE t.done = 1 AND t.completed_at &gt;= NOW() - INTERVAL ? DAY ${groupFilter} ORDER BY t.completed_at DESC`,
+      params,
+    );
+    res.json(rows);
+  } catch (err) {
+    next(err);
+  }
+});</code></pre>
+</details>
+
+<div data-check="history"></div>

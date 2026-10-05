@@ -1,0 +1,40 @@
+<h2>Step 2.1: The story and what done looks like</h2>
+
+<div lang="en">
+<p>Story 2 is the first one that <strong>changes data</strong>.</p>
+</div>
+<div lang="th">
+<p>Story 2 เป็น story แรกที่ <strong>แก้ไขข้อมูล</strong></p>
+</div>
+
+<blockquote class="blockquote">
+  <p>As a user, I want to add a task with a title, a priority and a due date, so that I can write down what I have to do.</p>
+</blockquote>
+
+<div lang="en">
+<p>Acceptance criteria:</p>
+<ul>
+  <li><code>POST /api/tasks</code> with a valid body answers <code>201</code> and the new task (with its <code>id</code>).</li>
+  <li>A body without a title, or with a title longer than 100 characters, answers <code>400</code> and says what is wrong.</li>
+  <li>The task is stored in MySQL and the list on the page shows it.</li>
+</ul>
+<p>Order of work: SQL, validation, the route, then the React form.</p>
+</div>
+<div lang="th">
+<p>เกณฑ์ที่ต้องผ่าน (acceptance criteria):</p>
+<ul>
+  <li><code>POST /api/tasks</code> ที่ส่ง body ถูกต้อง ตอบ <code>201</code> พร้อม task ใหม่ (มี <code>id</code>)</li>
+  <li>body ที่ไม่มี title หรือ title ยาวเกิน 100 ตัวอักษร ตอบ <code>400</code> และบอกว่าผิดอะไร</li>
+  <li>task ถูกเก็บใน MySQL และรายการบนหน้าเว็บแสดง task นั้น</li>
+</ul>
+<p>ลำดับการทำงาน: SQL, การตรวจข้อมูล (validation), route แล้วจึงเป็นฟอร์ม React</p>
+</div>
+
+<div lang="en">
+<p>To start this story from a clean state, even if you skipped steps before, type:</p>
+</div>
+<div lang="th">
+<p>ถ้าอยากเริ่ม story นี้จากสถานะที่สะอาด แม้จะข้าม step ก่อนหน้ามา ให้พิมพ์:</p>
+</div>
+
+<pre data-command><code>tutorial goto 2.1</code></pre>

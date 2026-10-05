@@ -1,0 +1,114 @@
+<h2>Step 2.5: The form in React</h2>
+
+<div lang="en">
+<p>The component <code>TaskForm</code> is a <strong>controlled form</strong>: each input shows a value kept in state and updates it on every change. On submit it sends the data with <code>fetch</code>, shows the server's error if there is one, and tells the page to reload the list with <code>onCreated()</code>.</p>
+<ul>
+  <li><code>event.preventDefault()</code> stops the browser from reloading the page.</li>
+  <li>A date input gives an empty text when it is empty. The code sends <code>null</code> instead (<code>dueDate || null</code>).</li>
+  <li>A new task goes into the selected group (the prop <code>groupId</code>, or none).</li>
+</ul>
+</div>
+<div lang="th">
+<p>component <code>TaskForm</code> เป็น <strong>controlled form</strong>: แต่ละ input แสดงค่าที่เก็บใน state และอัปเดตทุกครั้งที่เปลี่ยน ตอน submit จะส่งข้อมูลด้วย <code>fetch</code> แสดง error จาก server ถ้ามี และบอกหน้าเว็บให้โหลดรายการใหม่ด้วย <code>onCreated()</code></p>
+<ul>
+  <li><code>event.preventDefault()</code> ไม่ให้เบราว์เซอร์ reload หน้า</li>
+  <li>input วันที่ที่ว่างให้ข้อความว่าง โค้ดจึงส่ง <code>null</code> แทน (<code>dueDate || null</code>)</li>
+  <li>task ใหม่ไปอยู่ใน group ที่เลือก (prop <code>groupId</code> หรือไม่มี group)</li>
+</ul>
+</div>
+
+<p class="where">Edit <code>client/src/components/TaskForm.jsx</code> (in the Explorer: build &rsaquo; client &rsaquo; src &rsaquo; components &rsaquo; TaskForm.jsx). Write the code between the comments <code>@tutorial:begin s2-5-task-form</code> and <code>@tutorial:end s2-5-task-form</code>, inside the function.</p>
+
+<pre data-snippet data-file="client/src/components/TaskForm.jsx" data-zone="s2-5-task-form"><code class="language-javascript">const [title, setTitle] = useState('');
+const [priority, setPriority] = useState(2);
+const [dueDate, setDueDate] = useState('');
+const [error, setError] = useState('');
+
+async function handleSubmit(event) {
+  event.preventDefault();
+  const res = await fetch('/api/tasks', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title, priority, due_date: dueDate || null, group_id: groupId }),
+  });
+  if (!res.ok) {
+    setError((await res.json()).error);
+    return;
+  }
+  setTitle('');
+  setDueDate('');
+  setError('');
+  onCreated?.();
+}
+
+return (
+  &lt;form className="task-form" onSubmit={handleSubmit}&gt;
+    &lt;input value={title} onChange={(e) =&gt; setTitle(e.target.value)} placeholder="What needs doing?" aria-label="Title" /&gt;
+    &lt;select value={priority} onChange={(e) =&gt; setPriority(Number(e.target.value))} aria-label="Priority"&gt;
+      &lt;option value={1}&gt;low&lt;/option&gt;
+      &lt;option value={2}&gt;medium&lt;/option&gt;
+      &lt;option value={3}&gt;high&lt;/option&gt;
+    &lt;/select&gt;
+    &lt;input type="date" value={dueDate} onChange={(e) =&gt; setDueDate(e.target.value)} aria-label="Due date" /&gt;
+    &lt;button type="submit"&gt;Add&lt;/button&gt;
+    {error &amp;&amp; &lt;p role="alert"&gt;{error}&lt;/p&gt;}
+  &lt;/form&gt;
+);</code></pre>
+
+<div lang="en">
+<p>Save the file and use the form in <strong>Preview</strong>: add a task, then add one with an empty title and read the message.</p>
+</div>
+<div lang="th">
+<p>บันทึกไฟล์ แล้วลองใช้ฟอร์มใน <strong>Preview</strong>: เพิ่ม task หนึ่งอัน แล้วลองเพิ่มโดยไม่ใส่ title และอ่านข้อความที่ได้</p>
+</div>
+
+<p>
+  <a href="#" class="btn btn-sm btn-primary" data-action="preview" data-port="5173" data-path="/">Open the app in Preview</a>
+</p>
+
+<details>
+  <summary>Hint</summary>
+  <p>The form tag needs <code>onSubmit={handleSubmit}</code>, and every input needs <code>value</code> and <code>onChange</code>. If the list does not refresh, check that <code>onCreated?.()</code> is called after a successful answer.</p>
+</details>
+
+<details>
+  <summary>Solution</summary>
+  <p class="where">In <code>client/src/components/TaskForm.jsx</code>, between the comments of <code>s2-5-task-form</code>:</p>
+  <pre data-snippet data-file="client/src/components/TaskForm.jsx" data-zone="s2-5-task-form"><code class="language-javascript">const [title, setTitle] = useState('');
+const [priority, setPriority] = useState(2);
+const [dueDate, setDueDate] = useState('');
+const [error, setError] = useState('');
+
+async function handleSubmit(event) {
+  event.preventDefault();
+  const res = await fetch('/api/tasks', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title, priority, due_date: dueDate || null, group_id: groupId }),
+  });
+  if (!res.ok) {
+    setError((await res.json()).error);
+    return;
+  }
+  setTitle('');
+  setDueDate('');
+  setError('');
+  onCreated?.();
+}
+
+return (
+  &lt;form className="task-form" onSubmit={handleSubmit}&gt;
+    &lt;input value={title} onChange={(e) =&gt; setTitle(e.target.value)} placeholder="What needs doing?" aria-label="Title" /&gt;
+    &lt;select value={priority} onChange={(e) =&gt; setPriority(Number(e.target.value))} aria-label="Priority"&gt;
+      &lt;option value={1}&gt;low&lt;/option&gt;
+      &lt;option value={2}&gt;medium&lt;/option&gt;
+      &lt;option value={3}&gt;high&lt;/option&gt;
+    &lt;/select&gt;
+    &lt;input type="date" value={dueDate} onChange={(e) =&gt; setDueDate(e.target.value)} aria-label="Due date" /&gt;
+    &lt;button type="submit"&gt;Add&lt;/button&gt;
+    {error &amp;&amp; &lt;p role="alert"&gt;{error}&lt;/p&gt;}
+  &lt;/form&gt;
+);</code></pre>
+</details>
+
+<div data-check="task-form-code"></div>

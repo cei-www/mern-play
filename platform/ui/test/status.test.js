@@ -26,7 +26,11 @@ describe('describeStatus (banner)', () => {
 
 describe('describeDots', () => {
   it('has a dot for the workspace, your app and the database', () => {
-    expect(describeDots(up).map((d) => [d.id, d.state])).toEqual([['workspace', 'up'], ['app', 'up'], ['db', 'up']]);
+    expect(describeDots(up).map((d) => [d.id, d.state])).toEqual([
+      ['workspace', 'up'],
+      ['app', 'up'],
+      ['db', 'up'],
+    ]);
   });
 
   it('explains that a stopped app is normal while editing', () => {

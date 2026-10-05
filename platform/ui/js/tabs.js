@@ -16,10 +16,15 @@ export const TAB_LIST = [
 
 const host = () => window.location.hostname || 'localhost';
 
-/** @param {Ports} ports */
-export const editorUrl = (ports) => `http://${host()}:${ports.editor}/?folder=/workspace`;
-/** @param {Ports} ports */
-export const robotUrl = (ports) => `http://${host()}:${ports.robot}/?folder=/workspace`;
+/**
+ * The editors open the folder of the current module, so the terminal starts there and the `tutorial` command knows the module.
+ * @param {string} [moduleId]
+ */
+export const workspaceFolder = (moduleId) => (moduleId ? `/workspace/${moduleId}` : '/workspace');
+/** @param {Ports} ports @param {string} [moduleId] */
+export const editorUrl = (ports, moduleId) => `http://${host()}:${ports.editor}/?folder=${workspaceFolder(moduleId)}`;
+/** @param {Ports} ports @param {string} [moduleId] */
+export const robotUrl = (ports, moduleId) => `http://${host()}:${ports.robot}/?folder=${workspaceFolder(moduleId)}`;
 /** @param {Ports} ports */
 export const databaseUrl = (ports) => `http://${host()}:${ports.dbadmin}/?server=db&username=viewer&db=taskapp`;
 
@@ -68,10 +73,7 @@ export function unavailableMessage(id, startHint) {
   if (id === 'robot') {
     return {
       title: 'The Robot workspace is not running',
-      lines: [
-        startHint?.gui ?? 'Docker Desktop: Containers, ws-robot, Start.',
-        'This page loads the editor by itself as soon as it is running.',
-      ],
+      lines: [startHint?.gui ?? 'Docker Desktop: Containers, ws-robot, Start.', 'This page loads the editor by itself as soon as it is running.'],
       command: startHint?.cli ?? 'docker compose start ws-robot',
     };
   }
@@ -96,7 +98,9 @@ export function createTabs({ nav, panes, ports, copyText }) {
   let nonce = 0;
   /** @type {{ op?: string, server?: string }} */
   let swaggerTarget = {};
-  let previewTarget = { port: ports.express, path: '/api/health' };
+  let previewTarget = { port: ports.vite, path: '/' };
+  /** The module whose folder the editors open. */
+  let moduleId = '';
 
   /** @type {Record<string, { tab: HTMLButtonElement, open: HTMLAnchorElement, pane: HTMLElement, message: HTMLElement, frame: HTMLIFrameElement, loadedUrl: string | null }>} */
   const els = {};
@@ -104,11 +108,16 @@ export function createTabs({ nav, panes, ports, copyText }) {
   /** @param {TabId} id @returns {string} */
   function urlFor(id) {
     switch (id) {
-      case 'editor': return editorUrl(ports);
-      case 'robot': return robotUrl(ports);
-      case 'database': return databaseUrl(ports);
-      case 'preview': return previewUrl(previewTarget.port, previewTarget.path);
-      case 'swagger': return swaggerUrl({ ...swaggerTarget, nonce });
+      case 'editor':
+        return editorUrl(ports, moduleId);
+      case 'robot':
+        return robotUrl(ports, moduleId);
+      case 'database':
+        return databaseUrl(ports);
+      case 'preview':
+        return previewUrl(previewTarget.port, previewTarget.path);
+      case 'swagger':
+        return swaggerUrl({ ...swaggerTarget, nonce });
     }
   }
 
@@ -256,28 +265,71 @@ export function createTabs({ nav, panes, ports, copyText }) {
     const select = document.createElement('select');
     select.className = 'form-select form-select-sm';
     select.setAttribute('aria-label', 'Port');
-    /** @type {[number, string][]} */
+    /** Each entry opens one page; the line under the bar says what it is. @type {{ port: number, path: string, label: string, about: string }[]} */
     const choices = [
-      [ports.express, 'Your API'],
-      [ports.vite, 'Your app'],
-      [ports.viteStyle, 'Style app'],
-      [ports.referenceApi, 'Reference API'],
-      [ports.styleApi, 'Style API'],
-      [ports.report, 'Robot report'],
+      { port: ports.vite, path: '/', label: 'App', about: 'The front page of the Task Manager you build in module build (React, port 5173).' },
+      {
+        port: ports.viteStyle,
+        path: '/',
+        label: 'App (for Tailwind)',
+        about: 'The front page of the module style project (port 5174). It starts unstyled on purpose: you add the look with Tailwind.',
+      },
+      {
+        port: ports.express,
+        path: '/api/health',
+        label: 'API: health check',
+        about: 'Asks your Express server if it is alive. It answers {"status":"ok"} once you finish step 1.4 of module build.',
+      },
+      {
+        port: ports.express,
+        path: '/api/tasks',
+        label: 'API: task list',
+        about: 'The JSON your server returns for GET /api/tasks (your code, from Story 1).',
+      },
+      {
+        port: ports.referenceApi,
+        path: '/api/health',
+        label: 'Reference API',
+        about: 'The finished API that the tests of module api run against (needs the Robot container).',
+      },
+      { port: ports.styleApi, path: '/api/tasks', label: 'API (for Tailwind)', about: 'The finished API behind the Tailwind app. You do not change it.' },
+      { port: ports.report, path: '/report.html', label: 'Robot report', about: 'The HTML report of your last Robot Framework run (module api).' },
     ];
-    choices.forEach(([port, label]) => {
+    choices.forEach((choice, index) => {
       const option = document.createElement('option');
-      option.value = String(port);
-      option.textContent = `${label} (${port})`;
+      option.value = String(index);
+      option.textContent = `${choice.label} (${choice.port})`;
+      option.title = choice.about;
       select.append(option);
     });
-    select.value = String(previewTarget.port);
+    const hint = document.createElement('div');
+    hint.className = 'preview-hint';
+    /** The entry for the current target: same port and path if there is one, else the first with that port. */
+    const indexOfTarget = () => {
+      const exact = choices.findIndex((c) => c.port === previewTarget.port && c.path === previewTarget.path);
+      return exact >= 0
+        ? exact
+        : Math.max(
+            0,
+            choices.findIndex((c) => c.port === previewTarget.port),
+          );
+    };
+    const showTarget = () => {
+      select.value = String(indexOfTarget());
+      hint.textContent = choices[Number(select.value)]?.about ?? '';
+    };
 
     const path = document.createElement('input');
     path.className = 'form-control form-control-sm';
     path.setAttribute('aria-label', 'Path');
     path.placeholder = '/api/tasks';
     path.value = previewTarget.path;
+    select.addEventListener('change', () => {
+      const choice = choices[Number(select.value)];
+      if (!choice) return;
+      path.value = choice.path;
+      hint.textContent = choice.about;
+    });
     path.spellcheck = false;
 
     const go = document.createElement('button');
@@ -296,19 +348,20 @@ export function createTabs({ nav, panes, ports, copyText }) {
 
     form.addEventListener('submit', (event) => {
       event.preventDefault();
-      previewTarget = { port: Number(select.value), path: path.value || '/' };
+      previewTarget = { port: choices[Number(select.value)]?.port ?? previewTarget.port, path: path.value || '/' };
       const e = els.preview;
       if (e) {
         e.loadedUrl = null;
         refresh('preview');
       }
     });
-    form.append(select, path, go, reload);
+    form.append(select, path, go, reload, hint);
+    showTarget();
 
     // Keep the form in sync when a lesson button sets the target.
     form.dataset.sync = '1';
     form.addEventListener('sync', () => {
-      select.value = String(previewTarget.port);
+      showTarget();
       path.value = previewTarget.path;
     });
     return form;
@@ -332,6 +385,11 @@ export function createTabs({ nav, panes, ports, copyText }) {
       status = next;
       startHint = hint;
       TAB_LIST.forEach(({ id }) => refresh(id));
+    },
+    /** The editors now open the folder of this module (for example /workspace/style). @param {string} id */
+    setModule(id) {
+      moduleId = id;
+      TAB_LIST.forEach(({ id: tab }) => refresh(tab));
     },
     /** @param {{ port: number, path: string }} target */
     openPreview(target) {
