@@ -11,7 +11,7 @@ An interactive course that runs on your own computer. Read the lesson on the lef
 | **Build the app** (`build`) | Build the Task Manager step by step in seven stories: an Express API on MySQL and a React front end | 6 h |
 | **Tailwind CSS** (`style`) | Start from an unstyled page and style it with Tailwind 4: layout, look, hover and focus states, mobile and dark mode | 3 h |
 | **Unit testing** (`unit`) | Write tests with Vitest and Testing Library for server logic and React components; your tests are checked by putting bugs into the code | 3 h |
-| **API automation** (`api`) | Test the API with Robot Framework: status codes, data, errors, and a final check against deliberate bugs | 3 h |
+| **API Automation Test** (robot) | Test the API with Robot Framework: status codes, data, errors, and a final check against deliberate bugs | 3 h |
 
 Each module is independent, so you can take them in any order. Every checkpoint has two optional exercises.
 
