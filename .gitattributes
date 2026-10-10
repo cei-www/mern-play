@@ -1,6 +1,13 @@
 # Force LF everywhere. CRLF breaks shell scripts and entrypoints inside Linux containers (Windows checkouts).
+# These rules win over core.autocrlf on the learner's machine.
 * text=auto eol=lf
+*.sh text eol=lf
+*.conf text eol=lf
+*.sql text eol=lf
+Dockerfile text eol=lf
+bin/* text eol=lf
 *.png binary
 *.jpg binary
+*.webp binary
 *.ico binary
 *.woff2 binary

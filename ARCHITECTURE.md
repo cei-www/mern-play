@@ -170,7 +170,7 @@ The learner types these commands in the VS Code terminal. `tutorial` is installe
 - DB users: workspace `build`/`style` users have rights on `taskapp`/`taskapp_style`; `ws-robot` user only on `taskapp_test`. The Adminer viewer user can write to `taskapp` and `taskapp_style` and is read-only on `taskapp_test`. Progress is not in the DB.
 - Learner files: named volumes per module are the default (**OPEN**, see section 11). Reset policy is "delete the container (and volume) and recreate"; no in-container restore logic.
 
-Reset commands (documented in README; `make` targets exist but raw commands are documented because Windows has no `make`):
+Reset commands (documented in docs/GUIDE.md; plain `docker compose` only, because Windows has no `make`):
 
 | Goal | Command |
 |---|---|

@@ -45,6 +45,10 @@ COPY --from=cli-build --chown=node:node /cli/dist /opt/tutorial/dist
 COPY --from=cli-build --chown=node:node /cli/node_modules /opt/tutorial/node_modules
 RUN printf '{"type":"module"}\n' > /opt/tutorial/package.json
 COPY --chmod=0755 bin/tutorial bin/reset-db /usr/local/bin/
+# Safety net for a checkout with Windows line endings: "bad interpreter: /bin/sh^M" would stop the container.
+USER root
+RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh /usr/local/bin/tutorial /usr/local/bin/reset-db
+USER node
 
 # ---------------------------------------------------------------------------
 FROM base AS main
@@ -69,6 +73,9 @@ COPY --chown=node:node project-template/build /opt/templates/build
 COPY --chown=node:node project-template/style /opt/templates/style
 COPY --chown=node:node project-template/unit /opt/templates/unit
 COPY --chown=root:root supervisord-main.conf /etc/supervisor/ce-main.conf
+USER root
+RUN sed -i 's/\r$//' /etc/supervisor/ce-main.conf
+USER node
 
 WORKDIR /workspace
 EXPOSE 8080 3000 5173 5174 3002
@@ -92,6 +99,9 @@ RUN cd /opt/reference && npm install --no-audit --no-fund express@5.2.1 mysql2@3
 ENV PATH=/opt/robot-venv/bin:$PATH NODE_PATH=/opt/reference/node_modules INIT_MODULES=api WAIT_FOR_DB=1
 COPY --chown=node:node project-template/api /opt/templates/api
 COPY --chown=root:root supervisord-robot.conf /etc/supervisor/ce-robot.conf
+USER root
+RUN sed -i 's/\r$//' /etc/supervisor/ce-robot.conf
+USER node
 
 WORKDIR /workspace
 EXPOSE 8080 3001 9323

@@ -8,6 +8,7 @@
   "update.mode": "none",
   "extensions.autoUpdate": false,
   "extensions.autoCheckUpdates": false,
+  "files.eol": "\n",
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "typescript.disableAutomaticTypeAcquisition": true,

@@ -4,23 +4,30 @@ Thank you for helping. This file is for people who change the course or the plat
 
 ## Set up
 
-You only need Docker. Node 22 runs in containers (the `make` targets do this). Without `make`, copy the `docker run` commands from the [Makefile](Makefile).
+You only need Docker. Node 22 runs in containers: the tools are services of [docker-compose.tools.yml](docker-compose.tools.yml), started with `docker compose -f docker-compose.tools.yml run --rm <name>`. There is no `make`.
 
-| Command | What it does |
+Tool names (prefix each with `docker compose -f docker-compose.tools.yml run --rm`):
+
+| Name | What it does |
 |---|---|
-| `make test` | Unit tests and type checks of `workspace/tutorial-cli`, `platform/api`, `platform/ui` |
-| `make lint-lessons` | Checks every lesson against `lesson.yaml`, the OpenAPI file and the finished app |
-| `make snapshots` / `make snapshots-check` | Rebuild / verify `course/snapshots` |
-| `make integration` | Plays a learner through the course in a private stack (`-p ce-it`, other ports), then tears it down. About 2 minutes. `KEEP=1` leaves the stack up |
-| `make lint` / `make format` | ESLint and Prettier |
+| `test` | Unit tests and type checks of `workspace/tutorial-cli`, `platform/api`, `platform/ui` |
+| `lint-lessons` | Checks every lesson against `lesson.yaml`, the OpenAPI file and the finished projects |
+| `snapshots` / `snapshots-check` | Rebuild / verify `course/snapshots` (and the starting project of module `style`) |
+| `lint` / `format` / `format-check` | ESLint and Prettier (write or check) |
 
-Run `make test`, `make lint-lessons`, `make snapshots-check` and, when you touched the app, a check, a lesson or the CLI, `make integration` before you open a pull request.
+The integration test starts a whole private stack, so it is a shell script: `sh tests/integration/run.sh` (on Windows use WSL or Git Bash). It plays a learner through the course (`-p ce-it`, other ports) and tears the stack down. About 8 minutes for all modules; `ONLY=build|style|unit|api` runs one and `KEEP=1` leaves the stack up.
+
+Before a pull request run `test`, `lint-lessons`, `snapshots-check`, `format-check` and, when you touched the app, a check, a lesson or the CLI, the integration test.
 
 ## Modules that keep their finished project outside the template
 
-Module `build` ships the finished app as its starting project (learners use it first, then `tutorial wipe`). Module `style` starts unstyled, so its finished project lives in `course/solution/style` and the starting project `workspace/project-template/style` is **generated** from it. Edit only the solution, then run `make snapshots`. Step ids of module `style` are numbers (`2.3`), the first one being the part, because zone names (`s2-3-layout-grid`) give the step that owns them.
+Module `build` ships the finished app as its starting project (learners use it first, then `tutorial wipe`). Module `style` starts unstyled, so its finished project lives in `course/solution/style` and the starting project `workspace/project-template/style` is **generated** from it. Edit only the solution, then run `snapshots`. Step ids of module `style` are numbers (`2.3`), the first one being the part, because zone names (`s2-3-layout-grid`) give the step that owns them.
 
 Module `unit` has the opposite shape: the code under test is the starting project (`workspace/project-template/unit/src`, never changed by learners) and the learner writes tests. The finished tests are `course/solution/unit/tests/*.test.js(x)`, cut into zones with `// @tutorial:begin <id>` comments; the lessons show them as `data-position="end"` snippets (the first snippet of a file creates it). A mutation check lists bugs as `{ name, file, find, replace, tests, hint }`: the bug is put into a **copy** of the project and the learner's tests must fail. When you change code in `src`, make sure each `find` text still exists exactly once (the check says "has been changed" otherwise), and that the finished tests kill the bug.
+
+## Line endings (Mac, Windows and Linux)
+
+Everything inside the containers is Linux, so a script with Windows line endings (CRLF) fails with `bad interpreter` or `\r: command not found`. Three layers prevent it: `.gitattributes` forces LF at checkout whatever `core.autocrlf` says (also `.editorconfig` and Prettier `endOfLine: lf`); the `workspace/Dockerfile` strips CR from the scripts and the supervisor files it copies; the `db` service in `docker-compose.yml` copies `db/init/*` through `tr -d '\r'` because that folder is mounted from the host. If you add a script that is mounted or copied into a container, add it to one of those paths, and never rely on the editor of the person who clones it.
 
 ## Add or change a step
 
@@ -28,13 +35,13 @@ Module `unit` has the opposite shape: the code under test is the starting projec
    - Name the zone `s<major>-<minor>-<name>` after the step that writes it. The snapshot builder derives the order from it, and refuses a zone with any other name (exercise zones, `exercise-<n>-<name>`, are the exception).
    - After `tutorial wipe` the app must **still start**. Write the code around a zone so that an empty zone only removes a feature (a route answers 404, a component draws nothing). A React component may return `undefined`.
    - Code that **changes earlier code** goes into a new zone, never into an old one, because a snapshot is the finished app with later zones emptied. See how `s5-2-filter-sort` sits above the plain list route and calls `next()`.
-2. **Regenerate the snapshots**: `make snapshots`.
+2. **Regenerate the snapshots**: `snapshots`.
 3. **Write the lesson**: one HTML file in `course/modules/<module>/<part>/`, and a line under `steps:` in `lesson.yaml` (`id`, `title`, `type` of `read | do | practice | check`, `file`, optional `checks`).
    - Every `<pre data-snippet>` has `data-file` (path inside the module) and exactly one of `data-zone`, `data-after`, `data-position="end"`. A visible `<p class="where">` before it names the file and says which Explorer folders to open. The linter enforces this against the finished app.
    - The code in the snippet is the code in the zone. The integration test types the snippets of the lesson into a real workspace, so a typo in a lesson fails the test.
    - Hints and solutions are in `<details>`.
 4. **Define the checks** under `checks:` in `lesson.yaml` (the list of types is in [the guide](docs/GUIDE.md)). A good check **fails before the learner acts and passes after**; the integration test verifies exactly that for every step it covers. Give `http` checks `hints` for the status codes learners will meet (404 and 500) so the message says what to look at.
-5. **Run** `make lint-lessons`, `make test`, `make integration`.
+5. **Run** `lint-lessons`, `test`, `sh tests/integration/run.sh`.
 
 ### Exercises (checkpoints)
 
@@ -55,7 +62,7 @@ Module `unit` has the opposite shape: the code under test is the starting projec
 
 - TypeScript is strict. Versions of dependencies are pinned exactly (no `^`), because the images must build the same way every time.
 - No new dependency without a reason. The tutorial page is plain HTML, CSS and JavaScript with Bootstrap, Swagger UI and highlight.js vendored under `platform/ui/vendor` (see `VERSIONS.md` there). It has no build step.
-- `make format` runs Prettier and `make lint` runs ESLint on the tools (not on the learner project, the lessons or the snapshots: those are formatted by hand so that lessons and code match exactly).
+- `format` runs Prettier and `lint` runs ESLint on the tools (not on the learner project, the lessons or the snapshots: those are formatted by hand so that lessons and code match exactly).
 - Tests: a new behavior needs a test. For logic that protects something (path checks, SQL checks, zone handling, check types), also break the code on purpose once and confirm a test fails; the existing tests were verified this way.
 
 ## Safety rules the code relies on

@@ -51,7 +51,7 @@ Checkpoints have two optional exercises each. Skipping them never blocks the nex
 
 ## Everyday commands
 
-These work on every system. On Mac and Linux `make` has shortcuts for the same things (`make up`, `make down`, `make robot`, and so on).
+These work on every system. Only Docker is needed: there is nothing else to install, and no `make`.
 
 | Goal | Command |
 |---|---|
@@ -78,6 +78,7 @@ The tutorial pages, lessons and checks update at once. A project folder that alr
 
 | Problem | What to try |
 |---|---|
+| A container stops at once and its log says `bad interpreter` or `^M` or `\r: command not found` | Windows line endings (CRLF) got into a script. The repository forces LF with `.gitattributes`, so this happens only with files copied by hand or a very old checkout. Fix: `git rm --cached -r . -q && git reset --hard` (this discards uncommitted changes), then `docker compose up -d --build`. If it is a script you edited, save it with LF (in VS Code: click `CRLF` at the bottom right, choose `LF`) |
 | A tab says a service is not reachable | Wait 30 seconds after `docker compose up -d`. Then run `docker compose ps`; a container that is not `healthy` has its reason in `docker compose logs <name>` |
 | Port already in use | Copy `.env.example` to `.env` and change the port numbers, then `docker compose up -d` |
 | Preview shows an old page | The starter project in your workspace is from an older version. See "Updating" above |
@@ -88,7 +89,6 @@ The tutorial pages, lessons and checks update at once. A project folder that alr
 | The Robot tab is empty | Start the Robot container (see above) and wait until it is healthy |
 | `docker compose start ws-robot` says a network is not found | The network was removed after the container was created. Run `docker compose --profile robot up -d --force-recreate ws-robot` |
 | Slow or out of memory | Give Docker Desktop at least 4 CPUs and 6 GB of memory (Settings, Resources) |
-| A command is not found on Windows (`make`) | Use the `docker compose` commands in this README. `make` is optional |
 
 ## How it fits together
 
@@ -112,7 +112,7 @@ A module is a folder `course/modules/<id>/` with a `lesson.yaml` and one HTML fi
 
 - **Lesson HTML:** an English block followed directly by its Thai block (`<div lang="en">` then `<div lang="th">`). Hints, solutions, headings and check messages are English only; checkpoint exercise statements have both languages. Every code snippet is `<pre data-snippet data-file="server/app.js" data-zone="s1-4-health">` with a visible `<p class="where">` note that names the file (and the Explorer path) before it. A zone is one of `data-zone`, `data-after` or `data-position="end"`.
 - **Zones:** the finished app is `workspace/project-template/build`. Code you want learners to write sits between `@tutorial:begin <id>` and `@tutorial:end <id>` comments. Name the zone after the step that writes it: `s<major>-<minor>-<name>` (`s1-6-list-tasks` belongs to step 1.6). Exercise zones are `exercise-<n>-<name>`; they stay empty in the app and their solutions live in the lesson. Code that changes earlier code goes in a **new zone**, never into an old one.
-- **Snapshots** (`course/snapshots/<module>/<step>/`) are generated from the finished app: run `make snapshots` after changing the app and commit the result. `make snapshots-check` fails when they are out of date. For module `style` the finished project is `course/solution/style`, and its starting project `workspace/project-template/style` is generated from it (every zone emptied), so never edit the template by hand.
+- **Snapshots** (`course/snapshots/<module>/<step>/`) are generated from the finished app: run `snapshots` after changing the app and commit the result. `snapshots-check` fails when they are out of date. For module `style` the finished project is `course/solution/style`, and its starting project `workspace/project-template/style` is generated from it (every zone emptied), so never edit the template by hand.
 - **Checks** are defined once in `lesson.yaml` under `checks:` and attached to steps with `checks: [id]`. Types:
 
 | Type | Checks | Main fields |
@@ -127,7 +127,7 @@ A module is a folder `course/modules/<id>/` with a `lesson.yaml` and one HTML fi
 
   Matchers inside `expect.json`: `$type`, `$minLength`, `$length`, `$each`, `$regex`, `$oneOf`, `$var` with `$plus`. Checks only call localhost, run only `SELECT` queries and read only files inside the module folder.
 - **API contract:** `course/openapi/taskapp.yaml` describes the whole API. The Swagger tab and the contract test use it, and Swagger buttons in lessons use its `operationId`s (`data-action="swagger" data-op="listTasks"`).
-- **Check your work:** `make lint-lessons` (the lesson linter), `make test` (unit tests and type checks), `make integration` (plays a learner through all four modules in a private Docker stack, about 8 minutes; `ONLY=build`, `ONLY=style`, `ONLY=unit` or `ONLY=api` runs one). See [CONTRIBUTING.md](../CONTRIBUTING.md).
+- **Check your work** (tools of [CONTRIBUTING.md](../CONTRIBUTING.md), run with `docker compose -f docker-compose.tools.yml run --rm <name>`): `lint-lessons` (the lesson linter), `test` (unit tests and type checks), `sh tests/integration/run.sh` (plays a learner through all four modules in a private Docker stack, about 8 minutes; `ONLY=build`, `ONLY=style`, `ONLY=unit` or `ONLY=api` runs one). See [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## What is not verified yet
 

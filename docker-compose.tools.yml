@@ -1,0 +1,66 @@
+# Tools for course authors and contributors. Learners do not need this file.
+# Node 22 runs in a container, so the only requirement is Docker. Run one tool with:
+#   docker compose -f docker-compose.tools.yml run --rm <name>
+# Names: test, lint-lessons, snapshots, snapshots-check, lint, format, format-check.
+# (The integration test starts a whole private stack, so it is a script: sh tests/integration/run.sh)
+name: ce-webdev-tools
+
+x-tool: &tool
+  image: node:22-bookworm-slim
+  volumes:
+    - .:/repo
+  working_dir: /repo
+  # Installs the ESLint and Prettier packages (tools/lint) on first use.
+  environment:
+    NPM_CONFIG_UPDATE_NOTIFIER: "false"
+
+services:
+  # Unit tests and type checks of workspace/tutorial-cli, platform/api and platform/ui.
+  test:
+    <<: *tool
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        for d in workspace/tutorial-cli platform/api platform/ui; do
+          echo "== $$d"
+          (cd /repo/$$d && npx tsc -p tsconfig.json --noEmit && npx vitest run)
+        done
+
+  # Checks every lesson against lesson.yaml, the OpenAPI file and the finished projects.
+  lint-lessons:
+    <<: *tool
+    working_dir: /repo/platform/api
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        npx tsc -p tsconfig.build.json --outDir /tmp/dist >/dev/null
+        ln -s /repo/platform/api/node_modules /tmp/node_modules
+        printf '{"type":"module"}' > /tmp/package.json
+        node /tmp/dist/lintCli.js /repo/course --solution /repo/workspace/project-template --solution /repo/course/solution
+
+  # Rebuilds course/snapshots (and the starting project of module style) from the finished projects.
+  snapshots:
+    <<: *tool
+    working_dir: /repo/workspace/tutorial-cli
+    command: ["sh", "/repo/workspace/tutorial-cli/snapshots-run.sh"]
+
+  # Fails when course/snapshots is out of date.
+  snapshots-check:
+    <<: *tool
+    working_dir: /repo/workspace/tutorial-cli
+    command: ["sh", "/repo/workspace/tutorial-cli/snapshots-run.sh", "--check"]
+
+  # ESLint, and Prettier (write or check), for the tools of this repository. Not applied to the learner project, the lessons or the snapshots.
+  lint:
+    <<: *tool
+    command: ["sh", "-c", "test -d tools/lint/node_modules || (cd tools/lint && npm install --no-audit --no-fund >/dev/null 2>&1); tools/lint/node_modules/.bin/eslint -c tools/lint/eslint.config.js workspace/tutorial-cli platform tests"]
+  format:
+    <<: *tool
+    command: ["sh", "-c", "test -d tools/lint/node_modules || (cd tools/lint && npm install --no-audit --no-fund >/dev/null 2>&1); tools/lint/node_modules/.bin/prettier --config .prettierrc.json --write workspace/tutorial-cli platform tests"]
+  format-check:
+    <<: *tool
+    command: ["sh", "-c", "test -d tools/lint/node_modules || (cd tools/lint && npm install --no-audit --no-fund >/dev/null 2>&1); tools/lint/node_modules/.bin/prettier --config .prettierrc.json --check workspace/tutorial-cli platform tests"]

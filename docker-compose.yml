@@ -44,12 +44,22 @@ services:
 
   db:
     image: mysql:8.4
+    # The init scripts are copied with any Windows line ending (CR) removed, because MySQL runs them with bash
+    # and a "\r" at the end of a line would break them. They must be executable: a sourced script would leak `set -u` into MySQL's own entrypoint. The folder itself is mounted read-only under another name.
+    entrypoint:
+      - bash
+      - -c
+      - |
+        mkdir -p /docker-entrypoint-initdb.d
+        for f in /init-src/*; do tr -d '\r' < "$$f" > "/docker-entrypoint-initdb.d/$$(basename "$$f")"; done
+        chmod +x /docker-entrypoint-initdb.d/*
+        exec docker-entrypoint.sh mysqld
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_pw}
     volumes:
       - db-data:/var/lib/mysql
       - ./course:/course:ro
-      - ./db/init:/docker-entrypoint-initdb.d:ro
+      - ./db/init:/init-src:ro
     networks: [internal]
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
