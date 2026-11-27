@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-const require = createRequire(path.join(root, 'platform/api/package.json'));
+const require = createRequire(path.join(root, 'tests/integration/package.json'));
 const { parse: parseHtml } = require('node-html-parser');
 const { parse: parseYaml } = require('yaml');
 

@@ -103,7 +103,7 @@ Browser ── :4000 ──► platform (static tutorial + lessons + Swagger + s
 
 - `platform` only serves pages and reports whether services are up. It sends no commands to the workspaces and has no Docker access.
 - You work in the workspace with the `tutorial` command in the terminal. Nothing on the lesson page changes your files.
-- All published ports are bound to `127.0.0.1` (this computer only) by default. Set `BIND_ADDR=0.0.0.0` in `.env` to publish them on every interface; do this only on a machine other computers must reach (for example a department VM), and open those ports in the firewall. The lesson page links every tab to the hostname it was opened from, and Adminer accepts embedding from any hostname on the platform port, so the course works through the VM address as well. The database passwords are throw-away values for local use.
+- All published ports are bound to `127.0.0.1` (this computer only) by default. Set `BIND_ADDR=0.0.0.0` in `.env` to publish them on every interface; do this only on a machine other computers must reach (for example a department VM), and open those ports in the firewall. The editor (code-server) runs without a password (`--auth none`): anyone who can reach its port has a shell inside the workspace, so protect it with an SSH tunnel or a firewall rule before publishing it beyond this computer. The lesson page links every tab to the hostname it was opened from, and Adminer accepts embedding from any hostname on the platform port, so the course works through the VM address as well. The database passwords are throw-away values for local use.
 - The details and the reasons are in [ARCHITECTURE.md](../ARCHITECTURE.md).
 
 ## For course authors

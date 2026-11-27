@@ -97,6 +97,8 @@ services:
       TUTORIAL_DB_HOST: db
       TUTORIAL_DB_USER: app
       TUTORIAL_DB_PASSWORD: app_pw
+      # Extra hostnames the Vite dev servers accept (comma-separated), for a DNS name in front of the course.
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS:-}
     ports:
       - "${BIND_ADDR:-127.0.0.1}:${WS_MAIN_PORT:-8081}:8080"   # code-server
       - "${BIND_ADDR:-127.0.0.1}:${EXPRESS_PORT:-3000}:3000"   # learner's Express (build module)

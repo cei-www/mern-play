@@ -1,0 +1,11 @@
+{
+  "name": "ce-webdev-integration",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Dependencies of the integration test scripts (run.sh installs them with npm ci).",
+  "dependencies": {
+    "node-html-parser": "9.0.4",
+    "yaml": "2.9.1"
+  }
+}

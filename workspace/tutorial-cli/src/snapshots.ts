@@ -1,12 +1,20 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { resolveInside } from './pathGuard.js';
-import { isExerciseZone, preserveZones } from './zones.js';
+import { isExerciseZone, preserveZones, ZoneError } from './zones.js';
 
 export class SnapshotError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'SnapshotError';
+  }
+}
+
+/** A snapshot could not be applied because the learner's file has broken `@tutorial` markers. */
+export class SnapshotZoneError extends SnapshotError {
+  constructor(message: string) {
+    super(message);
+    this.name = 'SnapshotZoneError';
   }
 }
 
@@ -45,7 +53,12 @@ export function applySnapshot(snapshotDir: string, targetRoot: string): Snapshot
 
     let next: Buffer = source;
     if (!source.includes(0) && current && !current.includes(0)) {
-      next = Buffer.from(preserveZones(source.toString('utf8'), current.toString('utf8'), isExerciseZone), 'utf8');
+      try {
+        next = Buffer.from(preserveZones(source.toString('utf8'), current.toString('utf8'), isExerciseZone), 'utf8');
+      } catch (err) {
+        if (err instanceof ZoneError) throw new SnapshotZoneError(`${rel}: ${err.message}`);
+        throw err;
+      }
     }
     if (current && current.equals(next)) {
       result.unchanged.push(rel);

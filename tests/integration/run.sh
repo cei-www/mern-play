@@ -2,10 +2,10 @@
 # Boots a private copy of the stack (project "ce-it", other host ports), runs the integration tests, tears it down.
 #   tests/integration/run.sh          all modules (build, style, unit, api)
 #   ONLY=build tests/integration/run.sh   or   ONLY=api   or   ONLY=style   or   ONLY=unit
-# Needs Docker and Node 18+. The test scripts load node-html-parser and yaml from
-# platform/api, so run "npm ci" in platform/api once before the first run. The first run builds the images.
+# Needs Docker and Node 18+. The scripts install their two dependencies with npm ci. The first run builds the images.
 set -e
 cd "$(dirname "$0")/../.."
+npm ci --prefix tests/integration --no-audit --no-fund
 export WS_MAIN_PORT=18081 EXPRESS_PORT=13000 VITE_PORT=15173 STYLE_API_PORT=13002 VITE_STYLE_PORT=15174
 export WS_ROBOT_PORT=18083 REFERENCE_API_PORT=13001 ROBOT_REPORT_PORT=19323
 docker compose -p ce-it --profile robot up -d --build --wait db ws-main ws-robot

@@ -5,6 +5,7 @@
 # Pass --check to fail when they are out of date instead of writing them.
 set -e
 cd /repo/workspace/tutorial-cli
+npm ci --no-audit --no-fund
 npx tsc -p tsconfig.build.json --outDir /tmp/dist >/dev/null
 ln -sfn /repo/workspace/tutorial-cli/node_modules /tmp/node_modules
 printf '{"type":"module"}' > /tmp/package.json

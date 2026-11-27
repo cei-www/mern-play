@@ -7,19 +7,21 @@ app.use(cors());
 app.use(express.json());
 
 // @tutorial:begin s1-4-health
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok' });
-});
+// TODO (s1-4-health): write your code here
+
+
 // @tutorial:end s1-4-health
 
 // @tutorial:begin s1-5-mount-tasks
-const tasksRouter = require('./routes/tasks');
-app.use('/api/tasks', tasksRouter);
+// TODO (s1-5-mount-tasks): write your code here
+
+
 // @tutorial:end s1-5-mount-tasks
 
 // @tutorial:begin s4-3-mount-groups
-const groupsRouter = require('./routes/groups');
-app.use('/api/groups', groupsRouter);
+// TODO (s4-3-mount-groups): write your code here
+
+
 // @tutorial:end s4-3-mount-groups
 
 // The checkpoint exercises hook in here. Until you write them, these routes answer 404.
@@ -28,9 +30,9 @@ app.use('/api/search', require('./routes/search'));
 app.use('/api/high-priority', require('./routes/highPriority'));
 
 // @tutorial:begin s7-5-not-found
-app.use('/api', (req, res) => {
-  res.status(404).json({ error: 'Not found' });
-});
+// TODO (s7-5-not-found): write your code here
+
+
 // @tutorial:end s7-5-not-found
 
 app.use((err, req, res, next) => {

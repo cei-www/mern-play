@@ -78,7 +78,7 @@ Ports bound to `127.0.0.1`; learner runs as non-root; no Docker socket anywhere;
 
 ## Known gaps (as of this file)
 
-Only verified on macOS (Apple Silicon). Not yet run on Windows, Mac Intel or Linux. Thai text and the visual quality of the Tailwind module have not been reviewed by a person. Screen readers and keyboard use are untested. Nothing is committed yet. The Dockerfile steps that remove CR from scripts and set `files.eol` were written but the image was not rebuilt after them.
+Only verified on macOS (Apple Silicon). Not yet run on Windows, Mac Intel or Linux. Thai text and the visual quality of the Tailwind module have not been reviewed by a person. Screen readers and keyboard use are untested. The Dockerfile steps that remove CR from scripts and set `files.eol` were written but the image was not rebuilt after them.
 
 ---
 

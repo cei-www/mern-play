@@ -94,8 +94,7 @@ describe('preserveZones', () => {
     expect(merged).toBe(snapshot);
   });
 
-  it('falls back to the snapshot when the learner file has broken markers', () => {
-    const merged = preserveZones(snapshot, '// @tutorial:begin exercise-2\nunclosed\n', isExerciseZone);
-    expect(merged).toBe(snapshot);
+  it('throws when the learner file has broken markers', () => {
+    expect(() => preserveZones(snapshot, '// @tutorial:begin exercise-2\nunclosed\n', isExerciseZone)).toThrow(ZoneError);
   });
 });

@@ -129,9 +129,26 @@ export function decorateLesson(root, { stepId, hljs, tabName = 'Editor' }) {
 }
 
 /**
+ * Lessons name the default development ports of the project. Map them to the ports this
+ * installation actually published, so the buttons keep working after a port is changed in `.env`.
+ * @param {number} port
+ * @param {import('./api.js').Ports} ports
+ */
+export function previewPort(port, ports) {
+  const byDefault = new Map([
+    [3000, ports.express],
+    [5173, ports.vite],
+    [5174, ports.viteStyle],
+    [9323, ports.report],
+  ]);
+  return byDefault.get(port) ?? port;
+}
+
+/**
  * Handle clicks inside the lesson: tab-switching buttons (only code blocks have a Copy button).
  * @param {HTMLElement} root
- * @param {{ preview: (target: { port: number, path: string }) => void,
+ * @param {{ ports: import('./api.js').Ports,
+ *           preview: (target: { port: number, path: string }) => void,
  *           swagger: (target: { op: string, server: string }) => void }} handlers
  */
 export function bindLessonActions(root, handlers) {
@@ -143,7 +160,7 @@ export function bindLessonActions(root, handlers) {
     event.preventDefault();
     const { action } = actionEl.dataset;
     if (action === 'preview') {
-      handlers.preview({ port: Number(actionEl.dataset.port), path: actionEl.dataset.path || '/' });
+      handlers.preview({ port: previewPort(Number(actionEl.dataset.port), handlers.ports), path: actionEl.dataset.path || '/' });
     } else if (action === 'swagger') {
       handlers.swagger({ op: actionEl.dataset.op || '', server: actionEl.dataset.server || '' });
     }

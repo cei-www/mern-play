@@ -40,7 +40,7 @@ function createApp(pool) {
   app.post('/__control/mutant', (req, res) => {
     if (!isLoopback(req)) return res.status(404).json({ error: 'Not found' });
     const name = req.body?.name ?? null;
-    if (name !== null && !(name in MUTANTS)) return res.status(400).json({ error: `unknown mutant, use one of: ${Object.keys(MUTANTS).join(', ')}` });
+    if (name !== null && !Object.hasOwn(MUTANTS, name)) return res.status(400).json({ error: `unknown mutant, use one of: ${Object.keys(MUTANTS).join(', ')}` });
     mutant = name;
     res.json({ mutant });
   });
@@ -77,7 +77,7 @@ function createApp(pool) {
       where.push('t.group_id = ?');
       params.push(Number(groupId));
     }
-    if (sort !== undefined && !(sort in SORT_COLUMNS) && !is('unsafe-sort')) {
+    if (sort !== undefined && !Object.hasOwn(SORT_COLUMNS, sort) && !is('unsafe-sort')) {
       return res.status(400).json({ error: `sort must be one of: ${Object.keys(SORT_COLUMNS).join(', ')}` });
     }
     if (order !== 'asc' && order !== 'desc') return res.status(400).json({ error: 'order must be asc or desc' });

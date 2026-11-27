@@ -53,10 +53,13 @@ describe('step numbers', () => {
 
 describe('buildSnapshots', () => {
   it('fills the zones of earlier steps and stubs the zones of the step itself and later steps', () => {
-    const built = buildSnapshots(app(), ['0.1', '0.6', '1.1', '1.5', '1.6', '1.7', '2.2', '2.3']);
-    // Part 0 is the finished app.
+    const built = buildSnapshots(app(), ['0.1', '0.6', '0.7', '1.1', '1.5', '1.6', '1.7', '2.2', '2.3']);
+    // Part 0 is the finished app, except 0.7: the checked state right after the wipe.
     expect(snapshotOf(built, '0.1')).toBe(ROUTES);
     expect(snapshotOf(built, '0.6')).toBe(ROUTES);
+    expect(snapshotOf(built, '0.7')).toContain('TODO (s1-6-list)');
+    expect(snapshotOf(built, '0.7')).not.toContain("router.get('/', list);");
+    expect(snapshotOf(built, '0.7')).toBe(snapshotOf(built, '1.1'));
     expect(snapshotOf(built, '1.1')).not.toContain("router.get('/', list);");
     expect(snapshotOf(built, '1.5')).toContain('TODO (s1-6-list)');
     expect(snapshotOf(built, '1.6')).toContain('TODO (s1-6-list)');

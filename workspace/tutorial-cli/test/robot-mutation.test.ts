@@ -169,6 +169,20 @@ describe('mutation check', () => {
     await s.close();
   });
 
+  it('stops when robot cannot run the tests against a bug', async () => {
+    const s = await setup({ 'empty-title-ok': true });
+    const baseRun = s.io.run.bind(s.io);
+    let calls = 0;
+    const io: CheckIo = {
+      ...s.io,
+      run: async (...args) => (++calls === 1 ? baseRun(...args) : { code: null, stdout: '', stderr: '', timedOut: true }),
+    };
+    const r = await runCheck('m', s.def, ws.ctx(io));
+    expect(r.passed).toBe(false);
+    expect(r.message).toMatch(/could not be checked against the bug "empty-title-ok"/);
+    await s.close();
+  });
+
   it('accepts fewer kills when minKilled says so', async () => {
     const s = await setup({ 'empty-title-ok': true });
     const r = await runCheck('m', { ...s.def, minKilled: 1 }, ws.ctx(s.io));

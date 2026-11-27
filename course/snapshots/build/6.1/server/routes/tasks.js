@@ -27,7 +27,10 @@ function validateTask(body) {
   if (![1, 2, 3].includes(priority)) return { error: 'priority must be 1, 2 or 3' };
 
   const dueDate = body.due_date ?? null;
-  if (dueDate !== null && !/^\d{4}-\d{2}-\d{2}$/.test(dueDate)) return { error: 'due_date must look like 2026-12-31' };
+  const dueDay = typeof dueDate === 'string' ? new Date(`${dueDate}T00:00:00Z`) : null;
+  if (dueDate !== null && (!dueDay || Number.isNaN(dueDay.getTime()) || dueDay.toISOString().slice(0, 10) !== dueDate)) {
+    return { error: 'due_date must be a real date like 2026-12-31' };
+  }
 
   const groupId = body.group_id ?? null;
   if (groupId !== null && !Number.isInteger(groupId)) return { error: 'group_id must be a whole number' };
@@ -59,7 +62,7 @@ router.get('/', async (req, res, next) => {
     where.push('t.group_id = ?');
     params.push(Number(groupId));
   }
-  if (sort !== undefined && !(sort in SORT_COLUMNS)) {
+  if (sort !== undefined && !Object.hasOwn(SORT_COLUMNS, sort)) {
     return res.status(400).json({ error: `sort must be one of: ${Object.keys(SORT_COLUMNS).join(', ')}` });
   }
   if (order !== 'asc' && order !== 'desc') return res.status(400).json({ error: 'order must be asc or desc' });

@@ -3,7 +3,7 @@ import path from 'node:path';
 import type { CliConfig } from './config.js';
 import { DbResetError, resetDatabase } from './db.js';
 import { PathError } from './pathGuard.js';
-import { applySnapshot, SnapshotError, type SnapshotResult } from './snapshots.js';
+import { applySnapshot, SnapshotError, SnapshotZoneError, type SnapshotResult } from './snapshots.js';
 import { isExerciseZone, stripZones, ZoneError } from './zones.js';
 
 /** An error with a message that is safe and useful to show to the learner as it is. */
@@ -97,6 +97,7 @@ export function gotoStep(config: CliConfig, module: string, stepId: string): Sna
   try {
     return applySnapshot(snapshotDir, root);
   } catch (err) {
+    if (err instanceof SnapshotZoneError) throw new CliError(err.message);
     if (err instanceof SnapshotError) throw new CliError(`There is no starting point for step ${stepId} in module ${module}.`);
     if (err instanceof PathError) throw new CliError(err.message);
     throw err;

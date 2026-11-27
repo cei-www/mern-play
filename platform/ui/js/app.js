@@ -155,6 +155,8 @@ async function main() {
   let lastStatus = null;
   /** @type {{ moduleId: string | null, stepId: string | null }} */
   let current = { moduleId: null, stepId: null };
+  /** Counts renders so a slow lesson request cannot paint over a newer one. */
+  let renderToken = 0;
 
   const currentModule = () => modules.find((m) => m.id === current.moduleId) ?? null;
   startStatusPolling((status) => {
@@ -164,6 +166,7 @@ async function main() {
   });
 
   bindLessonActions(el('lesson-body'), {
+    ports,
     preview: (target) => tabs.openPreview(target),
     swagger: (target) => tabs.openSwagger(target),
   });
@@ -207,6 +210,7 @@ async function main() {
   }
 
   async function render() {
+    const token = ++renderToken;
     if (modules.length === 0) {
       renderSidebar(el('sidebar-body'), modules, current, goTo);
       const body = el('lesson-body');
@@ -242,11 +246,15 @@ async function main() {
     const body = el('lesson-body');
     body.setAttribute('aria-busy', 'true');
     try {
-      body.innerHTML = await fetchLesson(module.id, step.file);
+      const html = await fetchLesson(module.id, step.file);
+      if (token !== renderToken) return;
+      body.innerHTML = html;
       decorateLesson(body, { stepId: step.id, tabName: module.defaultTab === 'robot' ? 'Robot' : 'Editor', hljs: /** @type {any} */ (window).hljs });
     } catch (err) {
+      if (token !== renderToken) return;
       showFatal(err instanceof Error ? err.message : String(err));
     }
+    if (token !== renderToken) return;
     body.removeAttribute('aria-busy');
     renderFooter(module, step.id);
     el('lesson').scrollTo({ top: 0 });

@@ -103,9 +103,16 @@ export async function runMutation(id: string, def: MutationDef, ctx: CheckContex
       const suite =
         mutant.tests && Array.isArray(def.suite.command) ? { ...def.suite, command: [...(def.suite.command as string[]), ...mutant.tests] } : def.suite;
       const result = await runOne(`${id}#${mutant.name}`, suite, runCtx);
-      const ran = result.meta?.ran ?? 1;
-      if (!result.passed && ran > 0) killed.push(mutant.name);
-      else survived.push(mutant.hint ?? `no test noticed the bug "${mutant.name}"`);
+      const ran = result.meta?.ran;
+      if (!result.passed) {
+        if (ran === undefined || ran === 0) {
+          const why = ran === 0 ? 'no tests ran' : 'the run reported no result';
+          return bad(`The tests could not be checked against the bug "${mutant.name}" (${why}). ${result.message}`);
+        }
+        killed.push(mutant.name);
+      } else {
+        survived.push(mutant.hint ?? `no test noticed the bug "${mutant.name}"`);
+      }
     }
   } finally {
     if (bySource) {

@@ -49,7 +49,7 @@ router.get('/', async (req, res, next) =&gt; {
     where.push('t.group_id = ?');
     params.push(Number(groupId));
   }
-  if (sort !== undefined &amp;&amp; !(sort in SORT_COLUMNS)) {
+  if (sort !== undefined &amp;&amp; !Object.hasOwn(SORT_COLUMNS, sort)) {
     return res.status(400).json({ error: `sort must be one of: ${Object.keys(SORT_COLUMNS).join(', ')}` });
   }
   if (order !== 'asc' &amp;&amp; order !== 'desc') return res.status(400).json({ error: 'order must be asc or desc' });
@@ -113,7 +113,7 @@ router.get('/', async (req, res, next) =&gt; {
     where.push('t.group_id = ?');
     params.push(Number(groupId));
   }
-  if (sort !== undefined &amp;&amp; !(sort in SORT_COLUMNS)) {
+  if (sort !== undefined &amp;&amp; !Object.hasOwn(SORT_COLUMNS, sort)) {
     return res.status(400).json({ error: `sort must be one of: ${Object.keys(SORT_COLUMNS).join(', ')}` });
   }
   if (order !== 'asc' &amp;&amp; order !== 'desc') return res.status(400).json({ error: 'order must be asc or desc' });

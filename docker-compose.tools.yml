@@ -25,7 +25,7 @@ services:
         set -e
         for d in workspace/tutorial-cli platform/api platform/ui; do
           echo "== $$d"
-          (cd /repo/$$d && npx tsc -p tsconfig.json --noEmit && npx vitest run)
+          (cd /repo/$$d && npm ci --no-audit --no-fund && npx tsc -p tsconfig.json --noEmit && npx vitest run)
         done
 
   # Checks every lesson against lesson.yaml, the OpenAPI file and the finished projects.
@@ -37,6 +37,7 @@ services:
       - -c
       - |
         set -e
+        (cd /repo/platform/api && npm ci --no-audit --no-fund)
         npx tsc -p tsconfig.build.json --outDir /tmp/dist >/dev/null
         ln -s /repo/platform/api/node_modules /tmp/node_modules
         printf '{"type":"module"}' > /tmp/package.json

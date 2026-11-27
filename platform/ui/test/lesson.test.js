@@ -67,22 +67,40 @@ describe('decorateLesson', () => {
 });
 
 describe('bindLessonActions', () => {
-  it('sends preview and swagger button clicks to the handlers', () => {
+  const ports = {
+    editor: 8081,
+    robot: 8083,
+    dbadmin: 8085,
+    express: 13000,
+    vite: 15173,
+    viteStyle: 15174,
+    referenceApi: 13001,
+    styleApi: 13002,
+    report: 19323,
+  };
+
+  it('sends preview and swagger button clicks to the handlers, mapped to the configured ports', () => {
     const el = lesson(
       '<a href="#" data-action="preview" data-port="3000" data-path="/api/health">p</a>' +
         '<button data-action="swagger" data-op="listTasks" data-server="app">s</button>' +
-        '<a href="#" data-action="preview" data-port="5173">no path</a>',
+        '<a href="#" data-action="preview" data-port="5173">no path</a>' +
+        '<a href="#" data-action="preview" data-port="5174">tailwind</a>' +
+        '<a href="#" data-action="preview" data-port="9323" data-path="/report.html">report</a>' +
+        '<a href="#" data-action="preview" data-port="9999">custom</a>',
     );
     const preview = vi.fn();
     const swagger = vi.fn();
-    bindLessonActions(el, { preview, swagger });
-    const [a, b, c] = el.querySelectorAll('[data-action]');
+    bindLessonActions(el, { ports, preview, swagger });
+    const [a, b, ...rest] = el.querySelectorAll('[data-action]');
     a.click();
     b.click();
-    c.click();
-    expect(preview).toHaveBeenNthCalledWith(1, { port: 3000, path: '/api/health' });
+    rest.forEach((node) => node.click());
+    expect(preview).toHaveBeenNthCalledWith(1, { port: 13000, path: '/api/health' });
     expect(swagger).toHaveBeenCalledWith({ op: 'listTasks', server: 'app' });
-    expect(preview).toHaveBeenNthCalledWith(2, { port: 5173, path: '/' });
+    expect(preview).toHaveBeenNthCalledWith(2, { port: 15173, path: '/' });
+    expect(preview).toHaveBeenNthCalledWith(3, { port: 15174, path: '/' });
+    expect(preview).toHaveBeenNthCalledWith(4, { port: 19323, path: '/report.html' });
+    expect(preview).toHaveBeenNthCalledWith(5, { port: 9999, path: '/' });
   });
 
   it('does not make inline code clickable', () => {

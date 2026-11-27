@@ -63,6 +63,35 @@ describe('source mutation check', () => {
     expect(result.detail).toEqual(['Not caught: no test looks at the limit']);
   });
 
+  it('stops when a bug run reports nothing', async () => {
+    let calls = 0;
+    const io: CheckIo = {
+      ...fakeVitest(),
+      run: async () => {
+        calls += 1;
+        return calls === 1 ? { code: 0, stdout: report(2, 0), stderr: '', timedOut: false } : { code: 1, stdout: '', stderr: 'boom', timedOut: false };
+      },
+    };
+    const result = await runCheck('m', mutation([bug]), ws.ctx(io));
+    expect(result.passed).toBe(false);
+    expect(result.message).toMatch(/could not be checked against the bug "limit-changed"/);
+    expect(result.message).toMatch(/reported no result/);
+  });
+
+  it('stops when no tests run against a bug', async () => {
+    let calls = 0;
+    const io: CheckIo = {
+      ...fakeVitest(),
+      run: async () => {
+        calls += 1;
+        return calls === 1 ? { code: 0, stdout: report(2, 0), stderr: '', timedOut: false } : { code: 1, stdout: report(0, 0), stderr: '', timedOut: false };
+      },
+    };
+    const result = await runCheck('m', mutation([bug]), ws.ctx(io));
+    expect(result.passed).toBe(false);
+    expect(result.message).toMatch(/no tests ran/);
+  });
+
   it('asks the learner to undo changes in the code when the place of the bug is gone', async () => {
     ws.write('workspace/build/src/a.js', 'export const limit = 5;\n');
     const io: CheckIo = { ...fakeVitest(), run: async () => ({ code: 0, stdout: report(2, 0), stderr: '', timedOut: false }) };

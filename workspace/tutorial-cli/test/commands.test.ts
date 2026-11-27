@@ -121,6 +121,11 @@ describe('gotoStep', () => {
     expect(read('workspace/build/server/extra.txt')).toBe('extra');
   });
 
+  it('names the file when the learner markers are broken', () => {
+    write('workspace/build/server/routes.js', '// @tutorial:begin exercise-1\nunclosed\n');
+    expect(() => gotoStep(config, 'build', '1.5')).toThrowError(/routes\.js.*never closed/);
+  });
+
   it('reports files that are already in place and does not rewrite them', () => {
     gotoStep(config, 'build', '1.5');
     const again = gotoStep(config, 'build', '1.5');

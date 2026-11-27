@@ -8,7 +8,8 @@ import { toLf } from './text.js';
  * source; the starting state of a step is the finished app with every zone of that step and of
  * later steps replaced by its TODO stub. Exercise zones are never touched (they stay as in the app).
  *
- * Part 0 (steps `0.x`) is the tour of the finished app, so nothing is wiped there.
+ * Part 0 (steps `0.x`) is the tour of the finished app, so nothing is wiped there — except step
+ * 0.7, which is the state right after `tutorial wipe` and must match its checks.
  *
  * A step zone is named after the step that writes it: `s<major>-<minor>-<name>` is written in step
  * `<major>.<minor>`, for example `s1-6-list-tasks` belongs to step 1.6.
@@ -97,7 +98,7 @@ export function buildSnapshots(appDir: string, lessonSteps: string[]): BuiltSnap
     for (const [file, text] of contents) {
       const { content } = stripZones(text, {
         include: (zoneId) => {
-          if (n[0] === 0 || isExerciseZone(zoneId)) return false;
+          if ((n[0] === 0 && id !== '0.7') || isExerciseZone(zoneId)) return false;
           const owner = stepOfZone(zoneId);
           const ownerNumber = owner ? parseStepId(owner) : null;
           return ownerNumber !== null && compare(ownerNumber, n) >= 0;

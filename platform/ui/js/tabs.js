@@ -267,12 +267,12 @@ export function createTabs({ nav, panes, ports, copyText }) {
     select.setAttribute('aria-label', 'Port');
     /** Each entry opens one page; the line under the bar says what it is. @type {{ port: number, path: string, label: string, about: string }[]} */
     const choices = [
-      { port: ports.vite, path: '/', label: 'App', about: 'The front page of the Task Manager you build in module build (React, port 5173).' },
+      { port: ports.vite, path: '/', label: 'App', about: `The front page of the Task Manager you build in module build (React, port ${ports.vite}).` },
       {
         port: ports.viteStyle,
         path: '/',
         label: 'App (for Tailwind)',
-        about: 'The front page of the module style project (port 5174). It starts unstyled on purpose: you add the look with Tailwind.',
+        about: `The front page of the module style project (port ${ports.viteStyle}). It starts unstyled on purpose: you add the look with Tailwind.`,
       },
       {
         port: ports.express,

@@ -20,7 +20,10 @@ function validateTask(body) {
   if (![1, 2, 3].includes(priority)) return { error: 'priority must be 1, 2 or 3' };
 
   const dueDate = body.due_date ?? null;
-  if (dueDate !== null &amp;&amp; !/^\d{4}-\d{2}-\d{2}$/.test(dueDate)) return { error: 'due_date must look like 2026-12-31' };
+  const dueDay = typeof dueDate === 'string' ? new Date(`${dueDate}T00:00:00Z`) : null;
+  if (dueDate !== null &amp;&amp; (!dueDay || Number.isNaN(dueDay.getTime()) || dueDay.toISOString().slice(0, 10) !== dueDate)) {
+    return { error: 'due_date must be a real date like 2026-12-31' };
+  }
 
   const groupId = body.group_id ?? null;
   if (groupId !== null &amp;&amp; !Number.isInteger(groupId)) return { error: 'group_id must be a whole number' };
@@ -52,7 +55,10 @@ function validateTask(body) {
   if (![1, 2, 3].includes(priority)) return { error: 'priority must be 1, 2 or 3' };
 
   const dueDate = body.due_date ?? null;
-  if (dueDate !== null &amp;&amp; !/^\d{4}-\d{2}-\d{2}$/.test(dueDate)) return { error: 'due_date must look like 2026-12-31' };
+  const dueDay = typeof dueDate === 'string' ? new Date(`${dueDate}T00:00:00Z`) : null;
+  if (dueDate !== null &amp;&amp; (!dueDay || Number.isNaN(dueDay.getTime()) || dueDay.toISOString().slice(0, 10) !== dueDate)) {
+    return { error: 'due_date must be a real date like 2026-12-31' };
+  }
 
   const groupId = body.group_id ?? null;
   if (groupId !== null &amp;&amp; !Number.isInteger(groupId)) return { error: 'group_id must be a whole number' };

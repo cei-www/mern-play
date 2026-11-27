@@ -94,18 +94,14 @@ export function stripZones(original: string, options: StripOptions): StripResult
 /**
  * Take `base` (a snapshot file) but keep the learner's current content for the zones selected by
  * `preserve`. Used so that "reset step" and "skip to this step" never overwrite exercise work.
- * Zones missing from `current` keep the base content.
+ * Zones missing from `current` keep the base content. Throws `ZoneError` when the learner's file
+ * has broken markers: restoring over it could silently destroy exercise work.
  */
 export function preserveZones(base: string, current: string, preserve: (zoneId: string) => boolean): string {
   const crlf = hasCrlf(base);
   const baseLines = toLf(base).split('\n');
   const currentLines = toLf(current).split('\n');
-  let currentZones: Zone[];
-  try {
-    currentZones = findZones(currentLines);
-  } catch {
-    return base; // the learner's file has broken markers; fall back to the snapshot as is
-  }
+  const currentZones = findZones(currentLines);
   const byId = new Map(currentZones.map((z) => [z.id, z]));
   for (const zone of [...findZones(baseLines)].sort((a, b) => b.beginIndex - a.beginIndex)) {
     if (!preserve(zone.id)) continue;
